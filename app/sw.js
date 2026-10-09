@@ -1,6 +1,6 @@
 // CARTHAGO service worker : reseau d'abord pour l'app (chaque deploy est visible tout de suite),
 // cache en secours sans signal (sous-sol de la salle). Modules Firebase et polices : cache stable, mis a jour en fond.
-const CACHE = 'carthago-v9.0-93f2a4c';
+const CACHE = 'carthago-v9.0-90003de';
 const EXT = 'carthago-ext';
 const EXT_HOSTS = [
   { host: 'www.gstatic.com', prefix: '/firebasejs/' },
