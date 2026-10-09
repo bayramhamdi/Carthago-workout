@@ -15,7 +15,7 @@ Le code dans `app/` est la source de vérité. Les docs dans `archive/` datent d
 - React 18 inline, SANS JSX (`React.createElement` partout). Pas de bundler, pas de build step.
 - Firebase 10.x (Auth Google + Firestore `users/{uid}`), région eur3. localStorage = stockage primaire, Firebase = sync.
 - Design system v8 : police Sora ; tokens `--ink`, `--coal`, `--ash`, `--full` (#3ECF8E ember), `--smoke`, `--dim`.
-- Site live : burn-the-ships.netlify.app (the-ships.netlify.app renvoie 404 ; voir section Renommage avant de toucher au domaine).
+- Site live : carthago-workout.netlify.app (ex burn-the-ships.netlify.app, renomme le 2026-10-09 ; voir section Renommage avant de toucher au domaine).
 
 ## Version
 - Version actuelle : v9.0. Elle reste v9.0 jusqu'à ce que Bayram déclare une nouvelle version. Ne bumpe jamais seul : demande.
