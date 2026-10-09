@@ -1,4 +1,4 @@
-<!-- BURN THE SHIPS v9.0 | September 2026
+<!-- CARTHAGO v9.0 | September 2026
   TIER 6 FULL REORGANIZATION — 6-Day Split
   At Tier 6 (BE A PRO), the entire week reorganizes:
   - Tue: PUSH (Bench moves from Wed)
@@ -106,7 +106,7 @@ const firebaseConfig = {
 };
 
 // Make Firebase globally accessible
-window.btsFirebase = {
+window.carthagoFirebase = {
   ready: false,
   user: null,
   init() {
@@ -132,7 +132,7 @@ window.btsFirebase = {
       // Listen for auth changes
       onAuthStateChanged(this.auth, (user) => {
         this.user = user;
-        if (window.btsOnAuthChange) window.btsOnAuthChange(user);
+        if (window.carthagoOnAuthChange) window.carthagoOnAuthChange(user);
       });
     } catch (err) {
       console.error("Firebase init failed:", err);
@@ -190,7 +190,7 @@ window.btsFirebase = {
 
 // Initialize when config is valid
 if (firebaseConfig.apiKey !== "PASTE_YOUR_API_KEY_HERE") {
-  window.btsFirebase.init();
+  window.carthagoFirebase.init();
 }
 </script>
 </head>
@@ -1205,7 +1205,7 @@ const recoveryWorkouts = {
 // ═══ TIER 6 DAY OVERRIDES (Week A) ═══
 // At Tier 6 (BE A PRO), the week reorganizes to 6-day split.
 // ═══════════════════════════════════════════════════════════
-// BURN THE SHIPS — TIER 6 6-DAY PROGRAM
+// CARTHAGO : TIER 6 6-DAY PROGRAM
 // Mirrors Performance exactly, using our exercise library
 // No A/B rotation yet — same program both weeks
 // ═══════════════════════════════════════════════════════════
@@ -5550,7 +5550,7 @@ function zoneLabel(z) {
 const recoveryBlocks = ["PREP","MOBILITY","CORE ACTIVATION","HIP MOBILITY","HEALTH","ANKLE","STRETCH","T-SPINE","SHOULDER PREP","SHOULDER HEALTH"];
 function isRecoveryBlock(blockName) { return recoveryBlocks.some(rb => blockName.toUpperCase().includes(rb)); }
 
-function BurnTheShips() {
+function Carthago() {
   // Load from localStorage helper
   const loadLS = (key, def) => { try { const v = localStorage.getItem("bts_" + key); return v ? JSON.parse(v) : def; } catch { return def; } };
   const saveLS = (key, val) => { try { localStorage.setItem("bts_" + key, JSON.stringify(val)); } catch {} };
@@ -5796,14 +5796,14 @@ function BurnTheShips() {
   // Firebase auth state listener
   useEffect(() => {
     const checkReady = setInterval(() => {
-      if (window.btsFirebase && window.btsFirebase.ready) {
+      if (window.carthagoFirebase && window.carthagoFirebase.ready) {
         setFbReady(true);
-        window.btsOnAuthChange = (user) => {
+        window.carthagoOnAuthChange = (user) => {
           setFbUser(user);
           if (user) {
             // User signed in — load their data
             setSyncStatus("loading");
-            window.btsFirebase.load().then(data => {
+            window.carthagoFirebase.load().then(data => {
               if (data) {
                 if (data.week) setWeek(data.week);
                 if (data.condition) setCondition(data.condition);
@@ -5846,7 +5846,7 @@ function BurnTheShips() {
           }
         };
         // Check current user immediately
-        if (window.btsFirebase.user) window.btsOnAuthChange(window.btsFirebase.user);
+        if (window.carthagoFirebase.user) window.carthagoOnAuthChange(window.carthagoFirebase.user);
         clearInterval(checkReady);
       }
     }, 200);
@@ -5858,7 +5858,7 @@ function BurnTheShips() {
     if (!fbUser) return;
     const timer = setTimeout(() => {
       setSyncStatus("saving");
-      window.btsFirebase.save({ week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode }).then(ok => {
+      window.carthagoFirebase.save({ week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode }).then(ok => {
         setSyncStatus(ok ? "synced" : "error");
       });
     }, 1500);
@@ -6058,7 +6058,7 @@ function BurnTheShips() {
     const a = document.createElement("a");
     const d = new Date();
     a.href = url;
-    a.download = "burn-the-ships-backup-" + d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0") + ".json";
+    a.download = "carthago-backup-" + d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0") + ".json";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -6178,11 +6178,11 @@ function BurnTheShips() {
       ),
       // Auth row: top-right aligned, own row above title
       fbReady && React.createElement("div", { style: { display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 6, marginBottom: 8, minHeight: 24 } },
-        !fbUser && React.createElement("button", { onClick: () => window.btsFirebase.signIn(), style: { fontSize: 10, fontWeight: 700, color: "#64B5F6", background: "#64B5F620", border: "1px solid #64B5F6", borderRadius: 4, padding: "4px 10px", cursor: "pointer", letterSpacing: 0.3 } }, "\uD83D\uDD10 SIGN IN"),
+        !fbUser && React.createElement("button", { onClick: () => window.carthagoFirebase.signIn(), style: { fontSize: 10, fontWeight: 700, color: "#64B5F6", background: "#64B5F620", border: "1px solid #64B5F6", borderRadius: 4, padding: "4px 10px", cursor: "pointer", letterSpacing: 0.3 } }, "\uD83D\uDD10 SIGN IN"),
         fbUser && React.createElement("span", { style: { fontSize: 9, fontWeight: 600, color: syncStatus === "synced" ? "var(--full)" : syncStatus === "saving" || syncStatus === "loading" ? "var(--light)" : syncStatus === "error" ? "var(--recovery)" : "var(--smoke)", background: "var(--ash)", border: "1px solid var(--line)", borderRadius: 3, padding: "3px 6px" } },
           syncStatus === "synced" ? "\u2601\uFE0F \u2713" : syncStatus === "saving" ? "\u2601\uFE0F \u2026" : syncStatus === "loading" ? "\u2601\uFE0F \u2193" : syncStatus === "error" ? "\u2601\uFE0F \u26A0" : "\u2601\uFE0F"
         ),
-        fbUser && React.createElement("button", { onClick: () => window.btsFirebase.signOut(), title: "Sign out (" + fbUser.email + ")", style: { fontSize: 10, fontWeight: 700, color: "var(--recovery)", background: "rgba(240,96,76,0.082)", border: "1px solid rgba(240,96,76,0.376)", borderRadius: 4, padding: "4px 10px", cursor: "pointer", letterSpacing: 0.3 } }, "\u21AA SIGN OUT")
+        fbUser && React.createElement("button", { onClick: () => window.carthagoFirebase.signOut(), title: "Sign out (" + fbUser.email + ")", style: { fontSize: 10, fontWeight: 700, color: "var(--recovery)", background: "rgba(240,96,76,0.082)", border: "1px solid rgba(240,96,76,0.376)", borderRadius: 4, padding: "4px 10px", cursor: "pointer", letterSpacing: 0.3 } }, "\u21AA SIGN OUT")
       ),
       React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "center", gap: 12 } },
         // Left crossed arrows icon
@@ -7384,6 +7384,6 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
 }
 
 try { localStorage.removeItem('bts_tBox'); localStorage.removeItem('bts_supersetOn'); } catch (e) {}
-ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(BurnTheShips));
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Carthago));
 if ('serviceWorker' in navigator && location.protocol === 'https:') { window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); }); }
 </script></body></html>
