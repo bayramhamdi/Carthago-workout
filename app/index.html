@@ -5552,8 +5552,8 @@ function isRecoveryBlock(blockName) { return recoveryBlocks.some(rb => blockName
 
 function Carthago() {
   // Load from localStorage helper
-  const loadLS = (key, def) => { try { const v = localStorage.getItem("bts_" + key); return v ? JSON.parse(v) : def; } catch { return def; } };
-  const saveLS = (key, val) => { try { localStorage.setItem("bts_" + key, JSON.stringify(val)); } catch {} };
+  const loadLS = (key, def) => { try { let v = localStorage.getItem("carthago_" + key); if (v === null) v = localStorage.getItem("bts_" + key); return v ? JSON.parse(v) : def; } catch { return def; } }; // legacy-bts : repli lecture ancienne cle
+  const saveLS = (key, val) => { try { localStorage.setItem("carthago_" + key, JSON.stringify(val)); } catch {} };
 
   // ═══ ANCHOR DATE — Week A + Cycle 1 starts Monday April 27, 2026 ═══
   const ANCHOR_DATE = new Date(2026, 3, 27); // Month is 0-indexed (3 = April)
@@ -7383,7 +7383,20 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
   );
 }
 
-try { localStorage.removeItem('bts_tBox'); localStorage.removeItem('bts_supersetOn'); } catch (e) {}
+// Migration localStorage ancien prefixe vers carthago_ : copie seulement si la nouvelle cle est absente (null).
+// Les anciennes cles restent en place (au moins une version). Les cles mortes sont supprimees sous les deux prefixes.
+try {
+  const OLD_PFX = "bts_"; // legacy-bts
+  const DEAD_KEYS = ["tBox", "supersetOn"];
+  const oldKeys = [];
+  for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.indexOf(OLD_PFX) === 0) oldKeys.push(k); }
+  oldKeys.forEach(k => {
+    const name = k.slice(OLD_PFX.length);
+    if (DEAD_KEYS.indexOf(name) !== -1) return;
+    if (localStorage.getItem("carthago_" + name) === null) localStorage.setItem("carthago_" + name, localStorage.getItem(k));
+  });
+  DEAD_KEYS.forEach(n => { localStorage.removeItem("bts_" + n); localStorage.removeItem("carthago_" + n); }); // legacy-bts
+} catch (e) {}
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Carthago));
 if ('serviceWorker' in navigator && location.protocol === 'https:') { window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); }); }
 </script></body></html>
