@@ -1,0 +1,12 @@
+name: video-links
+# Verifie chaque video YouTube du programme. Non bloquant pour les push : hebdomadaire + manuel.
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash tools/preship.sh app/index.html --links
