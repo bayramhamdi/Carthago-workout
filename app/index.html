@@ -5816,6 +5816,7 @@ function Carthago() {
                 if (data.testHistory) setTestHistory(data.testHistory);
                 if (data.qAnchorDate) setQAnchorDate(data.qAnchorDate); if (data.qAnchorPos) setQAnchorPos(data.qAnchorPos); if (data.cpMode === "v2") { setCpMode("v2"); if (data.cyclePos) { setCyclePos(data.cyclePos); setQueueHome(data.cyclePos); } }
                 if (typeof data.queueMode === "boolean") setQueueMode(data.queueMode);
+                if (data.xSets) setXSets(data.xSets); if (data.skipDays) setSkipDays(data.skipDays); if (data.swapMap) setSwapMap(data.swapMap);
                 if (data.tier) setTier(data.tier);
 
                 // Smart load: if today's session is completed, don't restore old checkmarks/logData
@@ -5858,12 +5859,12 @@ function Carthago() {
     if (!fbUser) return;
     const timer = setTimeout(() => {
       setSyncStatus("saving");
-      window.carthagoFirebase.save({ week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode }).then(ok => {
+      window.carthagoFirebase.save({ week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap }).then(ok => {
         setSyncStatus(ok ? "synced" : "error");
       });
     }, 1500);
     return () => clearTimeout(timer);
-  }, [fbUser, week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode]);
+  }, [fbUser, week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap]);
 
   const [shipBurned, setShipBurned] = useState(false);
   const [igniting, setIgniting] = useState(!(typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches));
