@@ -20,6 +20,6 @@ else:
 PY
 node --check "$TMP" && echo "OK 1/2 SYNTAXE"
 for V in "$DIR/carthago-validator.py"; do
-  if [ -f "$V" ]; then $PY "$V" "$APP" $2; exit 0; fi
+  if [ -f "$V" ]; then $PY "$V" "$APP" $2; exit $?; fi
 done
-echo "ATTENTION : validator absent dans tools/, etape 2/2 sautee"
+echo "ECHEC : validator absent dans tools/ (gate 1 impossible)"; exit 1

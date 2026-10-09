@@ -225,3 +225,8 @@ if CHECK_LINKS:
             print(f"     {v} — {names}")
     else:
         print(f"  ✅ All {len(vids)} videos live")
+    if dead:
+        sys.exit(1)
+
+if total_blocking:
+    sys.exit(1)
