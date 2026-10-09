@@ -1,6 +1,6 @@
 // CARTHAGO service worker: network first, so every deploy shows up immediately.
 // Cache is only a fallback when you have no signal (gym basement).
-const CACHE = 'carthago-v9.0-b2bec4e';
+const CACHE = 'carthago-v9.0-0a26ff4';
 self.addEventListener('install', e => {
   self.skipWaiting();
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/', '/manifest.json', '/icon-192.png', '/icon-512.png', '/favicon.svg', '/apple-touch-icon.png'])).catch(() => {}));
