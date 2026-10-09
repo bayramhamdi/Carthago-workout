@@ -1,0 +1,8 @@
+#!/bin/bash
+# CARTHAGO : pre-push. Bloque le push si une des 3 gates echoue.
+cd "$(git rev-parse --show-toplevel)" || exit 1
+echo "pre-push : gates CARTHAGO"
+bash tools/preship.sh app/index.html > /dev/null || { echo "GATE 1 (preship) ECHEC"; exit 1; }
+node tools/rendertest.js || { echo "GATE 2 (rendertest) ECHEC"; exit 1; }
+node tools/weektest.js > /dev/null || { echo "GATE 3 (weektest) ECHEC"; exit 1; }
+echo "3 gates OK"

@@ -15,7 +15,7 @@ Le code dans `app/` est la source de vérité. Les docs dans `archive/` datent d
 - React 18 inline, SANS JSX (`React.createElement` partout). Pas de bundler, pas de build step.
 - Firebase 10.x (Auth Google + Firestore `users/{uid}`), région eur3. localStorage = stockage primaire, Firebase = sync.
 - Design system v8 : police Sora ; tokens `--ink`, `--coal`, `--ash`, `--full` (#3ECF8E ember), `--smoke`, `--dim`.
-- Site live : the-ships.netlify.app (voir section Renommage avant de toucher au domaine).
+- Site live : burn-the-ships.netlify.app (the-ships.netlify.app renvoie 404 ; voir section Renommage avant de toucher au domaine).
 
 ## Version
 - Version actuelle : v9.0. Elle reste v9.0 jusqu'à ce que Bayram déclare une nouvelle version. Ne bumpe jamais seul : demande.
@@ -62,9 +62,19 @@ Règle : tout ce que l'utilisateur VOIT et tout le code interne passe à Carthag
 - Ne jamais commit de secrets. Les clés web Firebase ne sont pas secrètes au sens strict mais le repo reste PRIVÉ.
 
 ## Deploy
-- Uniquement après les 3 gates au vert ET le "go" explicite de Bayram.
-- `netlify deploy --dir=app` (preview) puis `netlify deploy --dir=app --prod` après validation.
+Voir "Règle de livraison" ci-dessous : c'est le seul circuit autorisé.
 
 ## Hors périmètre de ce repo
 - THE CODEX (life-OS séparé). Protocoles nutrition / suppléments détaillés (vivent hors de l'app).
 - Futur mode invité (Ahmed, le frère de Bayram, avec ses propres séances) : idée notée, ne pas construire sans demande.
+
+## Règle de livraison (permanente)
+Toute modification validée part en ligne dans la même session, sans attendre :
+1. Travail sur une branche, les 3 gates passent (preship, rendertest, weektest).
+2. Merge dans main, push sur GitHub (git@github.com:bayramhamdi/Carthago-workout.git).
+3. Netlify déploie automatiquement depuis main (dossier publié : app/).
+4. Le nom du cache dans sw.js change à chaque déploiement (version + hash court du commit), sinon le téléphone garde l'ancienne version.
+5. Après le déploiement : vérifie l'URL live (index.html contient la bonne version, sw.js a le nouveau cache) et donne le lien du commit.
+Interdit : pousser sur main si une gate échoue, ou déployer à la main en dehors de ce circuit.
+Exception : renommage de domaine, changement des règles Firebase, suppression de données = go de Bayram avant.
+Hook pre-push versionné dans `tools/githooks/` (activé par `git config core.hooksPath tools/githooks`) : il lance les 3 gates.
