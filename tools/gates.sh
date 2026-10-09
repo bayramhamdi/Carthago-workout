@@ -7,5 +7,5 @@ run "gate 0 rename-audit" bash tools/rename-audit.sh
 run "gate 1 preship" bash tools/preship.sh app/index.html
 run "gate 2 rendertest" node tools/rendertest.js
 run "gate 3 weektest" node tools/weektest.js
-for t in migrationtest synctest backuptest loadtest progresstest mergetest swtest pushtest icontest; do [ -f tools/$t.js ] && run "$t" node tools/$t.js; done
+for t in migrationtest synctest backuptest loadtest progresstest remindertest mergetest swtest pushtest icontest; do [ -f tools/$t.js ] && run "$t" node tools/$t.js; done
 [ $FAIL -eq 0 ] && echo "TOUT VERT" || { echo "ROUGE"; exit 1; }

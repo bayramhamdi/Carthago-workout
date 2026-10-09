@@ -843,6 +843,7 @@ function Carthago() {
   const [xSets, setXSets] = useState(() => loadLS("xSets", {}));
   const [swapMap, setSwapMap] = useState(() => loadLS("swapMap", {}));
   const [lastExport, setLastExport] = useState(() => loadLS("lastExport", ""));
+  const [reminder, setReminder] = useState(() => { const r = loadLS("reminder", null); return r && r.time ? r : { on: false, time: "18:00", fired: "" }; });
   const cloudBackupTried = React.useRef("");
   const [swapOpen, setSwapOpen] = useState(null);
   const [holdT, setHoldT] = useState(null);
@@ -919,6 +920,7 @@ function Carthago() {
   useEffect(() => saveLS("condition", condition), [condition]);
   useEffect(() => saveLS("condAutoKey", condAutoKey), [condAutoKey]);
   useEffect(() => saveLS("lastExport", lastExport), [lastExport]);
+  useEffect(() => saveLS("reminder", reminder), [reminder]);
   useEffect(() => saveLS("xSets", xSets), [xSets]);
   useEffect(() => saveLS("swapMap", swapMap), [swapMap]);
   useEffect(() => saveLS("lastDone", lastDone), [lastDone]);
@@ -1018,6 +1020,34 @@ function Carthago() {
     }, 200);
     return () => clearInterval(checkReady);
   }, []);
+
+  // Rappel d'entrainement : notification locale (appli ouverte ou en arriere-plan), une fois par jour, seulement un jour de seance/combat non termine
+  useEffect(() => {
+    if (!reminder.on || typeof Notification === "undefined" || Notification.permission !== "granted") return;
+    const tk = carthagoTodayKey();
+    if (reminder.fired === tk) return;
+    const hm = String(reminder.time || "18:00").split(":");
+    if (now.getHours() * 60 + now.getMinutes() < (parseInt(hm[0], 10) || 0) * 60 + (parseInt(hm[1], 10) || 0)) return;
+    if (workoutHistory[tk] && workoutHistory[tk].completed) return;
+    const d0 = new Date(now); d0.setHours(0, 0, 0, 0);
+    const q = resolveQueueDay(tier, d0, posFromToday(tier, d0));
+    if (q.role !== "lift" && q.role !== "fight") return;
+    const body = q.role === "lift" ? "Today: " + q.session.label + ". No retreat." : "Fight night: " + q.fight + ".";
+    setReminder(r => ({ ...r, fired: tk }));
+    const show = () => { try { new Notification("CARTHAGO", { body, icon: "/icon-192.png", tag: "carthago-" + tk }); } catch (e) {} };
+    if (navigator.serviceWorker && navigator.serviceWorker.ready) navigator.serviceWorker.ready.then(reg => reg.showNotification("CARTHAGO", { body, icon: "/icon-192.png", badge: "/favicon.svg", tag: "carthago-" + tk })).catch(show);
+    else show();
+  }, [now, reminder, workoutHistory, tier]);
+  useEffect(() => {
+    const vis = () => { if (document.visibilityState === "visible") setNow(new Date()); };
+    document.addEventListener("visibilitychange", vis);
+    return () => document.removeEventListener("visibilitychange", vis);
+  }, []);
+  const toggleReminder = () => {
+    if (reminder.on) { setReminder(r => ({ ...r, on: false })); return; }
+    if (typeof Notification === "undefined") { alert("Notifications are not supported here. On iPhone, add the app to the Home Screen first."); return; }
+    Notification.requestPermission().then(p => { if (p === "granted") setReminder(r => ({ ...r, on: true, fired: "" })); else alert("Notifications are blocked. Allow them in your phone settings for this app."); });
+  };
 
   statusRef.current = syncStatus;
   useEffect(() => {
@@ -2449,6 +2479,15 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
             React.createElement("span", null, ss.length + " session" + (ss.length > 1 ? "s" : "") + " · best " + hi + " kg"),
             React.createElement("span", { style: { color: gain > 0 ? "var(--full)" : "var(--smoke)", fontWeight: 700 } }, ss.length > 1 ? (gain > 0 ? "+" : "") + gain + " kg since " + ss[0].date : ss[0].date)));
       })(),
+      // REMINDER (notification locale)
+      React.createElement("div", { style: { background: "linear-gradient(180deg,#231F1B,#16110D)", border: "1px solid var(--line)", borderRadius: 14, padding: "14px 16px", marginTop: 14 } },
+        React.createElement("div", { style: { fontSize: 10, fontWeight: 700, color: "var(--dim)", letterSpacing: "0.14em", marginBottom: 4 } }, "REMINDER"),
+        React.createElement("div", { style: { fontSize: 11, color: "var(--smoke)", marginBottom: 10 } }, "A notification at this time on training and fight days, if the session is not done. It shows while the app is open or in the background, not when fully closed."),
+        React.createElement("div", { style: { display: "flex", gap: 8, alignItems: "center" } },
+          React.createElement("button", { onClick: toggleReminder, "aria-pressed": reminder.on, style: { flex: 1, padding: "10px 6px", borderRadius: 10, border: "1px solid " + (reminder.on ? "var(--ember)" : "var(--line)"), background: reminder.on ? "var(--ember-soft)" : "transparent", color: "var(--bone)", fontSize: 12, fontWeight: 700, cursor: "pointer" } }, reminder.on ? "Reminder ON" : "Reminder OFF"),
+          React.createElement("input", { type: "time", value: reminder.time, onChange: e => setReminder(r => ({ ...r, time: e.target.value || "18:00", fired: "" })), "aria-label": "Reminder time", style: { padding: "9px 8px", borderRadius: 10, border: "1px solid var(--line)", background: "var(--coal)", color: "var(--bone)", fontSize: 13, fontFamily: "var(--disp)" } })
+        )
+      ),
       // BACKUP (export / import)
       React.createElement("div", { style: { background: "linear-gradient(180deg,#231F1B,#16110D)", border: "1px solid var(--line)", borderRadius: 14, padding: "14px 16px", marginTop: 14 } },
         React.createElement("div", { style: { fontSize: 10, fontWeight: 700, color: "var(--dim)", letterSpacing: "0.14em", marginBottom: 4 } }, "BACKUP"),

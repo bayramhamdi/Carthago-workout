@@ -22,6 +22,7 @@ const { APP, wait, readApp } = require("./_harness");
     const txt = w.document.getElementById("root").textContent;
     chk(txt.includes("Export backup") && txt.includes("Import backup"), "carte BACKUP absente du Calendar");
     chk(!!w.document.querySelector('input[type="file"]'), "input fichier absent");
+    chk(txt.includes("REMINDER") && txt.includes("Reminder OFF"), "carte REMINDER absente du Calendar");
     chk(txt.includes("No backup yet"), "statut de sauvegarde absent (jamais exporte)");
     chk(!!w.document.querySelector('span[title="Backup due"]'), "pastille de rappel absente");
   }
