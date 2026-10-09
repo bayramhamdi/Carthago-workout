@@ -2,7 +2,7 @@
 const fs = require("fs");
 const { APP } = require("./_harness");
 const src = fs.readFileSync(APP, "utf8");
-const save = (src.match(/carthagoFirebase\.save\(\{([^}]*)\}\)/) || [])[1] || "";
+const save = (src.match(/const payload = [{]([^}]*)[}]/) || [])[1] || "";
 const KEYS = ["week","completedEx","logData","condition","cycleWeek","injuries","customParts","workoutHistory","sessionTimer","autoMode","tier","testDraft","testHistory","queueMode","cyclePos","qAnchorDate","qAnchorPos","cpMode","xSets","skipDays","swapMap"];
 const fails = [];
 for (const k of KEYS) {

@@ -95,7 +95,7 @@ button:active{transform:scale(.93);box-shadow:0 0 16px 3px rgba(255,90,31,.55)}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
 // ⚠️ PASTE YOUR FIREBASE CONFIG HERE (from step 4 of setup guide)
 const firebaseConfig = {
@@ -168,14 +168,22 @@ window.carthagoFirebase = {
     if (!this.ready) return;
     await signOut(this.auth);
   },
-  async save(data) {
-    if (!this.ready || !this.user) return false;
+  // Sauvegarde transactionnelle : si le cloud a change depuis notre derniere synchro (autre appareil),
+  // fusion a 3 voies (base = dernier etat synchronise) au lieu d'ecraser. Retourne { ok, merged, doc, updatedAt }.
+  async save(data, base) {
+    if (!this.ready || !this.user) return { ok: false };
     try {
-      await setDoc(doc(this.db, "users", this.user.uid), { ...data, updatedAt: new Date().toISOString() });
-      return true;
+      const ref = doc(this.db, "users", this.user.uid);
+      return await runTransaction(this.db, async (tx) => {
+        const snap = await tx.get(ref);
+        const prep = window.carthagoPrepareSave(snap.exists() ? snap.data() : null, base, data);
+        const updatedAt = new Date().toISOString();
+        tx.set(ref, { ...prep.out, updatedAt });
+        return { ok: true, merged: prep.merged, doc: prep.out, updatedAt };
+      });
     } catch (err) {
       console.error("Save error:", err);
-      return false;
+      return { ok: false };
     }
   },
   // Retourne le document, null si le compte n'a pas encore de document, undefined si le chargement a ECHOUE
@@ -5554,6 +5562,61 @@ function zoneLabel(z) {
 const recoveryBlocks = ["PREP","MOBILITY","CORE ACTIVATION","HIP MOBILITY","HEALTH","ANKLE","STRETCH","T-SPINE","SHOULDER PREP","SHOULDER HEALTH"];
 function isRecoveryBlock(blockName) { return recoveryBlocks.some(rb => blockName.toUpperCase().includes(rb)); }
 
+// ─── Fusion de sync (module level, testable) ───
+const CARTHAGO_SYNC_KEYS = ["week", "completedEx", "logData", "condition", "cycleWeek", "injuries", "customParts", "workoutHistory", "sessionTimer", "autoMode", "tier", "testDraft", "testHistory", "queueMode", "cyclePos", "qAnchorDate", "qAnchorPos", "cpMode", "xSets", "skipDays", "swapMap"];
+const carthagoEq = (x, y) => JSON.stringify(x) === JSON.stringify(y);
+const carthagoIsObj = (v) => !!v && typeof v === "object" && !Array.isArray(v);
+function carthagoMergeMap(b, r, l, prefer) {
+  const out = {};
+  const keys = new Set([...Object.keys(b || {}), ...Object.keys(r || {}), ...Object.keys(l || {})]);
+  keys.forEach(k => {
+    const bv = b ? b[k] : undefined, rv = r ? r[k] : undefined, lv = l ? l[k] : undefined;
+    let v;
+    if (carthagoEq(lv, rv)) v = lv; else if (carthagoEq(lv, bv)) v = rv; else if (carthagoEq(rv, bv)) v = lv;
+    else v = prefer ? prefer(rv, lv) : (lv === undefined ? rv : lv);
+    if (v !== undefined) out[k] = v;
+  });
+  return out;
+}
+// Fusion a 3 voies : base = dernier etat synchronise, remote = cloud actuel, local = cet appareil.
+// Une valeur n'est ecrasee que si ELLE a change des deux cotes ; dans ce cas le local gagne (sauf histoire : seance terminee gagne).
+function carthagoMergeDocs(base, remote, local, todayKey) {
+  const b = base || {}, r = remote || {}, l = local || {};
+  const out = {};
+  CARTHAGO_SYNC_KEYS.forEach(k => {
+    const bv = b[k], rv = r[k], lv = l[k];
+    if (rv === undefined) { if (lv !== undefined) out[k] = lv; return; }
+    if (lv === undefined) { out[k] = rv; return; }
+    if (carthagoEq(lv, rv)) { out[k] = lv; return; }
+    if (carthagoEq(lv, bv)) { out[k] = rv; return; }
+    if (carthagoEq(rv, bv)) { out[k] = lv; return; }
+    if (k === "testHistory" && Array.isArray(rv) && Array.isArray(lv)) {
+      const byDate = {}; rv.concat(lv).forEach(t => { byDate[t && t.date ? t.date : JSON.stringify(t)] = t; });
+      out[k] = Object.keys(byDate).sort().map(d => byDate[d]); return;
+    }
+    if (carthagoIsObj(rv) && carthagoIsObj(lv)) {
+      out[k] = carthagoMergeMap(bv, rv, lv, k === "workoutHistory" ? (x, y) => (y === undefined ? x : ((y && y.completed) || !(x && x.completed) ? y : x)) : null); return;
+    }
+    out[k] = lv;
+  });
+  Object.keys(r).forEach(k => { if (!(k in out) && k !== "updatedAt") out[k] = r[k]; });
+  // Garde de completion : une seance du jour terminee ne ressuscite pas ses coches / logs
+  const t = out.workoutHistory && out.workoutHistory[todayKey];
+  if (t && t.completed && t.week && t.day) {
+    const prefix = t.week + "-" + t.day + "-";
+    ["completedEx", "logData"].forEach(k => { if (carthagoIsObj(out[k])) { const f = { ...out[k] }; Object.keys(f).forEach(x => { if (x.indexOf(prefix) === 0) delete f[x]; }); out[k] = f; } });
+  }
+  return out;
+}
+function carthagoTodayKey() { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+// Decision de sauvegarde (appelee dans la transaction) : pas de changement cloud depuis la base = ecriture directe.
+function carthagoPrepareSave(remoteDoc, baseDoc, local) {
+  if (!remoteDoc) return { out: local, merged: false };
+  const baseStamp = baseDoc ? baseDoc.updatedAt : null;
+  if (remoteDoc.updatedAt && remoteDoc.updatedAt === baseStamp) return { out: local, merged: false };
+  return { out: carthagoMergeDocs(baseDoc, remoteDoc, local, carthagoTodayKey()), merged: true };
+}
+
 // ─── Backup helpers (module level, testables) ───
 const CARTHAGO_PFX = "carthago_";
 const CARTHAGO_LEGACY_KEYS = ["week", "completedEx", "logData", "condition", "cycleWeek", "injuries", "workoutHistory", "sessionTimer", "autoMode", "tier", "testDraft", "testHistory", "queueMode", "cyclePos", "qAnchorDate", "qAnchorPos", "cpMode", "xSets", "skipDays", "swapMap", "lastDone", "condAutoKey"];
@@ -5785,6 +5848,7 @@ function Carthago() {
   const [monthOffset, setMonthOffset] = useState(0);
   const [showVacations, setShowVacations] = useState(true);
   const [cloudLoaded, setCloudLoaded] = useState(false);
+  const [syncTick, setSyncTick] = useState(0);
   const [fbUser, setFbUser] = useState(null);
   const [fbReady, setFbReady] = useState(false);
   // OWNER-ONLY: calendar/nutrition/schedule visible only to this account. Change email if needed.
@@ -5828,6 +5892,46 @@ function Carthago() {
   useEffect(() => saveLS("workoutHistory", workoutHistory), [workoutHistory]);
 
   // Firebase auth state listener
+  const syncBase = React.useRef(null);
+  const statusRef = React.useRef("offline");
+  // Applique un document cloud (chargement ou resultat de fusion) a l'etat React
+  const applyCloudDoc = (data) => {
+    if (data.week) setWeek(data.week);
+    if (data.condition) setCondition(data.condition);
+    if (data.cycleWeek) setCycleWeek(data.cycleWeek);
+    if (data.injuries) setInjuries(data.injuries);
+    if (data.workoutHistory) setWorkoutHistory(data.workoutHistory);
+    if (data.sessionTimer) setSessionTimer(data.sessionTimer);
+    if (typeof data.autoMode === "boolean") setAutoMode(data.autoMode);
+    if (data.testDraft) setTestDraft(data.testDraft);
+    if (data.testHistory) setTestHistory(data.testHistory);
+    if (data.qAnchorDate) setQAnchorDate(data.qAnchorDate); if (data.qAnchorPos) setQAnchorPos(data.qAnchorPos); if (data.cpMode === "v2") { setCpMode("v2"); if (data.cyclePos) { setCyclePos(data.cyclePos); setQueueHome(data.cyclePos); } }
+    if (typeof data.queueMode === "boolean") setQueueMode(data.queueMode);
+    if (data.customParts) setCustomParts(data.customParts); if (data.xSets) setXSets(data.xSets); if (data.skipDays) setSkipDays(data.skipDays); if (data.swapMap) setSwapMap(data.swapMap);
+    if (data.tier) setTier(data.tier);
+
+    // Smart load: if today's session is completed, don't restore old checkmarks/logData
+    // (they were cleared on Mark Complete — respect that)
+    const todayK = (() => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); })();
+    const todayEntry = data.workoutHistory && data.workoutHistory[todayK];
+    if (todayEntry && todayEntry.completed && todayEntry.week && todayEntry.day) {
+      const prefix = todayEntry.week + "-" + todayEntry.day + "-";
+      if (data.completedEx) {
+        const filtered = { ...data.completedEx };
+        Object.keys(filtered).forEach(k => { if (k.startsWith(prefix)) delete filtered[k]; });
+        setCompletedEx(filtered);
+      }
+      if (data.logData) {
+        const filtered = { ...data.logData };
+        Object.keys(filtered).forEach(k => { if (k.startsWith(prefix)) delete filtered[k]; });
+        setLogData(filtered);
+      }
+    } else {
+      if (data.completedEx) setCompletedEx(data.completedEx);
+      if (data.logData) setLogData(data.logData);
+    }
+  };
+
   useEffect(() => {
     const checkReady = setInterval(() => {
       if (window.carthagoFirebase && window.carthagoFirebase.ready) {
@@ -5840,42 +5944,8 @@ function Carthago() {
             setCloudLoaded(false);
             window.carthagoFirebase.load().then(data => {
               if (data === undefined) { setSyncStatus("error"); return; }
-              if (data) {
-                if (data.week) setWeek(data.week);
-                if (data.condition) setCondition(data.condition);
-                if (data.cycleWeek) setCycleWeek(data.cycleWeek);
-                if (data.injuries) setInjuries(data.injuries);
-                if (data.workoutHistory) setWorkoutHistory(data.workoutHistory);
-                if (data.sessionTimer) setSessionTimer(data.sessionTimer);
-                if (typeof data.autoMode === "boolean") setAutoMode(data.autoMode);
-                if (data.testDraft) setTestDraft(data.testDraft);
-                if (data.testHistory) setTestHistory(data.testHistory);
-                if (data.qAnchorDate) setQAnchorDate(data.qAnchorDate); if (data.qAnchorPos) setQAnchorPos(data.qAnchorPos); if (data.cpMode === "v2") { setCpMode("v2"); if (data.cyclePos) { setCyclePos(data.cyclePos); setQueueHome(data.cyclePos); } }
-                if (typeof data.queueMode === "boolean") setQueueMode(data.queueMode);
-                if (data.customParts) setCustomParts(data.customParts); if (data.xSets) setXSets(data.xSets); if (data.skipDays) setSkipDays(data.skipDays); if (data.swapMap) setSwapMap(data.swapMap);
-                if (data.tier) setTier(data.tier);
-
-                // Smart load: if today's session is completed, don't restore old checkmarks/logData
-                // (they were cleared on Mark Complete — respect that)
-                const todayK = (() => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); })();
-                const todayEntry = data.workoutHistory && data.workoutHistory[todayK];
-                if (todayEntry && todayEntry.completed && todayEntry.week && todayEntry.day) {
-                  const prefix = todayEntry.week + "-" + todayEntry.day + "-";
-                  if (data.completedEx) {
-                    const filtered = { ...data.completedEx };
-                    Object.keys(filtered).forEach(k => { if (k.startsWith(prefix)) delete filtered[k]; });
-                    setCompletedEx(filtered);
-                  }
-                  if (data.logData) {
-                    const filtered = { ...data.logData };
-                    Object.keys(filtered).forEach(k => { if (k.startsWith(prefix)) delete filtered[k]; });
-                    setLogData(filtered);
-                  }
-                } else {
-                  if (data.completedEx) setCompletedEx(data.completedEx);
-                  if (data.logData) setLogData(data.logData);
-                }
-              }
+              syncBase.current = data || null;
+              if (data) applyCloudDoc(data);
               setCloudLoaded(true);
               setSyncStatus("synced");
             }).catch(() => setSyncStatus("error"));
@@ -5892,17 +5962,32 @@ function Carthago() {
     return () => clearInterval(checkReady);
   }, []);
 
+  statusRef.current = syncStatus;
+  useEffect(() => {
+    const retry = () => { if (statusRef.current === "error") setSyncTick(t => t + 1); };
+    const vis = () => { if (document.visibilityState === "visible") retry(); };
+    window.addEventListener("online", retry);
+    document.addEventListener("visibilitychange", vis);
+    return () => { window.removeEventListener("online", retry); document.removeEventListener("visibilitychange", vis); };
+  }, []);
+
   // Auto-sync to Firebase when data changes (debounced). Garde : jamais avant la fin du chargement cloud.
   useEffect(() => {
     if (!fbUser || !cloudLoaded) return;
     const timer = setTimeout(() => {
       setSyncStatus("saving");
-      window.carthagoFirebase.save({ week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap }).then(ok => {
-        setSyncStatus(ok ? "synced" : "error");
-      });
+      const payload = { week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap };
+      window.carthagoFirebase.save(payload, syncBase.current).then(res => {
+        const r = res === true ? { ok: true } : (res || { ok: false });
+        if (r.ok) {
+          syncBase.current = { ...(r.doc || payload), updatedAt: r.updatedAt || (syncBase.current && syncBase.current.updatedAt) };
+          if (r.merged && r.doc) applyCloudDoc(r.doc);
+        }
+        setSyncStatus(r.ok ? "synced" : "error");
+      }).catch(() => setSyncStatus("error"));
     }, 1500);
     return () => clearTimeout(timer);
-  }, [fbUser, week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap, cloudLoaded]);
+  }, [fbUser, week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap, cloudLoaded, syncTick]);
 
   const [shipBurned, setShipBurned] = useState(false);
   const [igniting, setIgniting] = useState(!(typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches));
