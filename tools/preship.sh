@@ -18,7 +18,9 @@ for s in re.findall(r'<script[^>]*>(.*?)</script>', c, re.DOTALL):
 else:
     raise SystemExit('Bloc script de l app introuvable')
 PY
-node --check "$TMP" && echo "OK 1/2 SYNTAXE"
+node --check "$TMP" || exit 1
+for J in "$(dirname "$APP")"/*.js; do node --check "$J" || { echo "ECHEC syntaxe : $J"; exit 1; }; done
+echo "OK 1/2 SYNTAXE"
 for V in "$DIR/carthago-validator.py"; do
   if [ -f "$V" ]; then $PY "$V" "$APP" $2; exit $?; fi
 done

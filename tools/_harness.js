@@ -3,8 +3,15 @@ const fs = require("fs");
 const path = require("path");
 const { JSDOM, VirtualConsole } = require("jsdom");
 
+// Lit app/index.html et inline les scripts externes locaux (<script src="/x.js">) pour jsdom
+function readApp(file) {
+  file = file || path.join(__dirname, "..", "app", "index.html");
+  const dir = path.dirname(file);
+  return fs.readFileSync(file, "utf8").replace(/<script src="[/]([^"]+[.]js)"><[/]script>/g, (m, f) => "<script>" + fs.readFileSync(path.join(dir, f), "utf8") + "</script>");
+}
+
 function mount(file, fixedNow) {
-  const html = fs.readFileSync(file, "utf8");
+  const html = readApp(file);
   const errors = [];
   const vc = new VirtualConsole();
   vc.on("jsdomError", (e) => errors.push("jsdomError: " + (e.detail && e.detail.message || e.message)));
@@ -31,4 +38,4 @@ function mount(file, fixedNow) {
   return { dom, errors };
 }
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-module.exports = { mount, wait, APP: path.join(__dirname, "..", "app", "index.html") };
+module.exports = { mount, readApp, wait, APP: path.join(__dirname, "..", "app", "index.html") };

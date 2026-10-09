@@ -1,7 +1,7 @@
 // CARTHAGO : verifie que les cles attendues sont dans le payload Firestore ET relues au chargement.
 const fs = require("fs");
-const { APP } = require("./_harness");
-const src = fs.readFileSync(APP, "utf8");
+const { APP, readApp } = require("./_harness");
+const src = readApp(APP);
 const save = (src.match(/const payload = [{]([^}]*)[}]/) || [])[1] || "";
 const KEYS = ["week","completedEx","logData","condition","cycleWeek","injuries","customParts","workoutHistory","sessionTimer","autoMode","tier","testDraft","testHistory","queueMode","cyclePos","qAnchorDate","qAnchorPos","cpMode","xSets","skipDays","swapMap"];
 const fails = [];

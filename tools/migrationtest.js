@@ -1,9 +1,9 @@
 // CARTHAGO : test du shim de migration localStorage (ancien prefixe vers carthago_).
 const fs = require("fs");
 const { JSDOM, VirtualConsole } = require("jsdom");
-const { APP, wait } = require("./_harness");
+const { APP, wait, readApp } = require("./_harness");
 (async () => {
-  const dom = new JSDOM(fs.readFileSync(APP, "utf8"), {
+  const dom = new JSDOM(readApp(APP), {
     url: "http://localhost/", runScripts: "dangerously", pretendToBeVisual: true, virtualConsole: new VirtualConsole(),
     beforeParse(w) {
       w.matchMedia = () => ({ matches: false, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {} });

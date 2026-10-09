@@ -9,7 +9,7 @@ const EXT_HOSTS = [
 ];
 self.addEventListener('install', e => {
   self.skipWaiting();
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/', '/manifest.json', '/icon-192.png', '/icon-512.png', '/favicon.svg', '/apple-touch-icon.png'])).catch(() => {}));
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/', '/manifest.json', '/program.js', '/icon-192.png', '/icon-512.png', '/favicon.svg', '/apple-touch-icon.png'])).catch(() => {}));
 });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE && k !== EXT).map(k => caches.delete(k)))).then(() => self.clients.claim()));

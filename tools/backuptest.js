@@ -1,9 +1,9 @@
 // CARTHAGO : test export / import du backup (helpers carthagoBuildBackup / carthagoApplyBackup).
 const fs = require("fs");
 const { JSDOM, VirtualConsole } = require("jsdom");
-const { APP, wait } = require("./_harness");
+const { APP, wait, readApp } = require("./_harness");
 (async () => {
-  const dom = new JSDOM(fs.readFileSync(APP, "utf8"), {
+  const dom = new JSDOM(readApp(APP), {
     url: "http://localhost/", runScripts: "dangerously", pretendToBeVisual: true, virtualConsole: new VirtualConsole(),
     beforeParse(w) { w.carthagoFirebase = { ready: true, user: null, load: () => Promise.resolve(null), save: () => Promise.resolve(true), signIn() {}, signOut() {} }; w.matchMedia = () => ({ matches: false, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {} }); },
   });

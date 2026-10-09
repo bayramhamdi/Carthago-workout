@@ -1,9 +1,9 @@
 // CARTHAGO : fusion de sync a 3 voies (carthagoMergeDocs / carthagoPrepareSave).
 const fs = require("fs");
 const { JSDOM, VirtualConsole } = require("jsdom");
-const { APP, wait } = require("./_harness");
+const { APP, wait, readApp } = require("./_harness");
 (async () => {
-  const dom = new JSDOM(fs.readFileSync(APP, "utf8"), { url: "http://localhost/", runScripts: "dangerously", pretendToBeVisual: true, virtualConsole: new VirtualConsole(),
+  const dom = new JSDOM(readApp(APP), { url: "http://localhost/", runScripts: "dangerously", pretendToBeVisual: true, virtualConsole: new VirtualConsole(),
     beforeParse(w) { w.matchMedia = () => ({ matches: false, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {} }); } });
   await wait(800);
   const w = dom.window, M = (b, r, l, t) => JSON.parse(JSON.stringify(w.carthagoMergeDocs(b, r, l, t || "2026-10-10")));

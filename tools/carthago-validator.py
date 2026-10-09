@@ -3,12 +3,17 @@
 Runs every check before deploy. One command, full report."""
 import re, sys, json, urllib.request, urllib.error
 
+import os
 APP = sys.argv[1] if len(sys.argv) > 1 else "/home/claude/burn-new.html"
 REF = "/mnt/project/BURN-THE-SHIPS-VIDEO-REFERENCE.md"
 CHECK_LINKS = "--links" in sys.argv
 
-with open(APP) as f:
+with open(APP, encoding="utf-8") as f:
     content = f.read()
+_prog = os.path.join(os.path.dirname(os.path.abspath(APP)), "program.js")
+if os.path.isfile(_prog):
+    with open(_prog, encoding="utf-8") as f:
+        content += "\n" + f.read()
 
 issues = {"critical": [], "warning": [], "info": []}
 

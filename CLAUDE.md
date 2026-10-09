@@ -11,7 +11,7 @@ Le code dans `app/` est la source de vérité. Les docs dans `archive/` datent d
 - Pour une vraie feature : explique ce qu'elle fait, esquisse l'UX, attends le feu vert, PUIS code. Pour un fix clair : fais-le.
 
 ## Stack
-- `app/` = déploiement Netlify (dossier) : `index.html` + `manifest.json` + `sw.js` + 2 icônes. PWA installable sur téléphone (depuis v9.0).
+- `app/` = déploiement Netlify (dossier) : `index.html` (UI React + sync) + `program.js` (données du programme : séances, exercices, rotations, planning, nutrition) + `manifest.json` + `sw.js` + icônes. `program.js` est un script classique chargé avant celui de l'app (portée globale partagée). Les gates et le validator lisent les deux fichiers. PWA installable sur téléphone (depuis v9.0).
 - React 18 inline, SANS JSX (`React.createElement` partout). Pas de bundler, pas de build step.
 - Firebase 10.x (Auth Google + Firestore `users/{uid}`), région eur3. localStorage = stockage primaire, Firebase = sync.
 - Design system v8 : police Sora ; tokens `--ink`, `--coal`, `--ash`, `--full` (#3ECF8E ember), `--smoke`, `--dim`.

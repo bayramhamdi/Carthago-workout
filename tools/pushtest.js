@@ -5,11 +5,11 @@
 // 4. Load en echec (undefined) : aucun save, le cloud n'est jamais ecrase.
 const fs = require("fs");
 const { JSDOM, VirtualConsole } = require("jsdom");
-const { APP, wait } = require("./_harness");
+const { APP, wait, readApp } = require("./_harness");
 const LOCAL = { xSets: { "Bench Press": 2 }, skipDays: { "2026-10-07": true }, swapMap: { a: "b" } };
 async function run({ local, cloud, delay, waitMs = 4500, saveImpl, afterLogin, snap }) {
   const saved = [], calls = [];
-  const dom = new JSDOM(fs.readFileSync(APP, "utf8"), {
+  const dom = new JSDOM(readApp(APP), {
     url: "http://localhost/", runScripts: "dangerously", pretendToBeVisual: true, virtualConsole: new VirtualConsole(),
     beforeParse(w) {
       if (local) Object.keys(LOCAL).forEach(k => w.localStorage.setItem("carthago_" + k, JSON.stringify(LOCAL[k])));
