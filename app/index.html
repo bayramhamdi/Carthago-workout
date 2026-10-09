@@ -176,14 +176,16 @@ window.carthagoFirebase = {
       return false;
     }
   },
+  // Retourne le document, null si le compte n'a pas encore de document, undefined si le chargement a ECHOUE
+  // (undefined bloque la sauvegarde : jamais d'ecrasement du cloud par un etat local vide).
   async load() {
-    if (!this.ready || !this.user) return null;
+    if (!this.ready || !this.user) return undefined;
     try {
       const snap = await getDoc(doc(this.db, "users", this.user.uid));
       return snap.exists() ? snap.data() : null;
     } catch (err) {
       console.error("Load error:", err);
-      return null;
+      return undefined;
     }
   }
 };
@@ -5780,6 +5782,7 @@ function Carthago() {
   const [workoutHistory, setWorkoutHistory] = useState(() => loadLS("workoutHistory", {}));
   const [monthOffset, setMonthOffset] = useState(0);
   const [showVacations, setShowVacations] = useState(true);
+  const [cloudLoaded, setCloudLoaded] = useState(false);
   const [fbUser, setFbUser] = useState(null);
   const [fbReady, setFbReady] = useState(false);
   // OWNER-ONLY: calendar/nutrition/schedule visible only to this account. Change email if needed.
@@ -5832,7 +5835,9 @@ function Carthago() {
           if (user) {
             // User signed in — load their data
             setSyncStatus("loading");
+            setCloudLoaded(false);
             window.carthagoFirebase.load().then(data => {
+              if (data === undefined) { setSyncStatus("error"); return; }
               if (data) {
                 if (data.week) setWeek(data.week);
                 if (data.condition) setCondition(data.condition);
@@ -5869,9 +5874,11 @@ function Carthago() {
                   if (data.logData) setLogData(data.logData);
                 }
               }
+              setCloudLoaded(true);
               setSyncStatus("synced");
-            });
+            }).catch(() => setSyncStatus("error"));
           } else {
+            setCloudLoaded(false);
             setSyncStatus("offline");
           }
         };
@@ -5883,9 +5890,9 @@ function Carthago() {
     return () => clearInterval(checkReady);
   }, []);
 
-  // Auto-sync to Firebase when data changes (debounced)
+  // Auto-sync to Firebase when data changes (debounced). Garde : jamais avant la fin du chargement cloud.
   useEffect(() => {
-    if (!fbUser) return;
+    if (!fbUser || !cloudLoaded) return;
     const timer = setTimeout(() => {
       setSyncStatus("saving");
       window.carthagoFirebase.save({ week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap }).then(ok => {
@@ -5893,7 +5900,7 @@ function Carthago() {
       });
     }, 1500);
     return () => clearTimeout(timer);
-  }, [fbUser, week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap]);
+  }, [fbUser, week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap, cloudLoaded]);
 
   const [shipBurned, setShipBurned] = useState(false);
   const [igniting, setIgniting] = useState(!(typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches));
