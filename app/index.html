@@ -667,6 +667,35 @@ function carthagoSuggestNext(sessions, target) {
   return { weight: up ? last.max + (last.max >= 100 ? 5 : 2.5) : last.max, reason: up ? "up" : "hold", last: last.max };
 }
 
+// ─── Volume de seance (module level, testable) ───
+// Les reps affichees par defaut (ex.dr) ne sont stockees que si Bayram les tape : sans repli, volume = 0 des qu'on ne logge que les kg.
+let __drMap = null;
+function carthagoDefaultReps(name) {
+  if (!__drMap) {
+    __drMap = {};
+    const walk = (o, d) => {
+      if (!o || typeof o !== "object" || d > 8) return;
+      if (typeof o.name === "string" && typeof o.dr === "number" && String(o.track || "").indexOf("Reps") === 0 && !(o.name in __drMap)) __drMap[o.name] = o.dr;
+      (Array.isArray(o) ? o : Object.values(o)).forEach(v => walk(v, d + 1));
+    };
+    [workoutsA, workoutsB, tier6OverridesA, tier6OverridesB, recoveryWorkouts, customLib].forEach(x => walk(x, 0));
+  }
+  return __drMap[name] || 0;
+}
+function carthagoSessionVolume(logs) {
+  let v = 0, sets = 0;
+  Object.keys(logs || {}).forEach(k => {
+    const en = logs[k] || {}, m = /^[AB][-][A-Z]+[-][0-9]+[-](.+)$/.exec(k), dr = m ? carthagoDefaultReps(m[1]) : 0;
+    for (let i = 1; i <= 8; i++) {
+      const r0 = parseFloat(en["r" + i]), w = parseFloat(en["w" + i]);
+      const r = r0 > 0 ? r0 : (w > 0 ? dr : 0);
+      if (r > 0) sets++;
+      if (r > 0 && w > 0) v += r * w;
+    }
+  });
+  return { v: Math.round(v), sets };
+}
+
 // ─── Backup helpers (module level, testables) ───
 const CARTHAGO_PFX = "carthago_";
 const CARTHAGO_LEGACY_KEYS = ["week", "completedEx", "logData", "condition", "cycleWeek", "injuries", "workoutHistory", "sessionTimer", "autoMode", "tier", "testDraft", "testHistory", "queueMode", "cyclePos", "qAnchorDate", "qAnchorPos", "cpMode", "xSets", "skipDays", "swapMap", "lastDone", "condAutoKey"];
@@ -1223,7 +1252,7 @@ function Carthago() {
       saveLS("logData", clearedLog);
       setSwapMap(p => { const n = { ...p }; Object.keys(n).forEach(key => { if (key.startsWith(prefix)) delete n[key]; }); return n; });
       try {
-        const volOf = (logs) => { let v = 0, sets = 0; Object.values(logs || {}).forEach(en => { for (let i = 1; i <= 8; i++) { const r = parseFloat((en || {})["r" + i]); const w = parseFloat((en || {})["w" + i]); if (r > 0) sets++; if (r > 0 && w > 0) v += r * w; } }); return { v: Math.round(v), sets }; };
+        const volOf = (logs) => carthagoSessionVolume(logs);
         const now1 = volOf(sessionLogs);
         const exDone = Object.values(sessionChecks).filter(Boolean).length;
         const prs = [];
