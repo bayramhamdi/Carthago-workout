@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""BURN THE SHIPS — Pre-Ship Validator
+"""CARTHAGO : Pre-Ship Validator
 Runs every check before deploy. One command, full report."""
 import re, sys, json, urllib.request, urllib.error
 
@@ -83,11 +83,18 @@ for struct in ["workoutsA","workoutsB","tier6OverridesA","tier6OverridesB","reco
 
 # ── CHECK 3: Video IDs vs reference ──
 ref_vids = {}
-try:
-    with open(REF) as f: ref = f.read()
+import os
+_here = os.path.dirname(os.path.abspath(__file__))
+_cands = [os.environ.get("CARTHAGO_VIDEO_REF", ""), os.path.join(_here, "..", "archive", "VIDEO-REFERENCE.md"), REF]
+_ref_path = next((c for c in _cands if c and os.path.isfile(c)), None)
+if _ref_path is None:
+    issues["warning"].append("Fichier de references video ABSENT : check 3 (IDs video) NON effectue")
+else:
+    with open(_ref_path, encoding="utf-8") as f: ref = f.read()
     for m in re.finditer(r'\*\*([^*]+)\*\*:\s*[^\n]*?(?:v=|youtu\.be/|shorts/)([a-zA-Z0-9_-]{11})', ref):
         ref_vids[m.group(1).strip()] = m.group(2)
-except: pass
+    if not ref_vids:
+        issues["warning"].append("References video lues (" + os.path.basename(_ref_path) + ") mais 0 entree reconnue : check 3 (IDs video) inoperant")
 
 checked = set()
 for m in re.finditer(r'name:\s*"([^"]+)"[^}]*?vid:\s*"([^"]+)"', content, re.DOTALL):
@@ -166,7 +173,7 @@ for _struct in ["workoutsA","workoutsB","tier6OverridesA","tier6OverridesB","rec
 
 # ── REPORT ──
 print("="*60)
-print("BURN THE SHIPS — PRE-SHIP VALIDATOR")
+print("CARTHAGO : PRE-SHIP VALIDATOR")
 print("="*60)
 for level, color in [("critical","🔴"),("warning","🟡"),("info","🔵")]:
     items = issues[level]

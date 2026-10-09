@@ -19,7 +19,7 @@ else:
     raise SystemExit('Bloc script de l app introuvable')
 PY
 node --check "$TMP" && echo "OK 1/2 SYNTAXE"
-for V in "$DIR/carthago-validator.py" "$DIR/burn-the-ships-validator.py"; do
+for V in "$DIR/carthago-validator.py"; do
   if [ -f "$V" ]; then $PY "$V" "$APP" $2; exit 0; fi
 done
 echo "ATTENTION : validator absent dans tools/, etape 2/2 sautee"
