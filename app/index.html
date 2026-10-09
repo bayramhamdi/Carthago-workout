@@ -5845,7 +5845,7 @@ function Carthago() {
                 if (data.testHistory) setTestHistory(data.testHistory);
                 if (data.qAnchorDate) setQAnchorDate(data.qAnchorDate); if (data.qAnchorPos) setQAnchorPos(data.qAnchorPos); if (data.cpMode === "v2") { setCpMode("v2"); if (data.cyclePos) { setCyclePos(data.cyclePos); setQueueHome(data.cyclePos); } }
                 if (typeof data.queueMode === "boolean") setQueueMode(data.queueMode);
-                if (data.xSets) setXSets(data.xSets); if (data.skipDays) setSkipDays(data.skipDays); if (data.swapMap) setSwapMap(data.swapMap);
+                if (data.customParts) setCustomParts(data.customParts); if (data.xSets) setXSets(data.xSets); if (data.skipDays) setSkipDays(data.skipDays); if (data.swapMap) setSwapMap(data.swapMap);
                 if (data.tier) setTier(data.tier);
 
                 // Smart load: if today's session is completed, don't restore old checkmarks/logData
