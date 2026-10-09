@@ -83,6 +83,7 @@ for struct in ["workoutsA","workoutsB","tier6OverridesA","tier6OverridesB","reco
 
 # ── CHECK 3: Video IDs vs reference ──
 ref_vids = {}
+dead_vids = set()
 import os
 _here = os.path.dirname(os.path.abspath(__file__))
 _cands = [os.environ.get("CARTHAGO_VIDEO_REF", ""), os.path.join(_here, "..", "archive", "VIDEO-REFERENCE.md"), REF]
@@ -91,9 +92,24 @@ if _ref_path is None:
     issues["warning"].append("Fichier de references video ABSENT : check 3 (IDs video) NON effectue")
 else:
     with open(_ref_path, encoding="utf-8") as f: ref = f.read()
-    for m in re.finditer(r'\*\*([^*]+)\*\*:\s*[^\n]*?(?:v=|youtu\.be/|shorts/)([a-zA-Z0-9_-]{11})', ref):
+    _id = r'`([A-Za-z0-9_-]{11})`'
+    # Tableaux "| Exercice | `mort` | `bon` |" (videos mortes) et "| Exercice | `vid` | semaine |"
+    for line in ref.splitlines():
+        cells = [c.strip() for c in line.strip().strip("|").split("|")] if line.strip().startswith("|") else []
+        if len(cells) < 2 or not cells[0] or set(cells[0]) <= set("-: "): continue
+        ids = [m.group(1) for c in cells[1:] for m in re.finditer(_id, c)]
+        if not ids: continue
+        if len(cells) >= 3 and re.fullmatch(_id, cells[1]) and re.fullmatch(_id, cells[2]):
+            dead_vids.add(ids[0]); ref_vids[cells[0]] = ids[1]          # mort -> bon
+        elif re.fullmatch(_id, cells[1]):
+            ref_vids[cells[0]] = ids[0]
+    # Listes "- Exercice : `vid`" et "- Ancien -> Nouveau : `vid`"
+    for m in re.finditer(r'^- (?:[^\n]*?-> )?([^:\n`]+?) : ' + _id, ref, re.M):
         ref_vids[m.group(1).strip()] = m.group(2)
-    if not ref_vids:
+    # Videos reservees : "`id` appartient UNIQUEMENT a X"
+    for m in re.finditer(_id + r' appartient UNIQUEMENT [^A-Za-z]*([^.\n]+)', ref):
+        ref_vids.setdefault(m.group(2).strip(), m.group(1))
+    if not ref_vids and not dead_vids:
         issues["warning"].append("References video lues (" + os.path.basename(_ref_path) + ") mais 0 entree reconnue : check 3 (IDs video) inoperant")
 
 checked = set()
@@ -103,6 +119,11 @@ for m in re.finditer(r'name:\s*"([^"]+)"[^}]*?vid:\s*"([^"]+)"', content, re.DOT
     checked.add(name)
     if name in ref_vids and ref_vids[name] != vid:
         issues["warning"].append(f"Vid mismatch: {name} app={vid} ref={ref_vids[name]}")
+
+for _d in sorted(dead_vids):
+    if re.search(r'vid:\s*"' + re.escape(_d) + '"', content):
+        issues["critical"].append(f"Video morte reutilisee: {_d}")
+print(f"[check 3] {len(ref_vids)} IDs de reference, {len(dead_vids)} videos mortes", file=sys.stderr)
 
 # ── CHECK 4: Broken vid format ──
 for m in re.finditer(r'vid:\s*"([^"]*)"', content):
