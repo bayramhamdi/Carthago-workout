@@ -5550,6 +5550,35 @@ function zoneLabel(z) {
 const recoveryBlocks = ["PREP","MOBILITY","CORE ACTIVATION","HIP MOBILITY","HEALTH","ANKLE","STRETCH","T-SPINE","SHOULDER PREP","SHOULDER HEALTH"];
 function isRecoveryBlock(blockName) { return recoveryBlocks.some(rb => blockName.toUpperCase().includes(rb)); }
 
+// ─── Backup helpers (module level, testables) ───
+const CARTHAGO_PFX = "carthago_";
+const CARTHAGO_LEGACY_KEYS = ["week", "completedEx", "logData", "condition", "cycleWeek", "injuries", "workoutHistory", "sessionTimer", "autoMode", "tier", "testDraft", "testHistory", "queueMode", "cyclePos", "qAnchorDate", "qAnchorPos", "cpMode", "xSets", "skipDays", "swapMap", "lastDone", "condAutoKey"];
+function carthagoBuildBackup() {
+  const keys = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.indexOf(CARTHAGO_PFX) === 0) { try { keys[k.slice(CARTHAGO_PFX.length)] = JSON.parse(localStorage.getItem(k)); } catch (e) {} }
+  }
+  return { app: "carthago", format: 2, version: "9.0", exportedAt: new Date().toISOString(), keys };
+}
+// Normalise un fichier (format 2, ou ancien export a champs a plat) en { nom: valeur }
+function carthagoBackupItems(data) {
+  if (!data || typeof data !== "object") return {};
+  const out = {};
+  const src = (data.format === 2 && data.keys && typeof data.keys === "object") ? data.keys : data;
+  Object.keys(src).forEach(k => {
+    const name = k.indexOf(CARTHAGO_PFX) === 0 ? k.slice(CARTHAGO_PFX.length) : (k.indexOf("bts_") === 0 ? k.slice(4) : k); // legacy-bts : anciens exports
+    if (data.format === 2 || CARTHAGO_LEGACY_KEYS.indexOf(name) !== -1) { if (/^[A-Za-z0-9_]+$/.test(name) && name !== "tBox" && name !== "supersetOn") out[name] = src[k]; }
+  });
+  return out;
+}
+function carthagoCountBackup(data) { return Object.keys(carthagoBackupItems(data)).length; }
+function carthagoApplyBackup(data) {
+  const items = carthagoBackupItems(data);
+  Object.keys(items).forEach(name => { localStorage.setItem(CARTHAGO_PFX + name, JSON.stringify(items[name])); });
+  return Object.keys(items).length;
+}
+
 function Carthago() {
   // Load from localStorage helper
   const loadLS = (key, def) => { try { let v = localStorage.getItem("carthago_" + key); if (v === null) v = localStorage.getItem("bts_" + key); return v ? JSON.parse(v) : def; } catch { return def; } }; // legacy-bts : repli lecture ancienne cle
@@ -6049,12 +6078,7 @@ function Carthago() {
 
   // Export all app data to a JSON file
   const exportData = () => {
-    const data = {
-      version: "1.0",
-      exportedAt: new Date().toISOString(),
-      week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(carthagoBuildBackup(), null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     const d = new Date();
@@ -6066,30 +6090,25 @@ function Carthago() {
     URL.revokeObjectURL(url);
   };
 
-  // Import data from a JSON file
+  // Import data from a JSON file: rewrites everything under the carthago_ prefix, then reloads
   const importData = (e) => {
     const file = e.target.files[0];
+    e.target.value = "";
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
       try {
         const data = JSON.parse(ev.target.result);
-        if (data.week) setWeek(data.week);
-        if (data.completedEx) setCompletedEx(data.completedEx);
-        if (data.logData) setLogData(data.logData);
-        if (data.condition) setCondition(data.condition);
-        if (data.cycleWeek) setCycleWeek(data.cycleWeek);
-        if (data.injuries) setInjuries(data.injuries);
-        if (data.workoutHistory) setWorkoutHistory(data.workoutHistory);
-        if (data.qAnchorDate) setQAnchorDate(data.qAnchorDate); if (data.qAnchorPos) setQAnchorPos(data.qAnchorPos); if (data.cpMode === "v2") { setCpMode("v2"); if (data.cyclePos) { setCyclePos(data.cyclePos); setQueueHome(data.cyclePos); } }
-        if (typeof data.queueMode === "boolean") setQueueMode(data.queueMode);
-        alert("\u2705 Data imported! Exported on " + (data.exportedAt ? new Date(data.exportedAt).toLocaleString() : "unknown date"));
+        const n = carthagoCountBackup(data);
+        if (!n) throw new Error("empty");
+        if (!window.confirm("Replace local data with this backup (" + n + " items)? The page will reload." + (fbUser ? " You are signed in: synced items may be overwritten by the cloud copy on reload." : ""))) return;
+        carthagoApplyBackup(data);
+        window.location.reload();
       } catch (err) {
-        alert("\u274C Import failed. Is this a valid backup file?");
+        alert("❌ Import failed. Is this a valid backup file?");
       }
     };
     reader.readAsText(file);
-    e.target.value = "";
   };
 
 
@@ -7246,7 +7265,17 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
             )
           )
         );
-      })()
+      })(),
+      // BACKUP (export / import)
+      React.createElement("div", { style: { background: "linear-gradient(180deg,#231F1B,#16110D)", border: "1px solid var(--line)", borderRadius: 14, padding: "14px 16px", marginTop: 14 } },
+        React.createElement("div", { style: { fontSize: 10, fontWeight: 700, color: "var(--dim)", letterSpacing: "0.14em", marginBottom: 4 } }, "BACKUP"),
+        React.createElement("div", { style: { fontSize: 11, color: "var(--smoke)", marginBottom: 10 } }, "All your data in one file. Import restores it on any device or domain."),
+        React.createElement("div", { style: { display: "flex", gap: 8 } },
+          React.createElement("button", { onClick: exportData, style: { flex: 1, padding: "10px 6px", borderRadius: 10, border: "1px solid var(--line)", background: "transparent", color: "var(--bone)", fontSize: 12, fontWeight: 700, cursor: "pointer" } }, "Export backup"),
+          React.createElement("label", { style: { flex: 1, padding: "10px 6px", borderRadius: 10, border: "1px solid var(--line)", background: "transparent", color: "var(--bone)", fontSize: 12, fontWeight: 700, cursor: "pointer", textAlign: "center" } }, "Import backup",
+            React.createElement("input", { type: "file", accept: "application/json,.json", onChange: importData, style: { display: "none" } }))
+        )
+      )
     ),
 
 
