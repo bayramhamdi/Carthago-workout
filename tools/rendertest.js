@@ -10,6 +10,8 @@ const { mount, wait, APP } = require("./_harness");
   const text = root ? root.textContent.trim().length : 0;
   let ok = true;
   if (!root || len < 500 || text < 20) { console.error("FAIL : #root vide ou quasi vide (" + len + " car html, " + text + " car texte)"); ok = false; }
+  const vp = dom.window.document.querySelector('meta[name="viewport"]');
+  if (!vp || /user-scalable\s*=\s*no|maximum-scale/i.test(vp.content)) { console.error("FAIL : viewport bloque le zoom (accessibilite)"); ok = false; }
   if (errors.length) { console.error("FAIL : erreurs :\n  " + errors.join("\n  ")); ok = false; }
   if (ok) console.log("OK rendertest : #root rendu (" + len + " car html, " + text + " car texte), 0 erreur");
   dom.window.close();

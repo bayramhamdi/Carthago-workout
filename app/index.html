@@ -13,7 +13,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0B0A09">
@@ -42,7 +42,7 @@
   --moodglow:rgba(255,90,31,.14);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:radial-gradient(125% 85% at 50% 0%,#17110D 0%,#0B0908 44%,#050403 100%) fixed;overflow-x:hidden;color:var(--bone);font-family:var(--body);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+body{touch-action:manipulation;background:radial-gradient(125% 85% at 50% 0%,#17110D 0%,#0B0908 44%,#050403 100%) fixed;overflow-x:hidden;color:var(--bone);font-family:var(--body);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
 body::before{content:"";position:fixed;inset:-12%;background:radial-gradient(58% 42% at 50% 2%,var(--moodglow),transparent 66%);z-index:-1;pointer-events:none;animation:drift 22s ease-in-out infinite,breathe 7s ease-in-out infinite}
 input,textarea,button{-webkit-appearance:none;font-family:var(--body)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
