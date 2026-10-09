@@ -639,6 +639,34 @@ function carthagoPrepareSave(remoteDoc, baseDoc, local) {
   return { out: carthagoMergeDocs(baseDoc, remoteDoc, local, carthagoTodayKey()), merged: true };
 }
 
+// ─── Progression : sessions par exercice et suggestion de charge (module level, testable) ───
+// workoutHistory[date].exerciseData cles "A-MONDAY-2-BACK SQUAT" -> { w1..w5, r1..r5 }
+function carthagoExerciseSessions(wh) {
+  const out = {};
+  Object.keys(wh || {}).sort().forEach(date => {
+    const e = wh[date];
+    if (!e || !e.completed || !e.exerciseData) return;
+    Object.keys(e.exerciseData).forEach(k => {
+      const m = /^[AB][-][A-Z]+[-][0-9]+[-](.+)$/.exec(k);
+      if (!m || /^[0-9]+$/.test(m[1])) return;
+      const en = e.exerciseData[k] || {}, sets = [];
+      [1, 2, 3, 4, 5].forEach(i => { const w = parseFloat(en["w" + i]), r = parseFloat(en["r" + i]); if (!isNaN(w) && w > 0) sets.push({ w, r: isNaN(r) ? 0 : r }); });
+      if (!sets.length) return;
+      const max = Math.max(...sets.map(x => x.w));
+      (out[m[1]] = out[m[1]] || []).push({ date, sets, max });
+    });
+  });
+  return out;
+}
+// Double progression prudente : toutes les series a la charge max ont atteint les reps cibles -> +2.5 kg (+5 des 100 kg), sinon on garde.
+function carthagoSuggestNext(sessions, target) {
+  if (!sessions || !sessions.length || !(target > 0)) return null;
+  const last = sessions[sessions.length - 1];
+  const top = last.sets.filter(x => x.w === last.max);
+  const up = top.length > 0 && top.every(x => x.r >= target);
+  return { weight: up ? last.max + (last.max >= 100 ? 5 : 2.5) : last.max, reason: up ? "up" : "hold", last: last.max };
+}
+
 // ─── Backup helpers (module level, testables) ───
 const CARTHAGO_PFX = "carthago_";
 const CARTHAGO_LEGACY_KEYS = ["week", "completedEx", "logData", "condition", "cycleWeek", "injuries", "workoutHistory", "sessionTimer", "autoMode", "tier", "testDraft", "testHistory", "queueMode", "cyclePos", "qAnchorDate", "qAnchorPos", "cpMode", "xSets", "skipDays", "swapMap", "lastDone", "condAutoKey"];
@@ -877,6 +905,8 @@ function Carthago() {
   const [fbReady, setFbReady] = useState(false);
   // OWNER-ONLY: calendar/nutrition/schedule visible only to this account. Change email if needed.
   const OWNER_EMAIL = "med.bayram.hamdi@gmail.com";
+  const exSessions = React.useMemo(() => carthagoExerciseSessions(workoutHistory), [workoutHistory]);
+  const [progEx, setProgEx] = useState("");
   const backupDays = carthagoDaysSince(lastExport);
   const backupOverdue = backupDays === null || backupDays >= 7;
   const isOwner = fbUser && fbUser.email && fbUser.email.toLowerCase() === OWNER_EMAIL.toLowerCase();
@@ -2087,6 +2117,11 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
                   if (pr) return React.createElement("span", { style: { fontSize: 8, fontWeight: 600, color: "var(--smoke)", background: "var(--coal)", border: "1px solid var(--line)", borderRadius: 5, padding: "2px 6px", fontFamily: "var(--disp)" } }, "PR " + pr.weight + "kg");
                   return null;
                 })(),
+                ex.key && hw && (() => {
+                  const sg = carthagoSuggestNext(exSessions[ex.name], ex.dr);
+                  if (!sg) return null;
+                  return React.createElement("span", { title: "Last session top set: " + sg.last + " kg. " + (sg.reason === "up" ? "All reps hit: add weight." : "Hit all reps at this weight first."), style: { fontSize: 8, fontWeight: 700, color: sg.reason === "up" ? "var(--full)" : "var(--smoke)", background: "var(--coal)", border: "1px solid " + (sg.reason === "up" ? "var(--full)" : "var(--line)"), borderRadius: 5, padding: "2px 6px", fontFamily: "var(--disp)" } }, "NEXT " + sg.weight + (sg.reason === "up" ? " ↑" : ""));
+                })(),
                 React.createElement("button", { onClick: () => setOpenTip(io ? null : tk), style: { marginLeft: "auto", background: io ? "var(--ember)" : "transparent", border: "1px solid " + (io ? "var(--ember)" : "var(--line-2)"), color: io ? "#fff" : "var(--ember-2)", fontSize: 9, fontWeight: 700, padding: "6px 13px", borderRadius: 8, cursor: "pointer", fontFamily: "var(--disp)", letterSpacing: "0.08em" } }, "TIPS")
               ),
               React.createElement("div", { style: { fontSize: 9.5, color: "var(--bone)", marginBottom: 6, paddingLeft: 28 } }, ex.detail),
@@ -2392,6 +2427,27 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
             )
           )
         );
+      })(),
+      // PROGRESS (courbe de charge par exercice)
+      (() => {
+        const names = Object.keys(exSessions).sort((a, b) => exSessions[b].length - exSessions[a].length).slice(0, 8);
+        if (!names.length) return null;
+        const sel = names.indexOf(progEx) >= 0 ? progEx : names[0];
+        const ss = exSessions[sel], ws = ss.map(x => x.max);
+        const lo = Math.min(...ws), hi = Math.max(...ws), span = Math.max(hi - lo, 1);
+        const W = 300, H = 90, px = (i) => ss.length === 1 ? W / 2 : 14 + i * ((W - 28) / (ss.length - 1)), py = (v) => 12 + (H - 24) * (1 - (v - lo) / span);
+        const pts = ss.map((x, i) => px(i).toFixed(1) + "," + py(x.max).toFixed(1)).join(" ");
+        const gain = ws[ws.length - 1] - ws[0];
+        return React.createElement("div", { style: { background: "linear-gradient(180deg,#231F1B,#16110D)", border: "1px solid var(--line)", borderRadius: 14, padding: "14px 16px", marginTop: 14 } },
+          React.createElement("div", { style: { fontSize: 10, fontWeight: 700, color: "var(--dim)", letterSpacing: "0.14em", marginBottom: 8 } }, "PROGRESS"),
+          React.createElement("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10 } },
+            names.map(n => React.createElement("button", { key: n, onClick: () => setProgEx(n), style: { fontSize: 10, fontWeight: 700, padding: "5px 9px", borderRadius: 8, cursor: "pointer", border: "1px solid " + (n === sel ? "var(--ember)" : "var(--line)"), background: n === sel ? "var(--ember-soft)" : "transparent", color: n === sel ? "var(--bone)" : "var(--smoke)" } }, n))),
+          React.createElement("svg", { viewBox: "0 0 " + W + " " + H, style: { width: "100%", height: 90, display: "block" }, "aria-label": "Top set weight over time for " + sel },
+            ss.length > 1 && React.createElement("polyline", { points: pts, fill: "none", stroke: "var(--ember)", strokeWidth: 2.5, strokeLinejoin: "round", strokeLinecap: "round" }),
+            ss.map((x, i) => React.createElement("circle", { key: i, cx: px(i), cy: py(x.max), r: i === ss.length - 1 ? 4.5 : 3, fill: i === ss.length - 1 ? "var(--ember-2)" : "var(--ember)" }))),
+          React.createElement("div", { style: { fontSize: 11, color: "var(--smoke)", marginTop: 6, display: "flex", justifyContent: "space-between" } },
+            React.createElement("span", null, ss.length + " session" + (ss.length > 1 ? "s" : "") + " · best " + hi + " kg"),
+            React.createElement("span", { style: { color: gain > 0 ? "var(--full)" : "var(--smoke)", fontWeight: 700 } }, ss.length > 1 ? (gain > 0 ? "+" : "") + gain + " kg since " + ss[0].date : ss[0].date)));
       })(),
       // BACKUP (export / import)
       React.createElement("div", { style: { background: "linear-gradient(180deg,#231F1B,#16110D)", border: "1px solid var(--line)", borderRadius: 14, padding: "14px 16px", marginTop: 14 } },
