@@ -95,7 +95,7 @@ button:active{transform:scale(.93);box-shadow:0 0 16px 3px rgba(255,90,31,.55)}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot, runTransaction, deleteDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
 // ⚠️ PASTE YOUR FIREBASE CONFIG HERE (from step 4 of setup guide)
 const firebaseConfig = {
@@ -185,6 +185,19 @@ window.carthagoFirebase = {
       console.error("Save error:", err);
       return { ok: false };
     }
+  },
+  // Copie quotidienne (14 jours glissants) dans users/{uid}/backups/{YYYY-MM-DD}. Au mieux : ignore les refus de regles.
+  async snapshotBackup(data) {
+    if (!this.ready || !this.user || !data) return false;
+    try {
+      const uid = this.user.uid, d = new Date();
+      const day = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+      await setDoc(doc(this.db, "users", uid, "backups", day), { ...data, backupOf: day });
+      const old = new Date(d.getTime() - 14 * 86400000);
+      const oldDay = old.getFullYear() + "-" + String(old.getMonth() + 1).padStart(2, "0") + "-" + String(old.getDate()).padStart(2, "0");
+      await deleteDoc(doc(this.db, "users", uid, "backups", oldDay));
+      return true;
+    } catch (err) { return false; }
   },
   // Retourne le document, null si le compte n'a pas encore de document, undefined si le chargement a ECHOUE
   // (undefined bloque la sauvegarde : jamais d'ecrasement du cloud par un etat local vide).
@@ -5608,6 +5621,7 @@ function carthagoMergeDocs(base, remote, local, todayKey) {
   }
   return out;
 }
+function carthagoDaysSince(iso) { if (!iso) return null; const t = Date.parse(iso); return isNaN(t) ? null : Math.floor((Date.now() - t) / 86400000); }
 function carthagoTodayKey() { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
 // Decision de sauvegarde (appelee dans la transaction) : pas de changement cloud depuis la base = ecriture directe.
 function carthagoPrepareSave(remoteDoc, baseDoc, local) {
@@ -5792,6 +5806,8 @@ function Carthago() {
   const [condAutoKey, setCondAutoKey] = useState(() => loadLS("condAutoKey", ""));
   const [xSets, setXSets] = useState(() => loadLS("xSets", {}));
   const [swapMap, setSwapMap] = useState(() => loadLS("swapMap", {}));
+  const [lastExport, setLastExport] = useState(() => loadLS("lastExport", ""));
+  const cloudBackupTried = React.useRef("");
   const [swapOpen, setSwapOpen] = useState(null);
   const [holdT, setHoldT] = useState(null);
   const [recap, setRecap] = useState(null);
@@ -5853,6 +5869,8 @@ function Carthago() {
   const [fbReady, setFbReady] = useState(false);
   // OWNER-ONLY: calendar/nutrition/schedule visible only to this account. Change email if needed.
   const OWNER_EMAIL = "med.bayram.hamdi@gmail.com";
+  const backupDays = carthagoDaysSince(lastExport);
+  const backupOverdue = backupDays === null || backupDays >= 7;
   const isOwner = fbUser && fbUser.email && fbUser.email.toLowerCase() === OWNER_EMAIL.toLowerCase();
   const [syncStatus, setSyncStatus] = useState("offline");
 
@@ -5862,6 +5880,7 @@ function Carthago() {
   useEffect(() => saveLS("logData", logData), [logData]);
   useEffect(() => saveLS("condition", condition), [condition]);
   useEffect(() => saveLS("condAutoKey", condAutoKey), [condAutoKey]);
+  useEffect(() => saveLS("lastExport", lastExport), [lastExport]);
   useEffect(() => saveLS("xSets", xSets), [xSets]);
   useEffect(() => saveLS("swapMap", swapMap), [swapMap]);
   useEffect(() => saveLS("lastDone", lastDone), [lastDone]);
@@ -5977,6 +5996,11 @@ function Carthago() {
     const timer = setTimeout(() => {
       setSyncStatus("saving");
       const payload = { week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap };
+      const dayK = carthagoTodayKey();
+      if (typeof window.carthagoFirebase.snapshotBackup === "function" && cloudBackupTried.current !== dayK && loadLS("lastCloudBackup", "") !== dayK && syncBase.current) {
+        cloudBackupTried.current = dayK;
+        Promise.resolve(window.carthagoFirebase.snapshotBackup(syncBase.current)).then(ok => { if (ok) saveLS("lastCloudBackup", dayK); }).catch(() => {});
+      }
       window.carthagoFirebase.save(payload, syncBase.current).then(res => {
         const r = res === true ? { ok: true } : (res || { ok: false });
         if (r.ok) {
@@ -6182,6 +6206,7 @@ function Carthago() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    setLastExport(new Date().toISOString());
   };
 
   // Import data from a JSON file: rewrites everything under the carthago_ prefix, then reloads
@@ -6349,7 +6374,7 @@ function Carthago() {
 
     // VIEW TABS — only Workout tab shown publicly; rest require sign-in
     React.createElement("div", { style: { display: "flex", gap: 4, marginBottom: 14, justifyContent: "center", width: "100%", borderBottom: "1px solid var(--line)" } },
-      (isOwner ? ["workout", "schedule", "calendar", "nutrition"] : ["workout"]).map(v => React.createElement("button", { key: v, onClick: () => setView(v), style: { flex: "1 1 0", minWidth: 0, textAlign: "center", whiteSpace: "nowrap", padding: "0 0 10px", fontSize: 11, fontWeight: 600, fontFamily: "var(--disp)", textTransform: "uppercase", letterSpacing: "0.04em", border: "0", borderBottom: view === v ? "2px solid var(--ember)" : "2px solid transparent", cursor: "pointer", background: "transparent", color: view === v ? "var(--bone)" : "var(--dim)", marginBottom: -1, transition: ".18s" } }, v.charAt(0).toUpperCase() + v.slice(1)))
+      (isOwner ? ["workout", "schedule", "calendar", "nutrition"] : ["workout"]).map(v => React.createElement("button", { key: v, onClick: () => setView(v), style: { flex: "1 1 0", minWidth: 0, textAlign: "center", whiteSpace: "nowrap", padding: "0 0 10px", fontSize: 11, fontWeight: 600, fontFamily: "var(--disp)", textTransform: "uppercase", letterSpacing: "0.04em", border: "0", borderBottom: view === v ? "2px solid var(--ember)" : "2px solid transparent", cursor: "pointer", background: "transparent", color: view === v ? "var(--bone)" : "var(--dim)", marginBottom: -1, transition: ".18s" } }, v.charAt(0).toUpperCase() + v.slice(1), (v === "calendar" && backupOverdue) ? React.createElement("span", { "aria-label": "Backup due", title: "Backup due", style: { display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "var(--light)", marginLeft: 5, verticalAlign: "middle" } }) : null))
     ),
 
     // DAY SELECTOR (workout shows all 8; schedule hides CUS + STD)
@@ -7363,7 +7388,8 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
       // BACKUP (export / import)
       React.createElement("div", { style: { background: "linear-gradient(180deg,#231F1B,#16110D)", border: "1px solid var(--line)", borderRadius: 14, padding: "14px 16px", marginTop: 14 } },
         React.createElement("div", { style: { fontSize: 10, fontWeight: 700, color: "var(--dim)", letterSpacing: "0.14em", marginBottom: 4 } }, "BACKUP"),
-        React.createElement("div", { style: { fontSize: 11, color: "var(--smoke)", marginBottom: 10 } }, "All your data in one file. Import restores it on any device or domain."),
+        React.createElement("div", { style: { fontSize: 11, color: "var(--smoke)", marginBottom: 6 } }, "All your data in one file. Import restores it on any device or domain."),
+        React.createElement("div", { style: { fontSize: 11, fontWeight: 700, marginBottom: 10, color: backupOverdue ? "var(--light)" : "var(--full)" } }, backupDays === null ? "No backup yet. Export one now." : (backupDays === 0 ? "Last backup: today" : "Last backup: " + backupDays + " day" + (backupDays > 1 ? "s" : "") + " ago" + (backupOverdue ? ". Time for a new one." : ""))),
         React.createElement("div", { style: { display: "flex", gap: 8 } },
           React.createElement("button", { onClick: exportData, style: { flex: 1, padding: "10px 6px", borderRadius: 10, border: "1px solid var(--line)", background: "transparent", color: "var(--bone)", fontSize: 12, fontWeight: 700, cursor: "pointer" } }, "Export backup"),
           React.createElement("label", { style: { flex: 1, padding: "10px 6px", borderRadius: 10, border: "1px solid var(--line)", background: "transparent", color: "var(--bone)", fontSize: 12, fontWeight: 700, cursor: "pointer", textAlign: "center" } }, "Import backup",

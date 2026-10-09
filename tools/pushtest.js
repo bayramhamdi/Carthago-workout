@@ -7,7 +7,7 @@ const fs = require("fs");
 const { JSDOM, VirtualConsole } = require("jsdom");
 const { APP, wait } = require("./_harness");
 const LOCAL = { xSets: { "Bench Press": 2 }, skipDays: { "2026-10-07": true }, swapMap: { a: "b" } };
-async function run({ local, cloud, delay, waitMs = 4500, saveImpl, afterLogin }) {
+async function run({ local, cloud, delay, waitMs = 4500, saveImpl, afterLogin, snap }) {
   const saved = [], calls = [];
   const dom = new JSDOM(fs.readFileSync(APP, "utf8"), {
     url: "http://localhost/", runScripts: "dangerously", pretendToBeVisual: true, virtualConsole: new VirtualConsole(),
@@ -15,6 +15,7 @@ async function run({ local, cloud, delay, waitMs = 4500, saveImpl, afterLogin })
       if (local) Object.keys(LOCAL).forEach(k => w.localStorage.setItem("carthago_" + k, JSON.stringify(LOCAL[k])));
       w.carthagoFirebase = { ready: true, user: null, signIn() {}, signOut() {},
         load: () => new Promise(r => setTimeout(() => r(cloud), delay)),
+        snapshotBackup: snap ? (b) => { snap.push(b); return Promise.resolve(true); } : undefined,
         save: (d, base) => { saved.push(d); calls.push({ d, base }); return saveImpl ? saveImpl(saved.length) : Promise.resolve(true); } };
       w.matchMedia = () => ({ matches: false, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {} });
     },
@@ -57,6 +58,10 @@ const hasLocal = (d) => d && Object.keys(LOCAL).every(k => eq(d[k], LOCAL[k]));
     saveImpl: (n) => Promise.resolve(n === 1 ? { ok: false } : { ok: true, updatedAt: "T9" }),
     afterLogin: async (w, wt) => { await wt(2500); w.dispatchEvent(new w.Event("online")); } });
   chk(s.length === 2 && s[1].tier === 4, "7: pas de nouvelle tentative apres 'online' (" + s.length + " saves)");
-  console.log(fails.length ? "FAIL pushtest:\n  " + fails.join("\n  ") : "OK pushtest : 7 scenarios (push local, cloud lent, domaine neuf, load en echec, base, fusion appliquee, retry online)");
+  // 8. copie cloud quotidienne : une seule tentative par jour, avec l'etat cloud AVANT notre ecriture
+  const snaps = [];
+  s = await run({ local: true, cloud: { tier: 4, updatedAt: "T1" }, delay: 50, waitMs: 3500, snap: snaps });
+  chk(snaps.length === 1 && snaps[0].updatedAt === "T1", "8: snapshot cloud attendu une fois (" + snaps.length + ")");
+  console.log(fails.length ? "FAIL pushtest:\n  " + fails.join("\n  ") : "OK pushtest : 8 scenarios (push local, cloud lent, domaine neuf, load en echec, base, fusion appliquee, retry online, copie cloud)");
   process.exit(fails.length ? 1 : 0);
 })();

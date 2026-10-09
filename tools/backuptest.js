@@ -8,7 +8,7 @@ const { APP, wait } = require("./_harness");
     beforeParse(w) { w.carthagoFirebase = { ready: true, user: null, load: () => Promise.resolve(null), save: () => Promise.resolve(true), signIn() {}, signOut() {} }; w.matchMedia = () => ({ matches: false, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {} }); },
   });
   await wait(1500);
-  const w = dom.window, L = w.localStorage, fails = [];
+  const w = dom.window, L = w.localStorage, fails = []; let L0;
   const chk = (c, m) => { if (!c) fails.push(m); };
   chk(typeof w.carthagoBuildBackup === "function", "helpers absents");
   // 0. UI : connecte en proprietaire, onglet Calendar, carte BACKUP visible
@@ -22,7 +22,11 @@ const { APP, wait } = require("./_harness");
     const txt = w.document.getElementById("root").textContent;
     chk(txt.includes("Export backup") && txt.includes("Import backup"), "carte BACKUP absente du Calendar");
     chk(!!w.document.querySelector('input[type="file"]'), "input fichier absent");
+    chk(txt.includes("No backup yet"), "statut de sauvegarde absent (jamais exporte)");
+    chk(!!w.document.querySelector('span[title="Backup due"]'), "pastille de rappel absente");
   }
+  // 0b. rappel : une sauvegarde recente retire la pastille
+  L0 = w.localStorage; L0.setItem("carthago_lastExport", JSON.stringify(new Date().toISOString()));
   // 1. Export: toutes les cles carthago_, rien d'autre
   L.setItem("carthago_xSets", JSON.stringify({ a: 2 })); L.setItem("carthago_probe", JSON.stringify({ n: [1, 2] })); L.setItem("autre", "x");
   const b = w.carthagoBuildBackup();
