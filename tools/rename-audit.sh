@@ -1,10 +1,19 @@
 #!/bin/bash
 # CARTHAGO : gate 0 du renommage. Liste toutes les traces de l'ancien nom.
 # Usage : ./tools/rename-audit.sh [dossier]   (defaut : app)
-# Les seules occurrences tolerees : shim de migration des anciennes cles localStorage
-# et config Firebase (projectId / authDomain). Tout le reste doit etre a zero.
+# Exceptions tolerees (lignes filtrees) :
+#   - config Firebase : lignes avec authDomain / projectId / storageBucket
+#   - shim de migration : lignes marquees "legacy-bts"
+# Tout le reste doit etre a zero. Code retour 0 si propre, 1 sinon.
 TARGET="${1:-app}"
-grep -rniE "burn[ _-]?the[ _-]?ships|burntheships|\bbts[A-Z_]|btsFirebase|btsOnAuthChange|the-ships" "$TARGET" \
+PATTERN='burn[ _-]*(the[ _-]*)?ships|\bbts|the-ships'
+HITS=$(grep -rniE "$PATTERN" "$TARGET" \
   --include="*.html" --include="*.js" --include="*.json" --include="*.webmanifest" --include="*.css" \
-  && echo "" && echo "^ Verifie que chaque ligne ci-dessus est une exception documentee." \
-  || echo "OK : aucune trace de l'ancien nom."
+  | grep -vE 'authDomain|projectId|storageBucket|legacy-bts')
+if [ -n "$HITS" ]; then
+  echo "$HITS"
+  echo ""
+  echo "FAIL : traces de l'ancien nom (hors exceptions documentees)."
+  exit 1
+fi
+echo "OK : aucune trace de l'ancien nom."
