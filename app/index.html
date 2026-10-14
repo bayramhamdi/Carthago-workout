@@ -639,6 +639,15 @@ function carthagoMergeDocs(base, remote, local, todayKey) {
   return out;
 }
 function carthagoDaysSince(iso) { if (!iso) return null; const t = Date.parse(iso); return isNaN(t) ? null : Math.floor((Date.now() - t) / 86400000); }
+// Garde du chrono : un chrono ne peut pas tourner pour une seance deja terminee, ni plus de 6 h (chrono oublie).
+function carthagoSaneTimer(t, hist) {
+  const off = { running: false, startedAt: null, dayKey: null };
+  if (!t || !t.running) return t || off;
+  if (!t.startedAt || Date.now() - t.startedAt > 6 * 3600000) return off;
+  const h = hist && t.dayKey ? hist[t.dayKey] : null;
+  if (h && h.completed && (!h.completedAt || h.completedAt >= t.startedAt)) return off;
+  return t;
+}
 function carthagoTodayKey() { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
 // Decision de sauvegarde (appelee dans la transaction) : pas de changement cloud depuis la base = ecriture directe.
 function carthagoPrepareSave(remoteDoc, baseDoc, local) {
@@ -897,7 +906,8 @@ function Carthago() {
   const [customSearch, setCustomSearch] = useState(""); // search across all exercises
   const toggleCustom = k => setCustomParts(p => ({ ...p, [k]: !p[k] }));
   // Session timer: tracks how long current workout has been going
-  const [sessionTimer, setSessionTimer] = useState(() => loadLS("sessionTimer", { running: false, startedAt: null, dayKey: null }));
+  const [sessionTimer, setSessionTimer] = useState(() => carthagoSaneTimer(loadLS("sessionTimer", { running: false, startedAt: null, dayKey: null }), loadLS("workoutHistory", {})));
+  const [pickOpen, setPickOpen] = useState(false);
   // Performance Standards Test System
   // testDraft: current in-progress form (7 fields)
   // testHistory: completed test sessions [{ date, bench, pullups, deadlift, run800, broadJump, plank, carry }]
@@ -987,10 +997,20 @@ function Carthago() {
   useEffect(() => saveLS("cycleWeek", cycleWeek), [cycleWeek]);
   useEffect(() => saveLS("injuries", injuries), [injuries]);
   useEffect(() => saveLS("sessionTimer", sessionTimer), [sessionTimer]);
+  useEffect(() => { const t = carthagoSaneTimer(sessionTimer, workoutHistory); if (t !== sessionTimer) { saveLS("sessionTimer", t); setSessionTimer(t); } }, [sessionTimer, workoutHistory, now]);
   useEffect(() => saveLS("workoutHistory", workoutHistory), [workoutHistory]);
 
   // Firebase auth state listener
   const syncBase = React.useRef(null);
+  const flushPush = React.useRef(null);
+  // App mise en arriere-plan ou fermee : envoi immediat, sans attendre les 1.5 s
+  useEffect(() => {
+    const flush = () => { if (flushPush.current) flushPush.current(); };
+    const vis = () => { if (document.visibilityState === "hidden") flush(); };
+    document.addEventListener("visibilitychange", vis);
+    window.addEventListener("pagehide", flush);
+    return () => { document.removeEventListener("visibilitychange", vis); window.removeEventListener("pagehide", flush); };
+  }, []);
   const statusRef = React.useRef("offline");
   // Applique un document cloud (chargement ou resultat de fusion) a l'etat React
   const applyCloudDoc = (data) => {
@@ -999,7 +1019,7 @@ function Carthago() {
     if (data.cycleWeek) setCycleWeek(data.cycleWeek);
     if (data.injuries) setInjuries(data.injuries);
     if (data.workoutHistory) setWorkoutHistory(data.workoutHistory);
-    if (data.sessionTimer) setSessionTimer(data.sessionTimer);
+    if (data.sessionTimer) setSessionTimer(carthagoSaneTimer(data.sessionTimer, data.workoutHistory));
     if (typeof data.autoMode === "boolean") setAutoMode(data.autoMode);
     if (data.testDraft) setTestDraft(data.testDraft);
     if (data.testHistory) setTestHistory(data.testHistory);
@@ -1042,8 +1062,19 @@ function Carthago() {
             setCloudLoaded(false);
             window.carthagoFirebase.load().then(data => {
               if (data === undefined) { setSyncStatus("error"); return; }
+              // Fusion au chargement : ce qui a ete fait sur ce telephone et pas encore envoye (seance terminee, chrono arrete)
+              // n'est plus ecrase par un cloud en retard. Sans base connue (appareil neuf, autre compte) : le cloud gagne, comme avant.
+              const stored = loadLS("syncBase", null);
+              const base = stored && stored.uid === user.uid ? stored.doc : null;
+              let toApply = data;
+              if (data && base) {
+                const localDoc = {};
+                CARTHAGO_SYNC_KEYS.forEach(k => { const v = loadLS(k, undefined); if (v !== undefined) localDoc[k] = v; });
+                toApply = carthagoMergeDocs(base, data, localDoc, carthagoTodayKey());
+              }
               syncBase.current = data || null;
-              if (data) applyCloudDoc(data);
+              if (data) saveLS("syncBase", { uid: user.uid, doc: data });
+              if (toApply) applyCloudDoc(toApply);
               setCloudLoaded(true);
               setSyncStatus("synced");
             }).catch(() => setSyncStatus("error"));
@@ -1106,7 +1137,9 @@ function Carthago() {
   // Auto-sync to Firebase when data changes (debounced). Garde : jamais avant la fin du chargement cloud.
   useEffect(() => {
     if (!fbUser || !cloudLoaded) return;
-    const timer = setTimeout(() => {
+    let sent = false;
+    const push = () => {
+      if (sent) return; sent = true; flushPush.current = null;
       setSyncStatus("saving");
       const payload = { week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap };
       const dayK = carthagoTodayKey();
@@ -1118,11 +1151,14 @@ function Carthago() {
         const r = res === true ? { ok: true } : (res || { ok: false });
         if (r.ok) {
           syncBase.current = { ...(r.doc || payload), updatedAt: r.updatedAt || (syncBase.current && syncBase.current.updatedAt) };
+          if (fbUser && fbUser.uid) saveLS("syncBase", { uid: fbUser.uid, doc: syncBase.current });
           if (r.merged && r.doc) applyCloudDoc(r.doc);
         }
         setSyncStatus(r.ok ? "synced" : "error");
       }).catch(() => setSyncStatus("error"));
-    }, 1500);
+    };
+    flushPush.current = push;
+    const timer = setTimeout(push, 1500);
     return () => clearTimeout(timer);
   }, [fbUser, week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap, cloudLoaded, syncTick]);
 
@@ -1231,14 +1267,17 @@ function Carthago() {
     let durationMin = null;
     if (sessionTimer.running && sessionTimer.startedAt) {
       durationMin = Math.round((Date.now() - sessionTimer.startedAt) / 60000);
+      if (durationMin > 360) durationMin = null;
     } else if (existing && existing.durationMin) {
       durationMin = existing.durationMin;
     }
     // If already marked with SAME condition, toggle off (unmark)
     if (existing && existing.completed && existing.condition === condition) {
-      setWorkoutHistory(p => ({ ...p, [k]: { ...p[k], completed: false } }));
-      setCyclePos(p => ({ ...p, [tier]: qmod((p[tier] || 0) - 1, 12) }));
-      setLastDone(p => { const n = { ...p }; if (n[tier] === k) delete n[tier]; return n; });
+      const nh = { ...workoutHistory, [k]: { ...workoutHistory[k], completed: false } };
+      const ncp = { ...cyclePos, [tier]: qmod((cyclePos[tier] || 0) - 1, 12) };
+      const nld = { ...lastDone }; if (nld[tier] === k) delete nld[tier];
+      saveLS("workoutHistory", nh); saveLS("cyclePos", ncp); saveLS("lastDone", nld);
+      setWorkoutHistory(nh); setCyclePos(ncp); setLastDone(nld);
     } else {
       setShipBurned(true); setTimeout(() => setShipBurned(false), 1800);
       // SAVE: collect all logData AND completedEx for this week+day into the history record
@@ -1254,8 +1293,12 @@ function Carthago() {
       // Save active injuries at time of completion
       const activeInjuries = Object.keys(injuries).filter(z => injuries[z]);
       // Save to history with exercise data + checks + injuries
-      setWorkoutHistory(p => ({ ...p, [k]: { week, day: dayName, condition, completed: true, durationMin, exerciseData: sessionLogs, completedChecks: sessionChecks, injuries: activeInjuries } }));
-      if (!wasCompleted) { setCyclePos(p => ({ ...p, [tier]: qmod((p[tier] || 0) + 1, 12) })); setLastDone(p => ({ ...p, [tier]: k })); }
+      const nh = { ...workoutHistory, [k]: { week, day: dayName, condition, completed: true, completedAt: Date.now(), durationMin, exerciseData: sessionLogs, completedChecks: sessionChecks, injuries: activeInjuries } };
+      saveLS("workoutHistory", nh); setWorkoutHistory(nh);
+      if (!wasCompleted) {
+        const ncp = { ...cyclePos, [tier]: qmod((cyclePos[tier] || 0) + 1, 12) }; const nld = { ...lastDone, [tier]: k };
+        saveLS("cyclePos", ncp); saveLS("lastDone", nld); setCyclePos(ncp); setLastDone(nld);
+      }
       // RESET: clear checkmarks and log inputs for this week+day
       const clearedEx = { ...completedEx };
       Object.keys(clearedEx).forEach(key => { if (key.startsWith(prefix)) delete clearedEx[key]; });
@@ -1287,7 +1330,8 @@ function Carthago() {
     }
     // Stop timer whenever the complete button is pressed (either direction)
     if (sessionTimer.running) {
-      setSessionTimer({ running: false, startedAt: null, dayKey: null });
+      const off = { running: false, startedAt: null, dayKey: null };
+      saveLS("sessionTimer", off); setSessionTimer(off);
     }
   };
 
@@ -1598,6 +1642,27 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
             const isWeekend = sd4.getDay() === 0 || sd4.getDay() === 6;
             if (isWeekend) return null;
             return React.createElement("button", { onClick: toggleRestDay, style: { width: "100%", marginTop: 6, padding: "8px", borderRadius: 8, cursor: "pointer", fontSize: 9, fontWeight: 700, letterSpacing: "0.07em", fontFamily: "var(--disp)", textTransform: "uppercase", border: "1px solid " + (isSkipped ? "var(--light)" : "var(--line-2)"), background: isSkipped ? "rgba(244,181,63,.12)" : "transparent", color: isSkipped ? "var(--light)" : "var(--dim)" } }, isSkipped ? "\u21BA Rest day \u2014 tap to undo" : "\u2298 Take a rest day (keep session)");
+          })() : null,
+          queueMode ? (() => {
+            const t0 = new Date(now); t0.setHours(0, 0, 0, 0);
+            const doneT = !!(workoutHistory[dkey(t0)] && workoutHistory[dkey(t0)].completed);
+            const cur = qmod(cyclePos[tier] || 0, 12);
+            const lbl = doneT ? "Set next session" : "Set today's session";
+            const choose = (i) => { const n = { ...cyclePos, [tier]: i }; saveLS("cyclePos", n); setCyclePos(n); setPickOpen(false); setUserChangedDay(false); setWeekOffset(0); setSelectedDay(now.getDay() === 0 ? 6 : now.getDay() - 1); };
+            const cc = { full: "var(--full)", light: "var(--light)", recovery: "var(--recovery)" };
+            return React.createElement("div", { style: { marginTop: 6 } },
+              React.createElement("button", { onClick: () => setPickOpen(!pickOpen), style: { width: "100%", padding: "9px", borderRadius: 12, cursor: "pointer", fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--disp)", textTransform: "uppercase", border: "1px solid " + (pickOpen ? "var(--ember)" : "var(--line-2)"), background: pickOpen ? "rgba(255,90,31,.10)" : "transparent", color: pickOpen ? "var(--ember-2)" : "var(--smoke)" } }, "⇅ " + lbl + " · " + (cur + 1) + "/12 " + SESSION_QUEUE[cur].label),
+              pickOpen && React.createElement("div", { style: { marginTop: 6, padding: 8, background: "var(--ash)", border: "1px solid var(--line-2)", borderRadius: 14 } },
+                React.createElement("div", { style: { fontSize: 9, color: "var(--dim)", marginBottom: 6, lineHeight: 1.4 } }, (doneT ? "Today is done. Pick the session you do next." : "Pick the session you do today.") + " The queue keeps moving on its own after each Mark Complete."),
+                React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 5 } },
+                  SESSION_QUEUE.map((sq, i) => React.createElement("button", { key: i, onClick: () => choose(i), style: { display: "flex", alignItems: "center", gap: 7, padding: "9px 10px", borderRadius: 10, cursor: "pointer", textAlign: "left", border: "1px solid " + (i === cur ? "var(--ember)" : "var(--line)"), background: i === cur ? "rgba(255,90,31,.12)" : "var(--coal)", color: "var(--bone)" } },
+                    React.createElement("span", { style: { fontSize: 10, fontWeight: 800, color: i === cur ? "var(--ember-2)" : "var(--dim)", minWidth: 30, fontVariantNumeric: "tabular-nums" } }, (i + 1) + "/12"),
+                    React.createElement("span", { style: { flex: 1, fontSize: 11, fontWeight: 700 } }, sq.label, React.createElement("span", { style: { fontSize: 9, color: "var(--dim)", fontWeight: 600 } }, " · " + sq.w)),
+                    React.createElement("span", { style: { width: 7, height: 7, borderRadius: "50%", background: cc[sq.cond] || "var(--dim)" } })
+                  ))
+                )
+              )
+            );
           })() : null,
           React.createElement("div", { style: { fontSize: 9, fontWeight: 700, letterSpacing: 1, color: "var(--bone)", marginBottom: 6 } }, ""),
           React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 2 } },

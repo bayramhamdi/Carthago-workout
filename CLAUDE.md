@@ -46,6 +46,10 @@ Gate 0 en plus pendant le renommage : `tools/rename-audit.sh` (zéro occurrence 
 - `xSets` (boutons +Set / -Set par exercice) persisté en localStorage.
 - Toute action destructive ("clear" de l'état courant, Mark Complete) doit persister de façon SYNCHRONE (`saveLS()` direct) avant toute lecture/écriture Firebase. Jamais via une cascade de `useEffect`.
 - Format des clés `workoutHistory` : `YYYY-MM-DD`. Pas de changement sans migration.
+- Chargement cloud : JAMAIS d'ecrasement aveugle. Fusion 3 voies avec la base persistee `syncBase` ({ uid, doc }, ecrite a chaque load et save reussi). Sans base (appareil neuf, autre compte) : le cloud gagne. Bug du 13.10.2026 : seance terminee + envoi non parti = seance perdue et chrono relance le lendemain. Test : `tools/staletest.js`.
+- Envoi cloud : debounce 1.5 s, mais vide immediatement a `visibilitychange: hidden` et `pagehide`.
+- Chrono : `carthagoSaneTimer` l'arrete si la seance de son jour est terminee (`completedAt` >= depart) ou s'il tourne depuis plus de 6 h. Applique a l'init, au chargement cloud et en continu.
+- File de seances : bouton "Set today's session" (ou "Set next session" si aujourd'hui est fait) = ecrit `cyclePos[tier]`. L'auto-avance au Mark Complete reste inchangee.
 - Vue publique (non connecté) : uniquement le programme, aucune donnée perso. Ne pas casser.
 
 ## Renommage BURN THE SHIPS -> CARTHAGO
