@@ -33,7 +33,7 @@ def day_exercises(chunk, day):
     d_start = chunk.find(f"  {day}:")
     if d_start == -1: return set()
     d_end = len(chunk)
-    for nd in ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"]:
+    for nd in ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","ARMOR","SATURDAY"]:
         if nd != day:
             pos = chunk.find(f"  {nd}:", d_start + 10)
             if pos != -1 and pos < d_end: d_end = pos
@@ -41,7 +41,7 @@ def day_exercises(chunk, day):
     return set(m.replace("\\'","'") for m in re.findall(r'name:\s*"([^"]+)"', section)
                if not re.match(r'^[A-H]\d?\.\s', m))
 
-DAYS = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"]
+DAYS = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","ARMOR","SATURDAY"]
 PREP = {"Facing Wall Hip Circle Rotations","Heel Clicks","Dead Hang","Figure 4 Flow",
         "Cat Camel Diagonal","Kneeling T-Spine with Shoulder Opener","Banded Face Pulls with ER Focus",
         "Elevated Heels Deep Squat Opener","Band Pull Aparts","Push-Up to Pike","Banded External Rotation",

@@ -640,6 +640,16 @@ function carthagoMergeDocs(base, remote, local, todayKey) {
 }
 function carthagoDaysSince(iso) { if (!iso) return null; const t = Date.parse(iso); return isNaN(t) ? null : Math.floor((Date.now() - t) / 86400000); }
 // Garde du chrono : un chrono ne peut pas tourner pour une seance deja terminee, ni plus de 6 h (chrono oublie).
+// File de 14 seances (depuis le 17.10.2026). Migration unique de l'ancienne file de 12 : meme seance, nouvel index.
+// cyclePos garde { [tier]: index, c[tier]: tour 0/1 (rotation des FULL), q: 14 }.
+const CARTHAGO_QN = 14;
+const CARTHAGO_Q12_TO_14 = [0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 13];
+function carthagoQueue14(cp) {
+  if (!cp || typeof cp !== "object" || cp.q === CARTHAGO_QN) return cp;
+  const out = { q: CARTHAGO_QN };
+  Object.keys(cp).forEach(k => { const v = cp[k]; if (/^\d+$/.test(k) && typeof v === "number") out[k] = CARTHAGO_Q12_TO_14[((v % 12) + 12) % 12]; else if (k !== "q") out[k] = v; });
+  return out;
+}
 function carthagoSaneTimer(t, hist) {
   const off = { running: false, startedAt: null, dayKey: null };
   if (!t || !t.running) return t || off;
@@ -791,20 +801,22 @@ function Carthago() {
   // SESSION QUEUE ENGINE (Stage 1: preview only, does not yet drive the workout render)
   const [queueMode, setQueueMode] = useState(true);
   useEffect(() => saveLS("queueMode", queueMode), [queueMode]);
-  const [cyclePos, setCyclePos] = useState(() => loadLS("cyclePos", { 4: 0, 5: 0, 6: 0 }));
+  const [cyclePos, setCyclePos] = useState(() => { const raw = loadLS("cyclePos", { 4: 0, 5: 0, 6: 0, q: CARTHAGO_QN }); const cp = carthagoQueue14(raw); if (cp !== raw) saveLS("cyclePos", cp); return cp; });
   useEffect(() => saveLS("cyclePos", cyclePos), [cyclePos]);
-  const [queueHome, setQueueHome] = useState(() => loadLS("cyclePos", { 4: 0, 5: 0, 6: 0 }));
-  const [qAnchorPos, setQAnchorPos] = useState(() => { const s = loadLS("qAnchorPos", null); if (s) return s; const cp = loadLS("cyclePos", { 4: 0, 5: 0, 6: 0 }); return { 4: (((cp[4] || 0) + 1) % 12), 5: (((cp[5] || 0) + 1) % 12), 6: (((cp[6] || 0) + 1) % 12) }; });
+  const [queueHome, setQueueHome] = useState(() => carthagoQueue14(loadLS("cyclePos", { 4: 0, 5: 0, 6: 0, q: CARTHAGO_QN })));
+  const [qAnchorPos, setQAnchorPos] = useState(() => { const s = loadLS("qAnchorPos", null); if (s) return s; const cp = loadLS("cyclePos", { 4: 0, 5: 0, 6: 0 }); return { 4: (((cp[4] || 0) + 1) % CARTHAGO_QN), 5: (((cp[5] || 0) + 1) % CARTHAGO_QN), 6: (((cp[6] || 0) + 1) % CARTHAGO_QN) }; });
   const [qAnchorDate, setQAnchorDate] = useState(() => { const s = loadLS("qAnchorDate", ""); if (s) return s; const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); });
   useEffect(() => saveLS("qAnchorPos", qAnchorPos), [qAnchorPos]);
   useEffect(() => saveLS("qAnchorDate", qAnchorDate), [qAnchorDate]);
   const [cpMode, setCpMode] = useState(() => loadLS("cpMode", ""));
   useEffect(() => saveLS("cpMode", cpMode), [cpMode]);
   const [weekOffset, setWeekOffset] = useState(0);
+  // 14 seances. cond = tour 1, cond2 = tour 2 : les FULL tournent d'un tour a l'autre, toujours 2 seances minimum entre deux FULL.
   const SESSION_QUEUE = [
-    { w: "A", d: "MONDAY", label: "Pull", cond: "full" }, { w: "A", d: "TUESDAY", label: "Push", cond: "light" }, { w: "A", d: "WEDNESDAY", label: "Work Cap", cond: "full" }, { w: "A", d: "THURSDAY", label: "Legs", cond: "light" }, { w: "A", d: "FRIDAY", label: "Arms", cond: "light" }, { w: "A", d: "SATURDAY", label: "Mobility", cond: "recovery" },
-    { w: "B", d: "MONDAY", label: "Pull", cond: "light" }, { w: "B", d: "TUESDAY", label: "Push", cond: "full" }, { w: "B", d: "WEDNESDAY", label: "Work Cap", cond: "full" }, { w: "B", d: "THURSDAY", label: "Legs", cond: "full" }, { w: "B", d: "FRIDAY", label: "Arms", cond: "light" }, { w: "B", d: "SATURDAY", label: "Mobility", cond: "recovery" }
+    { w: "A", d: "MONDAY", label: "Pull", cond: "full", cond2: "light" }, { w: "A", d: "TUESDAY", label: "Push", cond: "light", cond2: "full" }, { w: "A", d: "WEDNESDAY", label: "Work Cap", cond: "light", cond2: "light" }, { w: "A", d: "THURSDAY", label: "Legs", cond: "full", cond2: "light" }, { w: "A", d: "FRIDAY", label: "Arms", cond: "light", cond2: "full" }, { w: "A", d: "ARMOR", label: "Armor", cond: "light", cond2: "light" }, { w: "A", d: "SATURDAY", label: "Mobility", cond: "recovery", cond2: "recovery" },
+    { w: "B", d: "MONDAY", label: "Pull", cond: "light", cond2: "full" }, { w: "B", d: "TUESDAY", label: "Push", cond: "full", cond2: "light" }, { w: "B", d: "WEDNESDAY", label: "Work Cap", cond: "light", cond2: "light" }, { w: "B", d: "THURSDAY", label: "Legs", cond: "light", cond2: "full" }, { w: "B", d: "FRIDAY", label: "Arms", cond: "full", cond2: "light" }, { w: "B", d: "ARMOR", label: "Armor", cond: "light", cond2: "light" }, { w: "B", d: "SATURDAY", label: "Mobility", cond: "recovery", cond2: "recovery" }
   ];
+  const QN = SESSION_QUEUE.length;
   const qmod = (n, m) => ((n % m) + m) % m;
   const [skipDays, setSkipDays] = useState(() => loadLS("skipDays", {}));
   const dkey = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
@@ -815,7 +827,7 @@ function Carthago() {
     const deload = qmod(wkNum, 4) === 3;
     if (dow >= 5) return { role: "rest", deload: deload, dow: dow };
     if (skipDays[dkey(date)]) return { role: "rest", skipped: true, deload: deload, dow: dow };
-    const lift = () => { const i = qmod(pos, 12); return { role: "lift", idx: i, session: SESSION_QUEUE[i], deload: deload, dow: dow }; };
+    const lift = () => { const i = qmod(pos, QN); const turn = qmod((cyclePos["c" + tr] || 0) + Math.floor(pos / QN), 2); const sq = SESSION_QUEUE[i]; return { role: "lift", idx: i, turn: turn, session: { ...sq, cond: turn ? sq.cond2 : sq.cond }, deload: deload, dow: dow }; };
     if (tr >= 6) {
       if (dow === 1 || dow === 3) return { role: "fight", fight: dow === 1 ? "BJJ" : "Muay Thai", deload: deload, dow: dow };
       return lift();
@@ -836,9 +848,9 @@ function Carthago() {
     else { let d = new Date(to); while (d < from) { if (resolveQueueDay(tr, d, 0).role === "lift") n--; d = new Date(d); d.setDate(d.getDate() + 1); } }
     return n;
   };
-  const posForDate = (tr, d) => qmod((qAnchorPos[tr] || 0) + liftsBetween(tr, qAnchorDate, d), 12);
+  const posForDate = (tr, d) => qmod((qAnchorPos[tr] || 0) + liftsBetween(tr, qAnchorDate, d), QN);
   const [lastDone, setLastDone] = useState(() => loadLS("lastDone", {}));
-  const posFromToday = (tr, d) => { const t = now; const tISO = t.getFullYear() + "-" + String(t.getMonth() + 1).padStart(2, "0") + "-" + String(t.getDate()).padStart(2, "0"); const doneToday = ((workoutHistory[tISO] && workoutHistory[tISO].completed) || lastDone[tr] === tISO) ? 1 : 0; return qmod((cyclePos[tr] || 0) - doneToday + liftsBetween(tr, tISO, d), 12); };
+  const posFromToday = (tr, d) => { const t = now; const tISO = t.getFullYear() + "-" + String(t.getMonth() + 1).padStart(2, "0") + "-" + String(t.getDate()).padStart(2, "0"); const doneToday = ((workoutHistory[tISO] && workoutHistory[tISO].completed) || lastDone[tr] === tISO) ? 1 : 0; return (cyclePos[tr] || 0) - doneToday + liftsBetween(tr, tISO, d); };
   const weekQueue = (tr) => {
     const tdow = now.getDay() === 0 ? 6 : now.getDay() - 1;
     const mon = new Date(now); mon.setDate(mon.getDate() - tdow + weekOffset * 7); mon.setHours(0, 0, 0, 0);
@@ -990,7 +1002,7 @@ function Carthago() {
   // One-time migration: freeze the current calendar-derived position as the completion counter
   useEffect(() => {
     if (loadLS("cpMode", "") === "v2") return;
-    setCyclePos(p => ({ 4: posForDate(4, now), 5: posForDate(5, now), 6: posForDate(6, now) }));
+    setCyclePos(p => ({ 4: posForDate(4, now), 5: posForDate(5, now), 6: posForDate(6, now), q: CARTHAGO_QN }));
     saveLS("cpMode", "v2"); setCpMode("v2");
   }, []);
   useEffect(() => saveLS("cycleWeek", cycleWeek), [cycleWeek]);
@@ -1022,7 +1034,7 @@ function Carthago() {
     if (typeof data.autoMode === "boolean") setAutoMode(data.autoMode);
     if (data.testDraft) setTestDraft(data.testDraft);
     if (data.testHistory) setTestHistory(data.testHistory);
-    if (data.qAnchorDate) setQAnchorDate(data.qAnchorDate); if (data.qAnchorPos) setQAnchorPos(data.qAnchorPos); if (data.cpMode === "v2") { setCpMode("v2"); if (data.cyclePos) { setCyclePos(data.cyclePos); setQueueHome(data.cyclePos); } }
+    if (data.qAnchorDate) setQAnchorDate(data.qAnchorDate); if (data.qAnchorPos) setQAnchorPos(data.qAnchorPos); if (data.cpMode === "v2") { setCpMode("v2"); if (data.cyclePos) { const cq = carthagoQueue14(data.cyclePos); setCyclePos(cq); setQueueHome(cq); } }
     if (typeof data.queueMode === "boolean") setQueueMode(data.queueMode);
     if (data.customParts) setCustomParts(data.customParts); if (data.xSets) setXSets(data.xSets); if (data.skipDays) setSkipDays(data.skipDays); if (data.swapMap) setSwapMap(data.swapMap);
     if (data.tier) setTier(data.tier);
@@ -1273,7 +1285,7 @@ function Carthago() {
     // If already marked with SAME condition, toggle off (unmark)
     if (existing && existing.completed && existing.condition === condition) {
       const nh = { ...workoutHistory, [k]: { ...workoutHistory[k], completed: false } };
-      const ncp = { ...cyclePos, [tier]: qmod((cyclePos[tier] || 0) - 1, 12) };
+      const p0 = cyclePos[tier] || 0; const ncp = { ...cyclePos, [tier]: qmod(p0 - 1, QN) }; if (p0 === 0) ncp["c" + tier] = qmod((cyclePos["c" + tier] || 0) + 1, 2);
       const nld = { ...lastDone }; if (nld[tier] === k) delete nld[tier];
       saveLS("workoutHistory", nh); saveLS("cyclePos", ncp); saveLS("lastDone", nld);
       setWorkoutHistory(nh); setCyclePos(ncp); setLastDone(nld);
@@ -1295,7 +1307,7 @@ function Carthago() {
       const nh = { ...workoutHistory, [k]: { week, day: dayName, condition, completed: true, completedAt: Date.now(), durationMin, exerciseData: sessionLogs, completedChecks: sessionChecks, injuries: activeInjuries } };
       saveLS("workoutHistory", nh); setWorkoutHistory(nh);
       if (!wasCompleted) {
-        const ncp = { ...cyclePos, [tier]: qmod((cyclePos[tier] || 0) + 1, 12) }; const nld = { ...lastDone, [tier]: k };
+        const p0 = cyclePos[tier] || 0; const ncp = { ...cyclePos, [tier]: qmod(p0 + 1, QN) }; if (p0 + 1 >= QN) ncp["c" + tier] = qmod((cyclePos["c" + tier] || 0) + 1, 2); const nld = { ...lastDone, [tier]: k };
         saveLS("cyclePos", ncp); saveLS("lastDone", nld); setCyclePos(ncp); setLastDone(nld);
       }
       // RESET: clear checkmarks and log inputs for this week+day
@@ -1397,7 +1409,11 @@ function Carthago() {
   const dayName = qLift ? qDay.session.d : days[selectedDay].name;
   const woRaw = workouts[dayName];
   const isTierTraining = woRaw && woRaw.tierRequired ? tier >= woRaw.tierRequired : true;
-  const recWo = (effCond === "recovery" && isTierTraining && recoveryWorkouts[dayName]) ? recoveryWorkouts[dayName] : null;
+  const qMob = qLift && qDay.session.label === "Mobility";
+  const recWo = (effCond === "recovery" && isTierTraining && !qMob && recoveryWorkouts[dayName]) ? recoveryWorkouts[dayName] : null;
+  // File de 14 : sur une seance de la file, rien n'est saute. LIGHT = memes exercices, une serie de moins. RECOVERY choisi a la main = modele recovery.
+  const qNoSkip = qLift && !recWo;
+  const skipCond = qNoSkip ? "full" : condition;
   const t6Overrides = effWeek === "A" ? tier6OverridesA : tier6OverridesB;
   // Force Tier-6 session content for ALL tiers on a queue lift day
   const t6Wo = (!recWo && (tier >= 6 || qLift) && t6Overrides[dayName]) ? t6Overrides[dayName] : null;
@@ -1410,9 +1426,9 @@ function Carthago() {
   const woTime = qEmpty ? "" : (recWo ? recWo.time : t6Wo ? t6Wo.trainTime : (isTierTraining && woRaw && woRaw.trainTime ? woRaw.trainTime : (wo ? wo.time : "")));
   const totalEx = wo && wo.blocks ? wo.blocks.reduce((a, b) => a + b.exercises.length, 0) : 0;
   const wk = `${effWeek}-${dayName}`;
-  const isLightPower = (bn) => condition === "light" && bn.toUpperCase().includes("POWER");
+  const isLightPower = (bn) => !qNoSkip && condition === "light" && bn.toUpperCase().includes("POWER");
   const capFor = (block) => { if (!queueMode || !qLift || !qDay || !qDay.session) return false; const U = block.name.toUpperCase(); const lab = qDay.session.label; if (lab === "Arms") return true; if (lab === "Legs") return !U.includes("MAIN LIFT"); if (lab === "Push") return !U.includes("MAIN LIFT") && !U.includes("T-SPINE") && !U.includes("BENCH PRESS"); if (lab === "Pull") return U.includes("BACK VOLUME"); return false; };
-  const blkMin = (block) => { const U = block.name.toUpperCase(); const fin = U.includes("FINISHER") || U.includes("CONDITIONING"); if (condition === "light" && fin) return 0; const prep = U.includes("PREP") || U.includes("ACTIVATION") || U.includes("MOBILITY"); const key = block.exercises.some(e => e.key); const per = prep ? 1 : key ? 2.5 : fin ? 1.5 : 1.8; const f = Math.min(block.sets, capFor(block) ? 2 : 99); const st = isLightPower(block.name) ? 1 : (condition === "light" ? Math.max(f - 1, 1) : f); const n = block.exercises.filter((e, i) => { if (isLightPower(block.name)) return i === 0; const r = rotationMap[e.name]; return !(r && ((condition === "light" && r.light === null) || (condition === "recovery" && r.recovery === null))); }).length; return st * per * n; };
+  const blkMin = (block) => { const U = block.name.toUpperCase(); const fin = U.includes("FINISHER") || U.includes("CONDITIONING"); if (skipCond === "light" && fin) return 0; const prep = U.includes("PREP") || U.includes("ACTIVATION") || U.includes("MOBILITY"); const key = block.exercises.some(e => e.key); const per = prep ? 1 : key ? 2.5 : fin ? 1.5 : 1.8; const f = Math.min(block.sets, capFor(block) ? 2 : 99); const st = isLightPower(block.name) ? 1 : (condition === "light" ? Math.max(f - 1, 1) : f); const n = block.exercises.filter((e, i) => { if (isLightPower(block.name)) return i === 0; const r = rotationMap[e.name]; return !(r && ((skipCond === "light" && r.light === null) || (skipCond === "recovery" && r.recovery === null))); }).length; return st * per * n; };
   const ssEligible = (b) => { const U = b.name.toUpperCase(); return !b.exercises.some(e => e.key) && !/PREP|ACTIVATION|MOBILITY|WARM-UP|CARS|POWER|PRIMER|FINISHER|CONDITIONING|STRETCH|HANG/.test(U); };
   const ssPair = {};
   if (supersetOn && condition !== "recovery" && wo && wo.blocks) { let pend = -1; wo.blocks.forEach((b, bi) => { if (ssEligible(b)) { if (pend >= 0) { ssPair[pend] = bi; ssPair[bi] = pend; pend = -1; } else pend = bi; } else pend = -1; }); }
@@ -1449,14 +1465,14 @@ function Carthago() {
     wo.blocks.forEach((block, bi) => {
       if (block.tierMax && tier > block.tierMax) return;
       const isRec = isRecoveryBlock(block.name);
-      if (condition === "recovery" && !wo._isRecovery && !isRec) return;
+      if (skipCond === "recovery" && !wo._isRecovery && !isRec) return;
       const isFin = block.name.toUpperCase().includes("FINISHER") || block.name.toUpperCase().includes("CONDITIONING");
-      if (condition === "light" && isFin) return;
+      if (skipCond === "light" && isFin) return;
       if (tbHidden.has(bi)) return;
       block.exercises.forEach((origEx, ei) => {
         const r = rotationMap[origEx.name];
         const lp = isLightPower(block.name);
-        const skip = lp ? ei !== 0 : (r && ((condition === "light" && r.light === null) || (condition === "recovery" && r.recovery === null)));
+        const skip = lp ? ei !== 0 : (r && ((skipCond === "light" && r.light === null) || (skipCond === "recovery" && r.recovery === null)));
         if (skip) return;
         total++;
         if (completedEx[`${wk}-${bi}-${origEx.name}`]) done++;
@@ -1623,7 +1639,7 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
                 React.createElement("div", null,
                   React.createElement("div", { style: { fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", color: "var(--dim)" } }, dayCtx),
                   React.createElement("div", { style: { fontSize: 34, fontWeight: 800, color: "var(--bone)", letterSpacing: "-0.02em", lineHeight: 0.95, marginTop: 5 } }, heroTitle),
-                  q.role === "lift" ? React.createElement("div", { style: { fontSize: 11, fontWeight: 500, color: "var(--smoke)", marginTop: 5 } }, "Session " + (q.idx + 1) + "/12 \u00B7 Block " + q.session.w) : null
+                  q.role === "lift" ? React.createElement("div", { style: { fontSize: 11, fontWeight: 500, color: "var(--smoke)", marginTop: 5 } }, "Session " + (q.idx + 1) + "/" + QN + " \u00B7 Block " + q.session.w) : null
                 ),
                 q.deload ? React.createElement("span", { style: { fontSize: 9, fontWeight: 800, padding: "5px 10px", borderRadius: 100, background: "var(--light)", color: "#0a0a0a", letterSpacing: "0.05em" } }, "DELOAD") : null
               )
@@ -1645,19 +1661,19 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
           queueMode ? (() => {
             const t0 = new Date(now); t0.setHours(0, 0, 0, 0);
             const doneT = !!(workoutHistory[dkey(t0)] && workoutHistory[dkey(t0)].completed);
-            const cur = qmod(cyclePos[tier] || 0, 12);
+            const cur = qmod(cyclePos[tier] || 0, QN);
             const lbl = doneT ? "Set next session" : "Set today's session";
             const choose = (i) => { const n = { ...cyclePos, [tier]: i }; saveLS("cyclePos", n); setCyclePos(n); setPickOpen(false); setUserChangedDay(false); setWeekOffset(0); setSelectedDay(now.getDay() === 0 ? 6 : now.getDay() - 1); };
-            const cc = { full: "var(--full)", light: "var(--light)", recovery: "var(--recovery)" };
+            const cc = { full: "var(--full)", light: "var(--light)", recovery: "var(--recovery)" }; const turnP = cyclePos["c" + tier] || 0;
             return React.createElement("div", { style: { marginTop: 6 } },
-              React.createElement("button", { onClick: () => setPickOpen(!pickOpen), style: { width: "100%", padding: "9px", borderRadius: 12, cursor: "pointer", fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--disp)", textTransform: "uppercase", border: "1px solid " + (pickOpen ? "var(--ember)" : "var(--line-2)"), background: pickOpen ? "rgba(255,90,31,.10)" : "transparent", color: pickOpen ? "var(--ember-2)" : "var(--smoke)" } }, "⇅ " + lbl + " · " + (cur + 1) + "/12 " + SESSION_QUEUE[cur].label),
+              React.createElement("button", { onClick: () => setPickOpen(!pickOpen), style: { width: "100%", padding: "9px", borderRadius: 12, cursor: "pointer", fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--disp)", textTransform: "uppercase", border: "1px solid " + (pickOpen ? "var(--ember)" : "var(--line-2)"), background: pickOpen ? "rgba(255,90,31,.10)" : "transparent", color: pickOpen ? "var(--ember-2)" : "var(--smoke)" } }, "⇅ " + lbl + " · " + (cur + 1) + "/" + QN + " " + SESSION_QUEUE[cur].label),
               pickOpen && React.createElement("div", { style: { marginTop: 6, padding: 8, background: "var(--ash)", border: "1px solid var(--line-2)", borderRadius: 14 } },
                 React.createElement("div", { style: { fontSize: 9, color: "var(--dim)", marginBottom: 6, lineHeight: 1.4 } }, (doneT ? "Today is done. Pick the session you do next." : "Pick the session you do today.") + " The queue keeps moving on its own after each Mark Complete."),
                 React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 5 } },
                   SESSION_QUEUE.map((sq, i) => React.createElement("button", { key: i, onClick: () => choose(i), style: { display: "flex", alignItems: "center", gap: 7, padding: "9px 10px", borderRadius: 10, cursor: "pointer", textAlign: "left", border: "1px solid " + (i === cur ? "var(--ember)" : "var(--line)"), background: i === cur ? "rgba(255,90,31,.12)" : "var(--coal)", color: "var(--bone)" } },
-                    React.createElement("span", { style: { fontSize: 10, fontWeight: 800, color: i === cur ? "var(--ember-2)" : "var(--dim)", minWidth: 30, fontVariantNumeric: "tabular-nums" } }, (i + 1) + "/12"),
+                    React.createElement("span", { style: { fontSize: 10, fontWeight: 800, color: i === cur ? "var(--ember-2)" : "var(--dim)", minWidth: 30, fontVariantNumeric: "tabular-nums" } }, (i + 1) + "/" + QN),
                     React.createElement("span", { style: { flex: 1, fontSize: 11, fontWeight: 700 } }, sq.label, React.createElement("span", { style: { fontSize: 9, color: "var(--dim)", fontWeight: 600 } }, " · " + sq.w)),
-                    React.createElement("span", { style: { width: 7, height: 7, borderRadius: "50%", background: cc[sq.cond] || "var(--dim)" } })
+                    React.createElement("span", { style: { width: 7, height: 7, borderRadius: "50%", background: cc[turnP ? sq.cond2 : sq.cond] || "var(--dim)" } })
                   ))
                 )
               )
@@ -1676,7 +1692,7 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
               return out.map((it, ix) => {
                 const r = it.r;
                 const rc = r.role === "lift" ? "var(--smoke)" : r.role === "fight" ? "var(--ember)" : r.role === "recovery" ? "var(--light)" : "var(--bone)";
-                const lab = r.role === "lift" ? (r.session.label + " (" + (r.idx + 1) + "/12)") : r.role === "fight" ? ("Fight \u00B7 " + r.fight) : r.role === "recovery" ? "Recovery" : "Rest";
+                const lab = r.role === "lift" ? (r.session.label + " (" + (r.idx + 1) + "/" + QN + ")") : r.role === "fight" ? ("Fight \u00B7 " + r.fight) : r.role === "recovery" ? "Recovery" : "Rest";
                 const di = (it.d.getDay() === 0 ? 6 : it.d.getDay() - 1);
                 return React.createElement("div", { key: ix, style: { display: "flex", justifyContent: "space-between", fontSize: 11, padding: "4px 7px", borderRadius: 4, background: ix === 0 ? "rgba(255,90,31,0.09)" : "transparent" } },
                   React.createElement("span", { style: { color: "var(--bone)", fontWeight: ix === 0 ? 800 : 600 } }, wd[di] + (ix === 0 ? " \u00B7 today" : "")),
@@ -1948,11 +1964,11 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
             let flaggedCount = 0;
             wo.blocks.forEach(block => {
               if (block.tierMax && tier > block.tierMax) return;
-              if (condition === "recovery" && !wo._isRecovery && !isRecoveryBlock(block.name)) return;
+              if (skipCond === "recovery" && !wo._isRecovery && !isRecoveryBlock(block.name)) return;
               const isPrep = block.name.toUpperCase().includes("PREP") || block.name.toUpperCase().includes("ACTIVATION") || block.name.toUpperCase().includes("MOBILITY");
               const isMain = block.exercises.some(e => e.key);
               const isFinish = block.name.toUpperCase().includes("FINISHER") || block.name.toUpperCase().includes("CONDITIONING");
-              if (condition === "light" && isFinish) return;
+              if (skipCond === "light" && isFinish) return;
               const legCap2 = queueMode && qLift && qDay && qDay.session && qDay.session.label === "Legs" && !block.name.toUpperCase().includes("MAIN LIFT");
               const armsCap2 = queueMode && qLift && qDay && qDay.session && qDay.session.label === "Arms";
               const pushCap2 = queueMode && qLift && qDay && qDay.session && qDay.session.label === "Push" && !block.name.toUpperCase().includes("MAIN LIFT") && !block.name.toUpperCase().includes("T-SPINE") && !block.name.toUpperCase().includes("BENCH PRESS");
@@ -1965,8 +1981,8 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
                 // Check if rotation skips this exercise
                 const rot = rotationMap[ex.name];
                 const rotSkipped = isLightPower(block.name) ? exi !== 0 : rot && (
-                  (condition === "light" && rot.light === null) ||
-                  (condition === "recovery" && rot.recovery === null)
+                  (skipCond === "light" && rot.light === null) ||
+                  (skipCond === "recovery" && rot.recovery === null)
                 );
                 if (rotSkipped) { flaggedCount++; return; }
                 const exZones = getZones(ex.name);
@@ -2189,14 +2205,14 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
         wo.blocks.forEach((block, bi) => {
           if (block.tierMax && tier > block.tierMax) return;
           const isRec = isRecoveryBlock(block.name);
-          if (condition === "recovery" && !wo._isRecovery && !isRec) return;
+          if (skipCond === "recovery" && !wo._isRecovery && !isRec) return;
           const isFin = block.name.toUpperCase().includes("FINISHER") || block.name.toUpperCase().includes("CONDITIONING");
-          if (condition === "light" && isFin) return;
+          if (skipCond === "light" && isFin) return;
           if (tbHidden.has(bi)) return;
           block.exercises.forEach((origEx, ei) => {
             const r = rotationMap[origEx.name];
             const lp = isLightPower(block.name);
-            const skip = lp ? ei !== 0 : (r && ((condition === "light" && r.light === null) || (condition === "recovery" && r.recovery === null)));
+            const skip = lp ? ei !== 0 : (r && ((skipCond === "light" && r.light === null) || (skipCond === "recovery" && r.recovery === null)));
             if (skip) return;
             total++;
             if (completedEx[`${wk}-${bi}-${origEx.name}`]) done++;
@@ -2220,7 +2236,7 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
         // Skip blocks that belong to higher-tier days (redistributed to Day 5/6)
         if (block.tierMax && tier > block.tierMax) return null;
         const isRec = isRecoveryBlock(block.name);
-        if (condition === "recovery" && !wo._isRecovery && !isRec) return null;
+        if (skipCond === "recovery" && !wo._isRecovery && !isRec) return null;
         const bD = block.exercises.every((ex) => completedEx[`${wk}-${bi}-${ex.name}`]);
         const isLegsCap = queueMode && qLift && qDay && qDay.session && qDay.session.label === "Legs" && !block.name.toUpperCase().includes("MAIN LIFT");
         const isArmsCap = queueMode && qLift && qDay && qDay.session && qDay.session.label === "Arms";
@@ -2232,11 +2248,11 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
         // EMPTY-BLOCK FIX: if every exercise in this block is skipped by rotation (light/recovery null), hide the whole block
         const allSkipped = !isLightPower(block.name) && block.exercises.length > 0 && block.exercises.every(e => {
           const r = rotationMap[e.name];
-          return r && ((condition === "light" && r.light === null) || (condition === "recovery" && r.recovery === null));
+          return r && ((skipCond === "light" && r.light === null) || (skipCond === "recovery" && r.recovery === null));
         });
         if (allSkipped) return null;
         if (tbHidden.has(bi)) return React.createElement("div", { key: bi, style: { marginBottom: 6, padding: "9px 12px", background: "var(--coal)", border: "1px dashed var(--line-2)", borderRadius: 12, fontSize: 9, color: "var(--dim)", fontWeight: 600, letterSpacing: "0.04em" } }, "\u23ED " + block.name + " \u00B7 left out to fit " + tBox + " min");
-        if (condition === "light" && isFinisher) return React.createElement("div", { key: bi, style: { marginBottom: 6, padding: "9px 12px", background: "var(--coal)", border: "1px dashed var(--line-2)", borderRadius: 12, opacity: 0.6 } },
+        if (skipCond === "light" && isFinisher) return React.createElement("div", { key: bi, style: { marginBottom: 6, padding: "9px 12px", background: "var(--coal)", border: "1px dashed var(--line-2)", borderRadius: 12, opacity: 0.6 } },
           React.createElement("span", { style: { fontSize: 9, color: "var(--smoke)" } }, "\uD83D\uDFE1 " + block.name + " \u2014 Optional in LIGHT mode")
         );
         return React.createElement("div", { key: bi, style: { marginBottom: 10, border: "1px solid", borderColor: bD ? "rgba(255,90,31,.35)" : "var(--line)", borderRadius: 16, overflow: "hidden", background: "var(--coal)", boxShadow: "inset 0 1px 0 rgba(255,255,255,.04)" } },
@@ -2244,17 +2260,18 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
             React.createElement("span", { style: { fontSize: 11, fontWeight: 700, color: block.color, letterSpacing: "0.07em", fontFamily: "var(--disp)", textTransform: "uppercase" } }, block.name, (ssPair[bi] !== undefined && !tbHidden.has(ssPair[bi])) ? React.createElement("span", { style: { display: "block", fontSize: 8.5, fontWeight: 700, color: "var(--ember-2)", letterSpacing: "0.04em", marginTop: 2, textTransform: "none" } }, "\u21C4 Superset with " + blockKind(wo.blocks[ssPair[bi]].name).toLowerCase() + ": one set each, then rest") : null),
             React.createElement("span", { style: { fontSize: 8, color: condition === "light" && adjSets !== block.sets ? "var(--light)" : "var(--smoke)", fontFamily: "var(--disp)", letterSpacing: "0.04em" } }, adjSets + (condition === "light" && adjSets !== block.sets ? " sets (reduced)" : " sets"))
           ),
+          (qNoSkip && condition === "light" && block.exercises.some(e => e.key)) && React.createElement("div", { style: { padding: "7px 11px", fontSize: 9.5, fontWeight: 700, color: "var(--light)", background: "rgba(244,181,63,.08)", borderBottom: "1px solid var(--line)", letterSpacing: "0.03em" } }, "LIGHT: same weight, fewer sets. Stop 2 reps short. PR attempts only on FULL days."),
           block.exercises.map((origEx, ei) => {
             // ═══ EXERCISE ROTATION CHECK ═══
             const rotation = rotationMap[origEx.name];
             const lpB = isLightPower(block.name);
             const rotVariant = !lpB && rotation && (
-              (condition === "light" && rotation.light) ? rotation.light :
-              (condition === "recovery" && rotation.recovery) ? rotation.recovery : null
+              (skipCond === "light" && rotation.light) ? rotation.light :
+              (skipCond === "recovery" && rotation.recovery) ? rotation.recovery : null
             );
             const shouldSkip = lpB ? ei !== 0 : (rotation && (
-              (condition === "light" && rotation.light === null) ||
-              (condition === "recovery" && rotation.recovery === null)
+              (skipCond === "light" && rotation.light === null) ||
+              (skipCond === "recovery" && rotation.recovery === null)
             ));
             if (shouldSkip) return null;
             const swEx = swapMap[`${wk}-${bi}-${origEx.name}`];

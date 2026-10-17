@@ -41,7 +41,10 @@ Gate 0 en plus pendant le renommage : `tools/rename-audit.sh` (zéro occurrence 
 - JS `getDay()` : dimanche = 0. Toute logique d'auto-avance doit le gérer (bug historique : Monday fantôme le dimanche).
 - Strip 7 jours (L M M J V S D), dimanche = repos permanent. Les gates d'index ont été migrés en conséquence.
 - Bouton Rest Day : un jour sauté renvoie `role: "rest"` pour que `liftsBetween` l'ignore.
-- Vague d'intensité FULL / LIGHT / RECOVERY intégrée à une queue de 12 séances, auto + override manuel. Garde de complétion via state `lastDone` (race condition corrigée).
+- Vague d'intensité FULL / LIGHT / RECOVERY intégrée à une queue de 14 séances (depuis le 17.10.2026, ex 12), auto + override manuel. Garde de complétion via state `lastDone` (race condition corrigée).
+- File de 14 : Pull, Push, Work Cap, Legs, Arms, Armor, Mobility, en A puis B. Contenu dans `tier6OverridesA/B` (clé `ARMOR` pour Armor, stub vide dans `workoutsA/B.ARMOR`). Chaque seance <= 60 min avec echauffement (trainTime). Les 147 exercices (programme + modele recovery) sont tous dans la file : ne jamais en sortir un.
+- FULL : `cond` (tour 1) / `cond2` (tour 2), au moins 2 seances entre deux FULL. `cyclePos` = { [tier]: index, c[tier]: tour 0/1, q: 14 }. Fin de tour au Mark Complete = index 0 et tour suivant. Ancienne file de 12 migree par `carthagoQueue14` (au demarrage et au chargement cloud).
+- Seance de la file (`qNoSkip`) : rien n'est saute. LIGHT = memes exercices, une serie de moins (plus de rotationMap, plus de finisher optionnel, plus de "power = 1 exercice"). Main lift en LIGHT : meme poids, moins de series, stop 2 reps avant l'echec, PR seulement en FULL. Mobility de la file = vraie seance Mobility A/B ; le modele `recoveryWorkouts` ne sert plus que si Bayram choisit RECOVERY a la main. Test : `tools/queuetest.js`.
 - Set caps sur les jours Leg / Arms / Push FULL : 2 séries, avec exceptions par NOM de bloc (MAIN LIFT, T-SPINE PREP).
 - `xSets` (boutons +Set / -Set par exercice) persisté en localStorage.
 - Toute action destructive ("clear" de l'état courant, Mark Complete) doit persister de façon SYNCHRONE (`saveLS()` direct) avant toute lecture/écriture Firebase. Jamais via une cascade de `useEffect`.

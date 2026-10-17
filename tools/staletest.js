@@ -1,11 +1,12 @@
 // CARTHAGO : cloud en retard au chargement (bug du 13.10.2026).
 // Seance 6/12 terminee sur le telephone, envoi cloud jamais parti. Le lendemain le cloud (ancien : seance non faite,
 // chrono en marche) ne doit plus ecraser le telephone.
-// 1. Telephone en avance + base connue : seance terminee, file a 7/12, chrono arrete, et c'est ce qui part au cloud.
+// File de 14 depuis le 17.10.2026 : l'ancienne position 6/12 (index 6, Pull B) devient 8/14 (index 7).
+// 1. Telephone en avance + base connue : seance terminee, file a 8/14, chrono arrete, et c'est ce qui part au cloud.
 // 2. Appareil neuf (pas de base) : le cloud gagne, comme avant.
 // 3. Base d'un autre compte : le cloud gagne.
 // 4. Garde du chrono : chrono oublie (> 6 h) ou seance deja terminee => arrete.
-// 5. Bouton "Set today's session" : choisir 7/12 Pull met le hero sur Session 7/12.
+// 5. Bouton "Set today's session" : choisir 8/14 Pull met le hero sur Session 8/14.
 const { JSDOM, VirtualConsole } = require("jsdom");
 const { readApp, wait } = require("./_harness");
 const NOW = new Date(2026, 9, 14, 12, 0, 0); // mercredi 14.10.2026
@@ -45,17 +46,17 @@ async function run({ local, base, cloud, uid = "u1", after }) {
   // 1
   let r = await run({ local: LOCAL, base: { uid: "u1", doc: STALE }, cloud: STALE });
   chk(r.ls("workoutHistory") && r.ls("workoutHistory")[Y] && r.ls("workoutHistory")[Y].completed, "1: seance d'hier perdue");
-  chk(r.ls("cyclePos") && r.ls("cyclePos")[5] === 6, "1: file revenue a " + JSON.stringify(r.ls("cyclePos")));
+  chk(r.ls("cyclePos") && r.ls("cyclePos")[5] === 7, "1: file revenue a " + JSON.stringify(r.ls("cyclePos")));
   chk(r.ls("sessionTimer") && r.ls("sessionTimer").running === false, "1: chrono relance par le cloud");
   const last = r.saved[r.saved.length - 1];
-  chk(last && last.workoutHistory[Y] && last.workoutHistory[Y].completed && last.cyclePos[5] === 6, "1: la correction n'est pas envoyee au cloud");
-  chk(/Session 7\/12/.test(r.text()), "1: hero n'affiche pas Session 7/12");
+  chk(last && last.workoutHistory[Y] && last.workoutHistory[Y].completed && last.cyclePos[5] === 7, "1: la correction n'est pas envoyee au cloud");
+  chk(/Session 8\/14/.test(r.text()), "1: hero n'affiche pas Session 8/14");
   // 2
   r = await run({ local: {}, base: null, cloud: { ...STALE, sessionTimer: { running: false, startedAt: null, dayKey: null } } });
-  chk(r.ls("cyclePos") && r.ls("cyclePos")[5] === 5, "2: appareil neuf, le cloud n'a pas gagne");
+  chk(r.ls("cyclePos") && r.ls("cyclePos")[5] === 6, "2: appareil neuf, le cloud n'a pas gagne");
   // 3
   r = await run({ local: LOCAL, base: { uid: "other", doc: STALE }, cloud: STALE });
-  chk(r.ls("cyclePos") && r.ls("cyclePos")[5] === 5, "3: base d'un autre compte utilisee");
+  chk(r.ls("cyclePos") && r.ls("cyclePos")[5] === 6, "3: base d'un autre compte utilisee");
   // 4
   r = await run({ local: {}, base: null, cloud: STALE });
   chk(r.ls("sessionTimer") && r.ls("sessionTimer").running === false, "4a: chrono de 18 h encore en marche");
@@ -70,12 +71,12 @@ async function run({ local, base, cloud, uid = "u1", after }) {
     chk(!!open, "5: bouton Set today's session absent");
     if (!open) return;
     open.dispatchEvent(new o.w.MouseEvent("click", { bubbles: true })); await wait(200);
-    const pick = btn().find(b => /^7\/12Pull/.test(b.textContent.replace(/\s+/g, "")));
-    chk(!!pick, "5: choix 7/12 Pull absent");
+    const pick = btn().find(b => /^8\/14Pull/.test(b.textContent.replace(/\s+/g, "")));
+    chk(!!pick, "5: choix 8/14 Pull absent");
     if (!pick) return;
     pick.dispatchEvent(new o.w.MouseEvent("click", { bubbles: true })); await wait(300);
-    chk(/Session 7\/12/.test(o.text()), "5: hero pas sur Session 7/12 apres le choix");
-    chk(o.ls("cyclePos")[5] === 6, "5: choix non enregistre");
+    chk(/Session 8\/14/.test(o.text()), "5: hero pas sur Session 8/14 apres le choix");
+    chk(o.ls("cyclePos")[5] === 7, "5: choix non enregistre");
   } });
   if (fails.length) { console.log("ECHEC staletest :\n  " + fails.join("\n  ")); process.exit(1); }
   console.log("OK staletest : cloud en retard ne gagne plus, appareil neuf / autre compte inchanges, garde du chrono (3 cas), Set today's session");

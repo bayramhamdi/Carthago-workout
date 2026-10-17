@@ -635,1491 +635,2325 @@ const recoveryWorkouts = {
 // ═══════════════════════════════════════════════════════════
 
 const tier6OverridesA = {
-  // ─── MONDAY: DEADLIFT ───
-  // Monday: DL + Pulls + Aerobic
+  // MONDAY
   MONDAY: {
-    trainTitle: "PULL — Deadlift + Back + Aerobic",
-    trainTime: "~65 min",
-    trainNote: "Pull day. Hip prep, KB swing, deadlift, back volume, sled row, 20 min aerobic.",
-    blocks: [{
-      name: "A. PREP",
-      sets: 1,
-      color: "var(--full)",
-      exercises: [{
-        name: "Facing Wall Hip Circle Rotations",
-        detail: "6 reps each direction. Hip CARs.",
-        track: "Reps",
-        vid: "odvEl4NkZuo",
-        dr: 6
-      }, {
-        name: "Heel Clicks",
-        detail: "8 reps. Prone, click heels. Glute + adductor activation.",
-        track: "Reps",
-        vid: "bBtfjTVPkus",
-        dr: 8
-      }, {
-        name: "Deadbug",
-        detail: "8 reps each leg. Low back pressed to floor. Anti-extension brace before pulling.",
-        track: "Reps",
-        vid: "rvNkdS3qAyM",
-        dr: 8
-      }, {
-        name: "Hip Flexor Loaded Arc Reach",
-        detail: "8 reps each leg. KB eccentric. Hip flexor prep for the hinge.",
-        track: "Reps + Weight",
-        vid: "LuNnBWO8wZ8",
-        dr: 8
-      }, {
-        name: "Band Assisted Straight Leg Raise",
-        detail: "8 reps each leg. Band-assisted hamstring stretch. Prime the hinge.",
-        track: "Reps",
-        vid: "Wnhc8hsTtpI",
-        dr: 8
-      }]
-    }, {
-      name: "A2. POWER",
-      sets: 4,
-      color: "#E65100",
-      exercises: [{
-        name: "Kettlebell Swing",
-        detail: "6 reps. Hip hinge power. Explosive.",
-        track: "Reps + Weight",
-        vid: "moK1eINw7NY",
-        dr: 6
-      }]
-    }, {
-      name: "B. MAIN LIFT",
-      sets: 4,
-      color: "var(--recovery)",
-      exercises: [{
-        name: "TRAP BAR DEADLIFT",
-        detail: "6 reps. RPE 8. Benchmark lift.",
-        track: "Reps + Weight",
-        key: true,
-        vid: "nZ4T7DPGa2g",
-        dr: 6
-      }]
-    }, {
-      name: "C. MAIN PULL",
-      sets: 3,
-      color: "#1565C0",
-      exercises: [{
-        name: "Behind-Neck Pull-Ups",
-        detail: "6 reps. STRICT + controlled, only to comfortable depth. Physio-prescribed. Stop if pinching.",
-        track: "Reps + Weight",
-        vid: "RRJ9Rz3ZW9M",
-        dr: 6
-      }, {
-        name: "Pull-Ups",
-        detail: "8 reps. Full ROM. Add weight if needed.",
-        track: "Reps + Weight",
-        vid: "PbfFblcxWSo",
-        dr: 8
-      }]
-    }, {
-      name: "D. SECONDARY",
-      sets: 3,
-      color: "#FF6B35",
-      exercises: [{
-        name: "Inverted Row",
-        detail: "8 reps. Strict. Horizontal pull.",
-        track: "Reps",
-        vid: "pIMXcgvVg3U",
-        dr: 8
-      }, {
-        name: "Hamstring Bridge with Pullover",
-        detail: "10 reps. Bridge + DB pullover. Posterior chain.",
-        track: "Reps + Weight",
-        vid: "cU2YDlDA8Dw",
-        dr: 10
-      }]
-    }, {
-      name: "E. BACK VOLUME",
-      sets: 3,
-      color: "var(--ember)",
-      exercises: [{
-        name: "Shoulder Hovers",
-        detail: "10 reps. Prone, hover arms. Scapular retraction.",
-        track: "Reps",
-        vid: "A0KY0DKZ1h4",
-        dr: 10
-      }, {
-        name: "Lat Sweep",
-        detail: "8 reps. Single-arm lat pulldown sweep.",
-        track: "Reps + Weight",
-        vid: "zdTbE1yHygQ",
-        dr: 8
-      }, {
-        name: "TRX Facepull",
-        detail: "12 reps. Squeeze scaps, external rotation at top.",
-        track: "Reps",
-        vid: "PoBbZrY9zTE",
-        dr: 12
-      }]
-    }, {
-      name: "F. FINISHER",
-      sets: 3,
-      color: "#37474F",
-      exercises: [{
-        name: "Dynamic Sled Row",
-        detail: "8 reps. Pull sled toward you. Back + grip.",
-        track: "Reps + Weight",
-        vid: "xdOhwytr0M8",
-        dr: 8
-      }]
-    }]
+    trainTitle: "PULL · Deadlift + Back",
+    trainTime: "~56 min",
+    trainNote: "Pull day. Hip prep, KB swing, deadlift, pull-ups, back volume.",
+    blocks: [
+      {
+        name: "A. PREP",
+        sets: 1,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Facing Wall Hip Circle Rotations",
+            detail: "6 reps each direction. Hip CARs.",
+            track: "Reps",
+            vid: "odvEl4NkZuo",
+            dr: 6
+          },
+          {
+            name: "Heel Clicks",
+            detail: "8 reps. Prone, click heels. Glute + adductor activation.",
+            track: "Reps",
+            vid: "bBtfjTVPkus",
+            dr: 8
+          },
+          {
+            name: "Hip Flexor Loaded Arc Reach",
+            detail: "8 reps each leg. KB eccentric. Hip flexor prep for the hinge.",
+            track: "Reps + Weight",
+            vid: "LuNnBWO8wZ8",
+            dr: 8
+          },
+          {
+            name: "Band Assisted Straight Leg Raise",
+            detail: "8 reps each leg. Band-assisted hamstring stretch. Prime the hinge.",
+            track: "Reps",
+            vid: "Wnhc8hsTtpI",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "A2. POWER",
+        sets: 4,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Kettlebell Swing",
+            detail: "6 reps. Hip hinge power. Explosive.",
+            track: "Reps + Weight",
+            vid: "moK1eINw7NY",
+            dr: 6
+          }
+        ]
+      },
+      {
+        name: "B. MAIN LIFT",
+        sets: 4,
+        color: "var(--recovery)",
+        exercises: [
+          {
+            name: "TRAP BAR DEADLIFT",
+            detail: "6 reps. RPE 8. Benchmark lift.",
+            track: "Reps + Weight",
+            key: true,
+            vid: "nZ4T7DPGa2g",
+            dr: 6
+          }
+        ]
+      },
+      {
+        name: "C. MAIN PULL",
+        sets: 3,
+        color: "#1565C0",
+        exercises: [
+          {
+            name: "Behind-Neck Pull-Ups",
+            detail: "6 reps. STRICT + controlled, only to comfortable depth. Physio-prescribed. Stop if pinching.",
+            track: "Reps + Weight",
+            vid: "RRJ9Rz3ZW9M",
+            dr: 6
+          },
+          {
+            name: "Pull-Ups",
+            detail: "8 reps. Full ROM. Add weight if needed.",
+            track: "Reps + Weight",
+            vid: "PbfFblcxWSo",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "D. SECONDARY",
+        sets: 3,
+        color: "#FF6B35",
+        exercises: [
+          {
+            name: "Inverted Row",
+            detail: "8 reps. Strict. Horizontal pull.",
+            track: "Reps",
+            vid: "pIMXcgvVg3U",
+            dr: 8
+          },
+          {
+            name: "Hamstring Bridge with Pullover",
+            detail: "10 reps. Bridge + DB pullover. Posterior chain.",
+            track: "Reps + Weight",
+            vid: "cU2YDlDA8Dw",
+            dr: 10
+          }
+        ]
+      },
+      {
+        name: "E. BACK VOLUME",
+        sets: 3,
+        color: "var(--ember)",
+        exercises: [
+          {
+            name: "Lat Sweep",
+            detail: "8 reps. Single-arm lat pulldown sweep.",
+            track: "Reps + Weight",
+            vid: "zdTbE1yHygQ",
+            dr: 8
+          },
+          {
+            name: "TRX Facepull",
+            detail: "12 reps. Squeeze scaps, external rotation at top.",
+            track: "Reps",
+            vid: "PoBbZrY9zTE",
+            dr: 12
+          }
+        ]
+      }
+    ]
   },
-
-  // ─── TUESDAY: BENCH ───
-  // Tuesday: Bench + Push + Core + Sled
+  // TUESDAY
   TUESDAY: {
     trainTitle: "PUSH — Bench + Shoulders + Core + Sled",
     trainTime: "~53 min",
     trainNote: "Push day. T-spine prep, bench 4x4, push volume, core, sled finisher.",
-    blocks: [{
-      name: "A. T-SPINE PREP",
-      sets: 1,
-      color: "var(--full)",
-      exercises: [{
-        name: "Cat Camel Diagonal",
-        detail: "6 reps. Slow spinal mobility.",
-        track: "Reps",
-        vid: "JrcOPzvdToQ",
-        dr: 6
-      }, {
-        name: "Kneeling T-Spine with Shoulder Opener",
-        detail: "8 reps each side. T-spine rotation + shoulder.",
-        track: "Reps",
-        vid: "LnLsZ2gZUK4",
-        dr: 8
-      }, {
-        name: "Banded Face Pulls with ER Focus",
-        detail: "8 reps. Band face pull with external rotation hold.",
-        track: "Reps",
-        vid: "sQL4qGLDhX4",
-        dr: 8
-      },
-        { name: "Banded T-Spine Rotations", detail: "8 reps each side. Banded thoracic rotation. Rotates with Needle Through week to week.", track: "Reps", vid: "75hleCEfV_I", dr: 8 },
-        { name: "Banded Overhead Mobilization", detail: "10 reps. Band overhead, open the shoulders and lats before pressing.", track: "Reps", vid: "OuaUM7xZ1ls", dr: 10 }
-      , { name: "Wall Contours", detail: "Slow scap protraction against the wall, arms overhead. Pressing stability primer.", track: "Reps", vid: "u9tP-C1BTO0", dr: 10 }, { name: "Scap Shrugs", detail: "Hang or plank, shrug the shoulder blades without bending the elbows. Serratus activation.", track: "Reps", vid: "1Et35cxbCgo", dr: 12 }]
-    }, {
-      name: "A2. SHOULDER STABILITY",
-      sets: 1,
-      color: "var(--full)",
-      exercises: [{
-        name: "Banded External Rotation",
-        detail: "8 reps each arm. Elbow pinned. Rotator cuff.",
-        track: "Reps",
-        vid: "7DqYesMRkzU",
-        dr: 8
-      },
-        { name: "Banded Shoulder External Rotation with Arm Behind", detail: "12 reps each side. Arm behind low back, band external rotation. Posterior cuff angle.", track: "Reps", vid: "tJDOsft6JJE", dr: 12 },
-        { name: "Swiss Ball Push", detail: "3 x 10 sec. Press into a swiss ball against the wall, brace and protract. Serratus and scapular stability.", track: "Seconds", vid: "STCC2DY96Mo", dr: 10 },
-        { name: "Banded Shoulder Internal Rotation", detail: "10 reps each arm. Elbow pinned, band internal rotation. Balances the external rotation work.", track: "Reps", vid: "xZQP0IkYmUs", dr: 10 },
-        { name: "Band Pull Aparts", detail: "15 reps. Light band, pull apart at chest height. Upper-back and posture balance.", track: "Reps", vid: "SuvO4TBwSu4", dr: 15 }
-      , { name: "Bottoms-Up KB Shoulder Stability", detail: "Kettlebell upside down at shoulder height, crush the grip to keep it vertical. Cuff + grip.", track: "Seconds", vid: "P7Nd4SAK1KM", dr: 20 }]
-    }, { name: "A3. POWER", sets: 3, color: "#E65100", exercises: [ { name: "Rotational Banded Punch", detail: "8 reps each side. Muay Thaï transfer.", track: "Reps", vid: "UKsjca_cNUs", dr: 8 } ] },
+    blocks: [
       {
-      name: "B. BENCH PRESS",
-      sets: 4,
-      color: "var(--recovery)",
-      exercises: [{
-        name: "BENCH PRESS",
-        detail: "4 reps. RPE 8. Benchmark lift.",
-        track: "Reps + Weight",
-        key: true,
-        vid: "5lrpyee_asw",
-        dr: 4
-      }]
-    }, {
-      name: "C. PUSH VOLUME",
-      sets: 3,
-      color: "#FF6B35",
-      exercises: [{
-        name: "Overhead Barbell Press",
-        detail: "6 reps. Light-moderate. Strict, ribs down, full lockout. Physio-approved shoulder builder.",
-        track: "Reps + Weight",
-        vid: "G2qpTG1Eh40",
-        dr: 6
-      }, {
-        name: "Weighted Push Up",
-        detail: "12 reps. Plate on back or band.",
-        track: "Reps + Weight",
-        vid: "auh9bmLsvUs",
-        dr: 12
-      }, {
-        name: "Seated Dumbbell Shoulder Press",
-        detail: "8 reps. Strict. Full ROM.",
-        track: "Reps + Weight",
-        vid: "AyFtEJiEFWc",
-        dr: 8
+        name: "A. T-SPINE PREP",
+        sets: 1,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Cat Camel Diagonal",
+            detail: "6 reps. Slow spinal mobility.",
+            track: "Reps",
+            vid: "JrcOPzvdToQ",
+            dr: 6
+          },
+          {
+            name: "Kneeling T-Spine with Shoulder Opener",
+            detail: "8 reps each side. T-spine rotation + shoulder.",
+            track: "Reps",
+            vid: "LnLsZ2gZUK4",
+            dr: 8
+          },
+          {
+            name: "Banded Face Pulls with ER Focus",
+            detail: "8 reps. Band face pull with external rotation hold.",
+            track: "Reps",
+            vid: "sQL4qGLDhX4",
+            dr: 8
+          },
+          {
+            name: "Banded T-Spine Rotations",
+            detail: "8 reps each side. Banded thoracic rotation. Rotates with Needle Through week to week.",
+            track: "Reps",
+            vid: "75hleCEfV_I",
+            dr: 8
+          },
+          {
+            name: "Banded Overhead Mobilization",
+            detail: "10 reps. Band overhead, open the shoulders and lats before pressing.",
+            track: "Reps",
+            vid: "OuaUM7xZ1ls",
+            dr: 10
+          },
+          {
+            name: "Wall Contours",
+            detail: "Slow scap protraction against the wall, arms overhead. Pressing stability primer.",
+            track: "Reps",
+            vid: "u9tP-C1BTO0",
+            dr: 10
+          },
+          {
+            name: "Scap Shrugs",
+            detail: "Hang or plank, shrug the shoulder blades without bending the elbows. Serratus activation.",
+            track: "Reps",
+            vid: "1Et35cxbCgo",
+            dr: 12
+          }
+        ]
       },
-        { name: "Standing Banded Pec Fly", detail: "12 reps. Band anchored behind, hug the arms across. Chest under tension.", track: "Reps", vid: "BUOVM8nMeIE", dr: 12 }
-      ]
-    }, {
-      name: "D. CORE",
-      sets: 4,
-      color: "#1565C0",
-      exercises: [{
-        name: "Plank Kettlebell Saw",
-        detail: "8 reps. Plank, push KB forward and back.",
-        track: "Reps + Weight",
-        vid: "KSNVUPybktI",
-        dr: 8
-      }, {
-        name: "Landmine Rotations",
-        detail: "8 reps each side, hip to hip. Rotational power from the ground.",
-        track: "Reps + Weight",
-        vid: "r4tfGcPWYuI",
-        dr: 8
-      }, { name: "Half-Kneeling Overhead Cable Tilts", detail: "Half kneeling, arm overhead, resist the cable's lateral pull. Lateral core + overhead stability.", track: "Reps", vid: "EVNJwnlsklc", dr: 8 }]
-    }, {
-      name: "E. CONDITIONING",
-      sets: 4,
-      color: "#37474F",
-      exercises: [{
-        name: "Sled Push",
-        detail: "30 steps. Heavy. Full body conditioning.",
-        track: "Dist + Weight",
-        vid: "t68aeTBXZ7s",
-        dr: 30
-      }]
-    }]
+      {
+        name: "A2. SHOULDER STABILITY",
+        sets: 1,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Banded External Rotation",
+            detail: "8 reps each arm. Elbow pinned. Rotator cuff.",
+            track: "Reps",
+            vid: "7DqYesMRkzU",
+            dr: 8
+          },
+          {
+            name: "Banded Shoulder External Rotation with Arm Behind",
+            detail: "12 reps each side. Arm behind low back, band external rotation. Posterior cuff angle.",
+            track: "Reps",
+            vid: "tJDOsft6JJE",
+            dr: 12
+          },
+          {
+            name: "Swiss Ball Push",
+            detail: "3 x 10 sec. Press into a swiss ball against the wall, brace and protract. Serratus and scapular stability.",
+            track: "Seconds",
+            vid: "STCC2DY96Mo",
+            dr: 10
+          },
+          {
+            name: "Banded Shoulder Internal Rotation",
+            detail: "10 reps each arm. Elbow pinned, band internal rotation. Balances the external rotation work.",
+            track: "Reps",
+            vid: "xZQP0IkYmUs",
+            dr: 10
+          },
+          {
+            name: "Band Pull Aparts",
+            detail: "15 reps. Light band, pull apart at chest height. Upper-back and posture balance.",
+            track: "Reps",
+            vid: "SuvO4TBwSu4",
+            dr: 15
+          },
+          {
+            name: "Bottoms-Up KB Shoulder Stability",
+            detail: "Kettlebell upside down at shoulder height, crush the grip to keep it vertical. Cuff + grip.",
+            track: "Seconds",
+            vid: "P7Nd4SAK1KM",
+            dr: 20
+          }
+        ]
+      },
+      {
+        name: "A3. POWER",
+        sets: 3,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Rotational Banded Punch",
+            detail: "8 reps each side. Muay Thaï transfer.",
+            track: "Reps",
+            vid: "UKsjca_cNUs",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "B. BENCH PRESS",
+        sets: 4,
+        color: "var(--recovery)",
+        exercises: [
+          {
+            name: "BENCH PRESS",
+            detail: "4 reps. RPE 8. Benchmark lift.",
+            track: "Reps + Weight",
+            key: true,
+            vid: "5lrpyee_asw",
+            dr: 4
+          }
+        ]
+      },
+      {
+        name: "C. PUSH VOLUME",
+        sets: 3,
+        color: "#FF6B35",
+        exercises: [
+          {
+            name: "Overhead Barbell Press",
+            detail: "6 reps. Light-moderate. Strict, ribs down, full lockout. Physio-approved shoulder builder.",
+            track: "Reps + Weight",
+            vid: "G2qpTG1Eh40",
+            dr: 6
+          },
+          {
+            name: "Weighted Push Up",
+            detail: "12 reps. Plate on back or band.",
+            track: "Reps + Weight",
+            vid: "auh9bmLsvUs",
+            dr: 12
+          },
+          {
+            name: "Seated Dumbbell Shoulder Press",
+            detail: "8 reps. Strict. Full ROM.",
+            track: "Reps + Weight",
+            vid: "AyFtEJiEFWc",
+            dr: 8
+          },
+          {
+            name: "Standing Banded Pec Fly",
+            detail: "12 reps. Band anchored behind, hug the arms across. Chest under tension.",
+            track: "Reps",
+            vid: "BUOVM8nMeIE",
+            dr: 12
+          }
+        ]
+      },
+      {
+        name: "D. CORE",
+        sets: 4,
+        color: "#1565C0",
+        exercises: [
+          {
+            name: "Plank Kettlebell Saw",
+            detail: "8 reps. Plank, push KB forward and back.",
+            track: "Reps + Weight",
+            vid: "KSNVUPybktI",
+            dr: 8
+          },
+          {
+            name: "Landmine Rotations",
+            detail: "8 reps each side, hip to hip. Rotational power from the ground.",
+            track: "Reps + Weight",
+            vid: "r4tfGcPWYuI",
+            dr: 8
+          },
+          {
+            name: "Half-Kneeling Overhead Cable Tilts",
+            detail: "Half kneeling, arm overhead, resist the cable's lateral pull. Lateral core + overhead stability.",
+            track: "Reps",
+            vid: "EVNJwnlsklc",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "E. CONDITIONING",
+        sets: 4,
+        color: "#37474F",
+        exercises: [
+          {
+            name: "Sled Push",
+            detail: "30 steps. Heavy. Full body conditioning.",
+            track: "Dist + Weight",
+            vid: "t68aeTBXZ7s",
+            dr: 30
+          }
+        ]
+      }
+    ]
   },
-
-  // ─── WEDNESDAY: WORK CAPACITY ───
-  // Wednesday: Rows + Carries + Forearms + Tempo Runs
+  // WEDNESDAY
   WEDNESDAY: {
-    trainTitle: "WORK CAPACITY — Rows + Carries + Grip + Conditioning",
-    trainTime: "~50 min",
-    trainNote: "Work Capacity. Loaded rows, carry circuit, eccentric pull, forearms, conditioning.",
-    blocks: [{
-      name: "A. WARM-UP",
-      sets: 1,
-      color: "var(--full)",
-      exercises: [{
-        name: "Figure 4 Flow",
-        detail: "8 reps each side. Hip rotation + core stability.",
-        track: "Reps",
-        vid: "GAjN5llpzrE",
-        dr: 8
-      }, {
-        name: "Crawl Shoulder Tap",
-        detail: "8 reps each side. Core + shoulder activation for rows.",
-        track: "Reps",
-        vid: "cMeBUqa4d3E",
-        dr: 8
+    trainTitle: "WORK CAPACITY · Rows + Carries + Sled",
+    trainTime: "~53 min",
+    trainNote: "Work Capacity. Loaded rows, carry circuit, sled row and reverse drag.",
+    blocks: [
+      {
+        name: "A. WARM-UP",
+        sets: 1,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Figure 4 Flow",
+            detail: "8 reps each side. Hip rotation + core stability.",
+            track: "Reps",
+            vid: "GAjN5llpzrE",
+            dr: 8
+          },
+          {
+            name: "Crawl Shoulder Tap",
+            detail: "8 reps each side. Core + shoulder activation for rows.",
+            track: "Reps",
+            vid: "cMeBUqa4d3E",
+            dr: 8
+          },
+          {
+            name: "KB Bottoms-Up Carry",
+            detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.",
+            track: "Reps",
+            vid: "wtBDkYRHlr4",
+            dr: 20
+          }
+        ]
       },
-        { name: "KB Bottoms-Up Carry", detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.", track: "Reps", vid: "wtBDkYRHlr4", dr: 20 }
-      ]
-    }, {
-      name: "A2. DEAD HANG",
-      sets: 3,
-      color: "var(--full)",
-      exercises: [{
-        name: "Dead Hang",
-        detail: "30 sec. Full hang. Grip endurance + shoulder and spinal decompression.",
-        track: "Seconds",
-        vid: "XPcT3capkyk",
-        dr: 30
-      }]
-    }, {
-      name: "A3. POWER PRIMER",
-      sets: 3,
-      color: "#E65100",
-      exercises: [{
-        name: "Med Ball Rotational Throw",
-        detail: "5 reps each side. Explosive rotational power.",
-        track: "Reps",
-        vid: "02c2YLgF8iE",
-        dr: 5
-      }, {
-        name: "Rotational Landmine Clean and Press",
-        detail: "6 reps each side. Clean to shoulder, press, control. Full-body rotational power.",
-        track: "Reps + Weight",
-        vid: "bZRXZZXOEdQ",
-        dr: 6
-      }]
-    }, {
-      name: "B. LOADED ROWS",
-      sets: 2,
-      color: "#1565C0",
-      exercises: [{
-        name: "Barbell Bent Over Row",
-        detail: "10 reps. Hinge to ~45°, flat back, pull to the lower ribs, control the way down. Heavy horizontal pull.",
-        track: "Reps + Weight",
-        vid: "bm0_q9bR_HA",
-        dr: 10
-      }, {
-        name: "Overhead Banded Shoulder Perturbations",
-        detail: "8 reps each side. Resist perturbation. Shoulder stability.",
-        track: "Reps",
-        vid: "pp5yEKD3udc",
-        dr: 8
-      }]
-    }, {
-      name: "C. PULL + CARRY CIRCUIT",
-      sets: 3,
-      color: "var(--recovery)",
-      exercises: [{
-        name: "Anti-Rotational Bear Row",
-        detail: "8 reps each side. Bear crawl hold + single-arm row.",
-        track: "Reps + Weight",
-        vid: "khcHYAUb7CM",
-        dr: 8
-      }, {
-        name: "Chin Up",
-        detail: "4 reps. 3 sec eccentric lowering. Supinated grip. Eccentric overload.",
-        track: "Reps",
-        vid: "jIvbJzs1V4I",
-        dr: 4
-      }, {
-        name: "Towel Kettlebell Carry",
-        detail: "20 steps. Towel over KB handle. Grip + carry.",
-        track: "Dist + Weight",
-        vid: "NEkUGE_gOLg",
-        dr: 20
-      }]
-    }, {
-      name: "D. FOREARMS",
-      sets: 2,
-      color: "#E65100",
-      exercises: [{
-        name: "Kettlebell Forearm Rotation",
-        detail: "8 reps. KB rotation for forearm strength.",
-        track: "Reps",
-        vid: "FwCuyV208bU",
-        dr: 8
-      }, {
-        name: "Forearm Twist + Curl with Towel",
-        detail: "8 reps. Towel over bar, twist and curl.",
-        track: "Reps",
-        vid: "Bc3qLJnYwkI",
-        dr: 8
-      }]
-    }, {
-      name: "E. CONDITIONING FINISHER",
-      sets: 3,
-      color: "#37474F",
-      exercises: [{
-        name: "Reverse Sled Drag",
-        detail: "20 steps. Walk backwards. Knee health + conditioning.",
-        track: "Dist + Weight",
-        vid: "wa3tZH_yaRY",
-        dr: 20
-      }]
-    }]
+      {
+        name: "A2. DEAD HANG",
+        sets: 3,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Dead Hang",
+            detail: "30 sec. Full hang. Grip endurance + shoulder and spinal decompression.",
+            track: "Seconds",
+            vid: "XPcT3capkyk",
+            dr: 30
+          }
+        ]
+      },
+      {
+        name: "A3. POWER PRIMER",
+        sets: 3,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Med Ball Rotational Throw",
+            detail: "5 reps each side. Explosive rotational power.",
+            track: "Reps",
+            vid: "02c2YLgF8iE",
+            dr: 5
+          },
+          {
+            name: "Rotational Landmine Clean and Press",
+            detail: "6 reps each side. Clean to shoulder, press, control. Full-body rotational power.",
+            track: "Reps + Weight",
+            vid: "bZRXZZXOEdQ",
+            dr: 6
+          }
+        ]
+      },
+      {
+        name: "B. LOADED ROWS",
+        sets: 2,
+        color: "#1565C0",
+        exercises: [
+          {
+            name: "Barbell Bent Over Row",
+            detail: "10 reps. Hinge to ~45°, flat back, pull to the lower ribs, control the way down. Heavy horizontal pull.",
+            track: "Reps + Weight",
+            vid: "bm0_q9bR_HA",
+            dr: 10
+          },
+          {
+            name: "Overhead Banded Shoulder Perturbations",
+            detail: "8 reps each side. Resist perturbation. Shoulder stability.",
+            track: "Reps",
+            vid: "pp5yEKD3udc",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "C. PULL + CARRY CIRCUIT",
+        sets: 3,
+        color: "var(--recovery)",
+        exercises: [
+          {
+            name: "Anti-Rotational Bear Row",
+            detail: "8 reps each side. Bear crawl hold + single-arm row.",
+            track: "Reps + Weight",
+            vid: "khcHYAUb7CM",
+            dr: 8
+          },
+          {
+            name: "Chin Up",
+            detail: "4 reps. 3 sec eccentric lowering. Supinated grip. Eccentric overload.",
+            track: "Reps",
+            vid: "jIvbJzs1V4I",
+            dr: 4
+          },
+          {
+            name: "Towel Kettlebell Carry",
+            detail: "20 steps. Towel over KB handle. Grip + carry.",
+            track: "Dist + Weight",
+            vid: "NEkUGE_gOLg",
+            dr: 20
+          }
+        ]
+      },
+      {
+        name: "E. CONDITIONING FINISHER",
+        sets: 3,
+        color: "#37474F",
+        exercises: [
+          {
+            name: "Reverse Sled Drag",
+            detail: "20 steps. Walk backwards. Knee health + conditioning.",
+            track: "Dist + Weight",
+            vid: "wa3tZH_yaRY",
+            dr: 20
+          }
+        ]
+      },
+      {
+        name: "F. SLED FINISHER",
+        sets: 2,
+        color: "#37474F",
+        exercises: [
+          {
+            name: "Dynamic Sled Row",
+            detail: "8 reps. Pull sled toward you. Back + grip.",
+            track: "Reps + Weight",
+            vid: "xdOhwytr0M8",
+            dr: 8
+          }
+        ]
+      }
+    ]
   },
-
-  // ─── THURSDAY: SQUAT ───
-  // Thursday: Squat + Carries + Sled + Walk
+  // THURSDAY
   THURSDAY: {
-    trainTitle: "LEGS — Squat + Carry + Sled + Walk",
-    trainTime: "~55 min",
-    trainNote: "Leg day. Squat 4x4, knee health, split squat, carries, sled, 20 min walk.",
-    blocks: [{
-      name: "A. PREP",
-      sets: 1,
-      color: "var(--full)",
-      exercises: [{
-        name: "Hip Flexor Rock Back",
-        detail: "6 reps each leg. Open hip flexors for squat depth.",
-        track: "Reps",
-        vid: "a5kTnLk1Dks",
-        dr: 6
-      }, {
-        name: "Elevated Heels Deep Squat Opener",
-        detail: "5 reps. Heels on plate. Slow eccentric. Squat warm-up.",
-        track: "Reps",
-        vid: "jKED44TDKIE",
-        dr: 5
-      }, {
-        name: "Adductor Rock to Hip Walk Out",
-        detail: "8 reps. Open the adductors and hips for squat depth.",
-        track: "Reps",
-        vid: "JvQzXBr8sPQ",
-        dr: 8
-      }, 
-        { name: "Banded Side-Lying Hip Abduction", detail: "12 reps each side. Lie on side, band on thighs, lift top leg slow. Glute medius for knee tracking.", track: "Reps", vid: "TCjssGsibKU", dr: 12 }
-      ]
-    }, { name: "A2. POWER", sets: 3, color: "#E65100", exercises: [ { name: "Seated Box Jump", detail: "5 reps. Dead stop. Explode. Broad jump builder.", track: "Reps", vid: "_vs2m-8NHTI", dr: 5 }, { name: "Front Foot Elevated Split Jumps", detail: "5 reps each leg. Explosive but controlled.", track: "Reps", vid: "3qCQQl-fpOQ", dr: 5 } ] },
+    trainTitle: "LEGS · Squat + Knee Health + Single Leg",
+    trainTime: "~52 min",
+    trainNote: "Leg day. Squat, knee health, posterior chain, single leg work.",
+    blocks: [
       {
-      name: "B. MAIN LIFT",
-      sets: 4,
-      color: "var(--recovery)",
-      exercises: [{
-        name: "BACK SQUAT",
-        detail: "4 reps. RPE 8. Benchmark lift.",
-        track: "Reps + Weight",
-        key: true,
-        vid: "pWWBjAvJuoA",
-        dr: 4
-      }]
-    }, {
-      name: "C. KNEE HEALTH",
-      sets: 3,
-      color: "var(--ember)",
-      exercises: [{
-        name: "BW Knee Extension (Reverse Nordic)",
-        detail: "8 reps. Slow eccentric. Quad + knee health.",
-        track: "Reps",
-        vid: "5ZCgazq6Emk",
-        dr: 8
-      }, {
-        name: "Poliquin Step Down with TKE",
-        detail: "8 reps each leg. Slow controlled step down. Knee tracking.",
-        track: "Reps",
-        vid: "xFKCoWuP94Y",
-        dr: 8
-      }]
-    }, {
-      name: "C2. POSTERIOR CHAIN",
-      sets: 3,
-      color: "var(--ember)",
-      exercises: [{
-        name: "Single-Leg RDL",
-        detail: "8 reps each leg. Slow hinge. Hamstring + glute focus.",
-        track: "Reps + Weight",
-        vid: "s32cCgmRV3I",
-        dr: 8
-      }, { name: "Plate Kang Squats", detail: "Plate at the chest, hinge then sink into a squat, reverse it. Hamstring + hip strength under control.", track: "Reps + Weight", vid: "f4fnfrKUfHE", dr: 6 }]
-    }, {
-      name: "D. UNILATERAL",
-      sets: 3,
-      color: "#FF6B35",
-      exercises: [{
-        name: "Rear Foot Elevated Split Squat",
-        detail: "8 reps each leg. Back foot on bench.",
-        track: "Reps + Weight",
-        vid: "um_OOswiPS4",
-        dr: 8
+        name: "A. PREP",
+        sets: 1,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Hip Flexor Rock Back",
+            detail: "6 reps each leg. Open hip flexors for squat depth.",
+            track: "Reps",
+            vid: "a5kTnLk1Dks",
+            dr: 6
+          },
+          {
+            name: "Elevated Heels Deep Squat Opener",
+            detail: "5 reps. Heels on plate. Slow eccentric. Squat warm-up.",
+            track: "Reps",
+            vid: "jKED44TDKIE",
+            dr: 5
+          },
+          {
+            name: "Adductor Rock to Hip Walk Out",
+            detail: "8 reps. Open the adductors and hips for squat depth.",
+            track: "Reps",
+            vid: "JvQzXBr8sPQ",
+            dr: 8
+          },
+          {
+            name: "Banded Side-Lying Hip Abduction",
+            detail: "12 reps each side. Lie on side, band on thighs, lift top leg slow. Glute medius for knee tracking.",
+            track: "Reps",
+            vid: "TCjssGsibKU",
+            dr: 12
+          }
+        ]
       },
-        { name: "Dumbbell Lateral Squat Drop In", detail: "8 reps each side.", track: "Reps + Weight", vid: "O62PpPfpsis", dr: 8 },
-        { name: "ISO Squat Hold", detail: "30 sec hold. Wall sit or free standing.", track: "Seconds", vid: "OpiE9QGKfuo", dr: 30 }
-      ]
-    }, {
-      name: "E. CARRY",
-      sets: 3,
-      color: "#E65100",
-      exercises: [{
-        name: "FARMER'S CARRY",
-        detail: "175ft (53m) at bodyweight. Benchmark.",
-        track: "Dist + Weight",
-        key: true,
-        vid: "fPwwaXCgDNE",
-        dr: 175
-      }, {
-        name: "Suitcase Carry",
-        detail: "80ft each hand. Core anti-lateral flexion.",
-        track: "Dist + Weight",
-        vid: "iTjwbts8Djw",
-        dr: 80
-      }]
-    }, {
-      name: "F. CONDITIONING",
-      sets: 4,
-      color: "#37474F",
-      exercises: [
-        { name: "Loaded Leg Lifts", detail: "8 reps. Hanging or lying, weight between feet. Core finisher.", track: "Reps + Weight", vid: "PpZxg66ftYc", dr: 8 }
-      , { name: "Seated Hip Flexion", detail: "Seated, drive the knee up against resistance, control the lower. Hip flexor strength for kicks and knees.", track: "Reps + Weight", vid: "ImcibRWv09E", dr: 10 }]
-    }]
+      {
+        name: "A2. POWER",
+        sets: 3,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Seated Box Jump",
+            detail: "5 reps. Dead stop. Explode. Broad jump builder.",
+            track: "Reps",
+            vid: "_vs2m-8NHTI",
+            dr: 5
+          },
+          {
+            name: "Front Foot Elevated Split Jumps",
+            detail: "5 reps each leg. Explosive but controlled.",
+            track: "Reps",
+            vid: "3qCQQl-fpOQ",
+            dr: 5
+          }
+        ]
+      },
+      {
+        name: "B. MAIN LIFT",
+        sets: 4,
+        color: "var(--recovery)",
+        exercises: [
+          {
+            name: "BACK SQUAT",
+            detail: "4 reps. RPE 8. Benchmark lift.",
+            track: "Reps + Weight",
+            key: true,
+            vid: "pWWBjAvJuoA",
+            dr: 4
+          }
+        ]
+      },
+      {
+        name: "C. KNEE HEALTH",
+        sets: 3,
+        color: "var(--ember)",
+        exercises: [
+          {
+            name: "BW Knee Extension (Reverse Nordic)",
+            detail: "8 reps. Slow eccentric. Quad + knee health.",
+            track: "Reps",
+            vid: "5ZCgazq6Emk",
+            dr: 8
+          },
+          {
+            name: "Poliquin Step Down with TKE",
+            detail: "8 reps each leg. Slow controlled step down. Knee tracking.",
+            track: "Reps",
+            vid: "xFKCoWuP94Y",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "C2. POSTERIOR CHAIN",
+        sets: 3,
+        color: "var(--ember)",
+        exercises: [
+          {
+            name: "Single-Leg RDL",
+            detail: "8 reps each leg. Slow hinge. Hamstring + glute focus.",
+            track: "Reps + Weight",
+            vid: "s32cCgmRV3I",
+            dr: 8
+          },
+          {
+            name: "Plate Kang Squats",
+            detail: "Plate at the chest, hinge then sink into a squat, reverse it. Hamstring + hip strength under control.",
+            track: "Reps + Weight",
+            vid: "f4fnfrKUfHE",
+            dr: 6
+          }
+        ]
+      },
+      {
+        name: "D. UNILATERAL",
+        sets: 3,
+        color: "#FF6B35",
+        exercises: [
+          {
+            name: "Rear Foot Elevated Split Squat",
+            detail: "8 reps each leg. Back foot on bench.",
+            track: "Reps + Weight",
+            vid: "um_OOswiPS4",
+            dr: 8
+          },
+          {
+            name: "Dumbbell Lateral Squat Drop In",
+            detail: "8 reps each side.",
+            track: "Reps + Weight",
+            vid: "O62PpPfpsis",
+            dr: 8
+          },
+          {
+            name: "ISO Squat Hold",
+            detail: "30 sec hold. Wall sit or free standing.",
+            track: "Seconds",
+            vid: "OpiE9QGKfuo",
+            dr: 30
+          }
+        ]
+      }
+    ]
   },
-
-  // ─── FRIDAY: ARMS ───
-  // Friday: Close Grip Bench + Biceps + Triceps + Forearms
+  // FRIDAY
   FRIDAY: {
-    trainTitle: "ARMS — Close Grip + Biceps + Triceps + Forearms",
-    trainTime: "~44 min",
-    trainNote: "Arms day. Compound push, bicep + tricep isolation, forearm work.",
-    blocks: [{
-      name: "A. WARM-UP",
-      sets: 2,
-      color: "var(--full)",
-      exercises: [{
-        name: "Band Pull Aparts",
-        detail: "12 reps. Light band. Open chest, warm shoulders.",
-        track: "Reps",
-        vid: "SuvO4TBwSu4",
-        dr: 12
-      }, {
-        name: "Banded External Rotation",
-        detail: "10 reps each arm. Rotator cuff prep before pressing.",
-        track: "Reps",
-        vid: "7DqYesMRkzU",
-        dr: 10
-      }, {
-        name: "Push-Up to Pike",
-        detail: "8 reps. Push-up then pike up. Shoulder + tricep activation.",
-        track: "Reps",
-        vid: "oNj5I72Yskg",
-        dr: 8
-      }]
-    }, { name: "A2. POWER", sets: 3, color: "#E65100", exercises: [ { name: "Landmine Push Press", detail: "8 reps each side. Explosive angled press.", track: "Reps + Weight", vid: "PpMoR20QJQg", dr: 8 } ] },
+    trainTitle: "ARMS · Close Grip + Biceps + Triceps + Forearms",
+    trainTime: "~50 min",
+    trainNote: "Arms day. Compound push, shoulders, bicep + tricep isolation, forearm work.",
+    blocks: [
       {
-      name: "B. COMPOUND PUSH",
-      sets: 3,
-      color: "var(--recovery)",
-      exercises: [{
-        name: "Close Grip Barbell Bench Press",
-        detail: "12 reps. Narrow grip. Tricep emphasis compound.",
-        track: "Reps + Weight",
-        key: true,
-        vid: "Inj9b3jhREY",
-        dr: 12
+        name: "A. WARM-UP",
+        sets: 2,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Band Pull Aparts",
+            detail: "12 reps. Light band. Open chest, warm shoulders.",
+            track: "Reps",
+            vid: "SuvO4TBwSu4",
+            dr: 12
+          },
+          {
+            name: "Banded External Rotation",
+            detail: "10 reps each arm. Rotator cuff prep before pressing.",
+            track: "Reps",
+            vid: "7DqYesMRkzU",
+            dr: 10
+          },
+          {
+            name: "Push-Up to Pike",
+            detail: "8 reps. Push-up then pike up. Shoulder + tricep activation.",
+            track: "Reps",
+            vid: "oNj5I72Yskg",
+            dr: 8
+          }
+        ]
       },
-        { name: "DIPS", detail: "8 reps. Controlled descent. Tricep focus.", track: "Reps + Weight", key: true, vid: "0326dy_-CzM", dr: 8 }
-      ]
-    }, { name: "B2. SHOULDERS", sets: 3, color: "#EF6C00", exercises: [ { name: "DB Lateral Raises", detail: "8 reps. Moderate weight. Shoulder width.", track: "Reps + Weight", vid: "KkynA3FpkhE", dr: 8 }, { name: "Shoulder Arm Bar", detail: "5 reps each side. KB held overhead, roll under control. Loaded shoulder stability.", track: "Reps + Weight", vid: "g2EhWlBX_Qw", dr: 5 } ] },
       {
-      name: "C. BICEPS",
-      sets: 3,
-      color: "#FF6B35",
-      exercises: [{
-        name: "Barbell Bicep Curl",
-        detail: "10 reps. Strict form. No swing.",
-        track: "Reps + Weight",
-        vid: "yRMQoSLOl6g",
-        dr: 10
-      }, {
-        name: "Isolated Bicep Supinated Curl",
-        detail: "12 reps each arm. Full supination at top.",
-        track: "Reps + Weight",
-        vid: "I_bKCYL2nL8",
-        dr: 12
-      }]
-    }, {
-      name: "D. TRICEPS",
-      sets: 3,
-      color: "#1565C0",
-      exercises: [{
-        name: "Tricep Dive Ins with Rope",
-        detail: "10 reps. Full extension squeeze.",
-        track: "Reps + Weight",
-        vid: "DrnY3A9p4Cs",
-        dr: 10
-      }, {
-        name: "Single-Arm Tricep Extension",
-        detail: "8 reps each arm. Overhead or kickback.",
-        track: "Reps + Weight",
-        vid: "VgjAgAKaSPM",
-        dr: 8
-      }]
-    }, {
-      name: "E. FOREARMS",
-      sets: 2,
-      color: "#E65100",
-      exercises: [{
-        name: "Seated DB Wrist Curl",
-        detail: "8 reps. Palm up, forearm on knee, curl wrist. Forearm flexor.",
-        track: "Reps + Weight",
-        vid: "y-x14sVi12o",
-        dr: 8
-      }, {
-        name: "Seated DB Reverse Wrist Curl",
-        detail: "8 reps. Palm down, forearm on knee, extend wrist up. Forearm extensor.",
-        track: "Reps + Weight",
-        vid: "cRLJ86m00cU",
-        dr: 8
+        name: "A2. POWER",
+        sets: 3,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Landmine Push Press",
+            detail: "8 reps each side. Explosive angled press.",
+            track: "Reps + Weight",
+            vid: "PpMoR20QJQg",
+            dr: 8
+          }
+        ]
       },
-        { name: "Banded Wrist Rotation", detail: "10 reps each direction. Band around the hand, rotate through the wrist. Wrist + forearm health.", track: "Reps", vid: "vXaF4LVlaic", dr: 10 }
-      ]
-    }, {
-      name: "F. NECK",
-      sets: 2,
-      color: "#546E7A",
-      exercises: [{
-        name: "Neck Lateral Band Resistance",
-        detail: "10 reps each side. Light band, controlled. Neck stability.",
-        track: "Reps",
-        vid: "QEayGbDM1Do",
-        dr: 10
-      }, {
-        name: "Neck Rotations",
-        detail: "8 reps each direction. Slow, full ROM. Neck mobility.",
-        track: "Reps",
-        vid: "Fx4LvjovL_k",
-        dr: 8
-      }]
-    }]
+      {
+        name: "B. COMPOUND PUSH",
+        sets: 3,
+        color: "var(--recovery)",
+        exercises: [
+          {
+            name: "Close Grip Barbell Bench Press",
+            detail: "12 reps. Narrow grip. Tricep emphasis compound.",
+            track: "Reps + Weight",
+            key: true,
+            vid: "Inj9b3jhREY",
+            dr: 12
+          },
+          {
+            name: "DIPS",
+            detail: "8 reps. Controlled descent. Tricep focus.",
+            track: "Reps + Weight",
+            key: true,
+            vid: "0326dy_-CzM",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "B2. SHOULDERS",
+        sets: 3,
+        color: "#EF6C00",
+        exercises: [
+          {
+            name: "DB Lateral Raises",
+            detail: "8 reps. Moderate weight. Shoulder width.",
+            track: "Reps + Weight",
+            vid: "KkynA3FpkhE",
+            dr: 8
+          },
+          {
+            name: "Shoulder Arm Bar",
+            detail: "5 reps each side. KB held overhead, roll under control. Loaded shoulder stability.",
+            track: "Reps + Weight",
+            vid: "g2EhWlBX_Qw",
+            dr: 5
+          }
+        ]
+      },
+      {
+        name: "C. BICEPS",
+        sets: 3,
+        color: "#FF6B35",
+        exercises: [
+          {
+            name: "Barbell Bicep Curl",
+            detail: "10 reps. Strict form. No swing.",
+            track: "Reps + Weight",
+            vid: "yRMQoSLOl6g",
+            dr: 10
+          },
+          {
+            name: "Isolated Bicep Supinated Curl",
+            detail: "12 reps each arm. Full supination at top.",
+            track: "Reps + Weight",
+            vid: "I_bKCYL2nL8",
+            dr: 12
+          }
+        ]
+      },
+      {
+        name: "D. TRICEPS",
+        sets: 3,
+        color: "#1565C0",
+        exercises: [
+          {
+            name: "Tricep Dive Ins with Rope",
+            detail: "10 reps. Full extension squeeze.",
+            track: "Reps + Weight",
+            vid: "DrnY3A9p4Cs",
+            dr: 10
+          },
+          {
+            name: "Single-Arm Tricep Extension",
+            detail: "8 reps each arm. Overhead or kickback.",
+            track: "Reps + Weight",
+            vid: "VgjAgAKaSPM",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "E. FOREARMS",
+        sets: 2,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Seated DB Wrist Curl",
+            detail: "8 reps. Palm up, forearm on knee, curl wrist. Forearm flexor.",
+            track: "Reps + Weight",
+            vid: "y-x14sVi12o",
+            dr: 8
+          },
+          {
+            name: "Seated DB Reverse Wrist Curl",
+            detail: "8 reps. Palm down, forearm on knee, extend wrist up. Forearm extensor.",
+            track: "Reps + Weight",
+            vid: "cRLJ86m00cU",
+            dr: 8
+          },
+          {
+            name: "Banded Wrist Rotation",
+            detail: "10 reps each direction. Band around the hand, rotate through the wrist. Wrist + forearm health.",
+            track: "Reps",
+            vid: "vXaF4LVlaic",
+            dr: 10
+          }
+        ]
+      }
+    ]
   },
-
-  // ─── SATURDAY: MOBILITY ───
-  // Saturday: Full body mobility + recovery
+  // ARMOR
+  ARMOR: {
+    trainTitle: "FIGHTER ARMOR · Carries + Grip + Neck + Core",
+    trainTime: "~40 min",
+    trainNote: "Armor day. Carries, grip, neck strength, core and hip flexors.",
+    blocks: [
+      {
+        name: "A. WARM-UP",
+        sets: 1,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Deadbug",
+            detail: "8 reps each leg. Low back pressed to floor. Anti-extension brace before pulling.",
+            track: "Reps",
+            vid: "rvNkdS3qAyM",
+            dr: 8
+          },
+          {
+            name: "Shoulder Hovers",
+            detail: "10 reps. Prone, hover arms. Scapular retraction.",
+            track: "Reps",
+            vid: "A0KY0DKZ1h4",
+            dr: 10
+          },
+          {
+            name: "Neck Rotations",
+            detail: "8 reps each direction. Slow, full ROM. Neck mobility.",
+            track: "Reps",
+            vid: "Fx4LvjovL_k",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "C. CARRY",
+        sets: 3,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "FARMER'S CARRY",
+            detail: "175ft (53m) at bodyweight. Benchmark.",
+            track: "Dist + Weight",
+            key: true,
+            vid: "fPwwaXCgDNE",
+            dr: 175
+          },
+          {
+            name: "Suitcase Carry",
+            detail: "80ft each hand. Core anti-lateral flexion.",
+            track: "Dist + Weight",
+            vid: "iTjwbts8Djw",
+            dr: 80
+          }
+        ]
+      },
+      {
+        name: "D. FOREARMS + GRIP",
+        sets: 2,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Kettlebell Forearm Rotation",
+            detail: "8 reps. KB rotation for forearm strength.",
+            track: "Reps",
+            vid: "FwCuyV208bU",
+            dr: 8
+          },
+          {
+            name: "Forearm Twist + Curl with Towel",
+            detail: "8 reps. Towel over bar, twist and curl.",
+            track: "Reps",
+            vid: "Bc3qLJnYwkI",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "E. NECK",
+        sets: 2,
+        color: "#546E7A",
+        exercises: [
+          {
+            name: "Neck Lateral Band Resistance",
+            detail: "10 reps each side. Light band, controlled. Neck stability.",
+            track: "Reps",
+            vid: "QEayGbDM1Do",
+            dr: 10
+          },
+          {
+            name: "Neck Prone ROM & Strengthening",
+            detail: "8 reps. Gentle.",
+            track: "Reps",
+            vid: "cjIDKy6z3zY",
+            dr: 8
+          },
+          {
+            name: "Neck Circles",
+            detail: "5 slow circles each direction.",
+            track: "Reps",
+            vid: "9zP1BHF5eqQ",
+            dr: 5
+          },
+          {
+            name: "Neck Bridge",
+            detail: "Hold bridge position. Build neck strength progressively.",
+            track: "Seconds",
+            vid: "kgFFqbiqvW8",
+            dr: 20
+          }
+        ]
+      },
+      {
+        name: "F. CORE + HIP FLEXORS",
+        sets: 2,
+        color: "#1565C0",
+        exercises: [
+          {
+            name: "Loaded Leg Lifts",
+            detail: "8 reps. Hanging or lying, weight between feet. Core finisher.",
+            track: "Reps + Weight",
+            vid: "PpZxg66ftYc",
+            dr: 8
+          },
+          {
+            name: "Seated Hip Flexion",
+            detail: "Seated, drive the knee up against resistance, control the lower. Hip flexor strength for kicks and knees.",
+            track: "Reps + Weight",
+            vid: "ImcibRWv09E",
+            dr: 10
+          },
+          {
+            name: "Pallof Press",
+            detail: "8 reps each side. Light band.",
+            track: "Reps",
+            vid: "99evyH71IWs",
+            dr: 8
+          }
+        ]
+      }
+    ]
+  },
+  // SATURDAY
   SATURDAY: {
-    trainTitle: "MOBILITY — Full Body Recovery",
-    trainTime: "~29 min",
-    trainNote: "Active recovery. Joint CARs, hip + t-spine mobility, calves, neck, loaded stretches.",
-    blocks: [{
-      name: "A. JOINT CARs",
-      sets: 1,
-      color: "var(--full)",
-      exercises: [{
-        name: "Shoulder CARs",
-        detail: "5 slow circles each direction. Full ROM.",
-        track: "Reps",
-        vid: "ZOP6RPjdAhA",
-        dr: 5
-      }, {
-        name: "Hip Airplane",
-        detail: "6 reps each leg. Single leg hip rotation.",
-        track: "Reps",
-        vid: "AA8zZh8Iz9I",
-        dr: 6
-      }]
-    }, {
-      name: "B. HIP MOBILITY",
-      sets: 2,
-      color: "#009688",
-      exercises: [{
-        name: "Shin Box Fold",
-        detail: "8 reps. Deep hip rotation.",
-        track: "Reps",
-        vid: "A9vhRbwH2Sw",
-        dr: 8
-      }, {
-        name: "Banded Hip Distraction",
-        detail: "30 sec each side. Joint decompression.",
-        track: "Seconds",
-        vid: "mDUrMKDZS-U",
-        dr: 30
-      }, {
-        name: "Heel Clicks",
-        detail: "10 reps. Prone, click heels.",
-        track: "Reps",
-        vid: "bBtfjTVPkus",
-        dr: 10
-      }]
-    }, {
-      name: "C. T-SPINE + SHOULDER",
-      sets: 2,
-      color: "#1565C0",
-      exercises: [{
-        name: "Kneeling T-Spine with Shoulder Opener",
-        detail: "8 reps each side.",
-        track: "Reps",
-        vid: "LnLsZ2gZUK4",
-        dr: 8
-      }, {
-        name: "Shoulder Airplanes",
-        detail: "8 reps each side. Scapular control.",
-        track: "Reps",
-        vid: "T9j_ArUIxWw",
-        dr: 8
-      }, {
-        name: "Birddog to Gecko",
-        detail: "6 reps each side. Crawl pattern + stability.",
-        track: "Reps",
-        vid: "ISp9hRUQQ3M",
-        dr: 6
-      }, {
-        name: "Banded Rotations",
-        detail: "8 reps each side. Controlled rotation under band resistance.",
-        track: "Reps",
-        vid: "ViWJ1u2u4d0",
-        dr: 8
+    trainTitle: "MOBILITY · Full Body Recovery + Zone 2",
+    trainTime: "~59 min",
+    trainNote: "Mobility day. Joint CARs, hips, t-spine, calves, loaded stretches, recovery drills, 20 min zone 2 walk.",
+    blocks: [
+      {
+        name: "A. JOINT CARs",
+        sets: 1,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Shoulder CARs",
+            detail: "5 slow circles each direction. Full ROM.",
+            track: "Reps",
+            vid: "ZOP6RPjdAhA",
+            dr: 5
+          },
+          {
+            name: "Hip Airplane",
+            detail: "6 reps each leg. Single leg hip rotation.",
+            track: "Reps",
+            vid: "AA8zZh8Iz9I",
+            dr: 6
+          }
+        ]
       },
-        { name: "Crawl to Kick Through", detail: "6 reps each side. Coordination.", track: "Reps", vid: "wqt9IdcUxig", dr: 6 }
-      ]
-    }, {
-      name: "D. CALVES + ANKLES",
-      sets: 2,
-      color: "var(--ember)",
-      exercises: [{
-        name: "Ankle CARs",
-        detail: "5 circles each direction, each ankle.",
-        track: "Reps",
-        vid: "UVtCSGJmGEY",
-        dr: 5
-      }, {
-        name: "Loaded SL Calf Raise",
-        detail: "10 reps each leg. Slow eccentric.",
-        track: "Reps + Weight",
-        vid: "wZfr_svtSr0",
-        dr: 10
-      }, {
-        name: "Ankle Mobility",
-        detail: "8 reps each side. Wall knee drives.",
-        track: "Reps",
-        vid: "qXvA35UHs2w",
-        dr: 8
-      }]
-    }, {
-      name: "E. NECK",
-      sets: 2,
-      color: "#546E7A",
-      exercises: [{
-        name: "Neck Prone ROM & Strengthening",
-        detail: "8 reps. Gentle.",
-        track: "Reps",
-        vid: "cjIDKy6z3zY",
-        dr: 8
-      }, {
-        name: "Neck Circles",
-        detail: "5 slow circles each direction.",
-        track: "Reps",
-        vid: "9zP1BHF5eqQ",
-        dr: 5
+      {
+        name: "B. HIP MOBILITY",
+        sets: 2,
+        color: "#009688",
+        exercises: [
+          {
+            name: "Shin Box Fold",
+            detail: "8 reps. Deep hip rotation.",
+            track: "Reps",
+            vid: "A9vhRbwH2Sw",
+            dr: 8
+          },
+          {
+            name: "Banded Hip Distraction",
+            detail: "30 sec each side. Joint decompression.",
+            track: "Seconds",
+            vid: "mDUrMKDZS-U",
+            dr: 30
+          },
+          {
+            name: "Heel Clicks",
+            detail: "10 reps. Prone, click heels.",
+            track: "Reps",
+            vid: "bBtfjTVPkus",
+            dr: 10
+          }
+        ]
       },
-        { name: "Neck Bridge", detail: "Hold bridge position. Build neck strength progressively.", track: "Seconds", vid: "kgFFqbiqvW8", dr: 20 }
-      ]
-    }, {
-      name: "F. LOADED STRETCHES",
-      sets: 1,
-      color: "#009688",
-      exercises: [{
-        name: "Loaded Lat Stretch",
-        detail: "30 sec each side. Hang from bar.",
-        track: "Seconds",
-        vid: "9Pik5qPNgCo",
-        dr: 30
-      }, {
-        name: "Seated Hip Stretch",
-        detail: "30 sec each side. Deep hip flexor release.",
-        track: "Seconds",
-        vid: "VtcR9kUn5v8",
-        dr: 30
-      }, {
-        name: "Deep Chest Stretch ISO",
-        detail: "30 sec each side. Doorway or rack.",
-        track: "Seconds",
-        vid: "bbCEt0kphkA",
-        dr: 30
-      }, { name: "QL Hip Drop from Bench", detail: "Side-lying off a bench, drop the hip then lift back to neutral. QL length and control.", track: "Reps", vid: "7mFHWar-EVY", dr: 10 }]
-    }]
+      {
+        name: "C. T-SPINE + SHOULDER",
+        sets: 2,
+        color: "#1565C0",
+        exercises: [
+          {
+            name: "Kneeling T-Spine with Shoulder Opener",
+            detail: "8 reps each side.",
+            track: "Reps",
+            vid: "LnLsZ2gZUK4",
+            dr: 8
+          },
+          {
+            name: "Shoulder Airplanes",
+            detail: "8 reps each side. Scapular control.",
+            track: "Reps",
+            vid: "T9j_ArUIxWw",
+            dr: 8
+          },
+          {
+            name: "Birddog to Gecko",
+            detail: "6 reps each side. Crawl pattern + stability.",
+            track: "Reps",
+            vid: "ISp9hRUQQ3M",
+            dr: 6
+          },
+          {
+            name: "Banded Rotations",
+            detail: "8 reps each side. Controlled rotation under band resistance.",
+            track: "Reps",
+            vid: "ViWJ1u2u4d0",
+            dr: 8
+          },
+          {
+            name: "Crawl to Kick Through",
+            detail: "6 reps each side. Coordination.",
+            track: "Reps",
+            vid: "wqt9IdcUxig",
+            dr: 6
+          }
+        ]
+      },
+      {
+        name: "D. CALVES + ANKLES",
+        sets: 2,
+        color: "var(--ember)",
+        exercises: [
+          {
+            name: "Ankle CARs",
+            detail: "5 circles each direction, each ankle.",
+            track: "Reps",
+            vid: "UVtCSGJmGEY",
+            dr: 5
+          },
+          {
+            name: "Loaded SL Calf Raise",
+            detail: "10 reps each leg. Slow eccentric.",
+            track: "Reps + Weight",
+            vid: "wZfr_svtSr0",
+            dr: 10
+          },
+          {
+            name: "Ankle Mobility",
+            detail: "8 reps each side. Wall knee drives.",
+            track: "Reps",
+            vid: "qXvA35UHs2w",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "F. LOADED STRETCHES",
+        sets: 1,
+        color: "#009688",
+        exercises: [
+          {
+            name: "Loaded Lat Stretch",
+            detail: "30 sec each side. Hang from bar.",
+            track: "Seconds",
+            vid: "9Pik5qPNgCo",
+            dr: 30
+          },
+          {
+            name: "Seated Hip Stretch",
+            detail: "30 sec each side. Deep hip flexor release.",
+            track: "Seconds",
+            vid: "VtcR9kUn5v8",
+            dr: 30
+          },
+          {
+            name: "Deep Chest Stretch ISO",
+            detail: "30 sec each side. Doorway or rack.",
+            track: "Seconds",
+            vid: "bbCEt0kphkA",
+            dr: 30
+          },
+          {
+            name: "QL Hip Drop from Bench",
+            detail: "Side-lying off a bench, drop the hip then lift back to neutral. QL length and control.",
+            track: "Reps",
+            vid: "7mFHWar-EVY",
+            dr: 10
+          }
+        ]
+      },
+      {
+        name: "G. RECOVERY DRILLS",
+        sets: 1,
+        color: "#009688",
+        exercises: [
+          {
+            name: "Low Back Swivels",
+            detail: "8 reps each side. Spinal rotation.",
+            track: "Reps",
+            vid: "gb5KeyG9i14",
+            dr: 8
+          },
+          {
+            name: "Shoulder Angels",
+            detail: "8 reps. Wall angels, full scapular control.",
+            track: "Reps",
+            vid: "Nkla4hz-1Q8",
+            dr: 8
+          },
+          {
+            name: "Banded Ankle Dorsiflexion",
+            detail: "10 reps each side.",
+            track: "Reps",
+            vid: "v-cxqr5OKEk",
+            dr: 10
+          },
+          {
+            name: "Barbell Trap & Neck Release",
+            detail: "60 sec. Bar on traps, gentle pressure.",
+            track: "Seconds",
+            vid: "S19RfrYqlsk",
+            dr: 60
+          }
+        ]
+      },
+      {
+        name: "H. ZONE 2",
+        sets: 1,
+        color: "#37474F",
+        exercises: [
+          {
+            name: "Incline Walk",
+            detail: "20 min. Easy pace, nose breathing (zone 2). Replaces the aerobic of Pull and the walk of Legs.",
+            track: "Minutes",
+            vid: null,
+            dr: 15
+          }
+        ]
+      }
+    ]
   }
 };
 
 
 
 const tier6OverridesB = {
-  // ─── MONDAY B: DEADLIFT ───
+  // MONDAY B
   MONDAY: {
-    trainTitle: "PULL B — Deadlift + Back + Aerobic",
-    trainTime: "~65 min",
-    trainNote: "Pull day B. Snatch power, deadlift, chin-ups, back volume, sled row, aerobic.",
-    blocks: [{
-      name: "A. PREP",
-      sets: 1,
-      color: "var(--full)",
-      exercises: [{
-        name: "Facing Wall Hip Circle Rotations",
-        detail: "6 reps each direction. Hip CARs.",
-        track: "Reps",
-        vid: "odvEl4NkZuo",
-        dr: 6
-      }, {
-        name: "Heel Clicks",
-        detail: "8 reps. Prone, click heels. Glute + adductor activation.",
-        track: "Reps",
-        vid: "bBtfjTVPkus",
-        dr: 8
-      }, {
-        name: "Deadbug",
-        detail: "8 reps each leg. Low back pressed to floor. Anti-extension brace before pulling.",
-        track: "Reps",
-        vid: "rvNkdS3qAyM",
-        dr: 8
-      }, {
-        name: "Hip Flexor Loaded Arc Reach",
-        detail: "8 reps each leg. KB eccentric. Hip flexor prep for the hinge.",
-        track: "Reps + Weight",
-        vid: "LuNnBWO8wZ8",
-        dr: 8
-      }, {
-        name: "Band Assisted Straight Leg Raise",
-        detail: "8 reps each leg. Band-assisted hamstring stretch. Prime the hinge.",
-        track: "Reps",
-        vid: "Wnhc8hsTtpI",
-        dr: 8
-      }, {
-        name: "Birddog to Gecko",
-        detail: "8 reps each side. Crawl pattern + scapular stability.",
-        track: "Reps",
-        vid: "ISp9hRUQQ3M",
-        dr: 8
-      }]
-    }, {
-      name: "A2. POWER",
-      sets: 4,
-      color: "#E65100",
-      exercises: [{
-        name: "Dumbbell Snatch",
-        detail: "6 reps each arm. Explosive single-arm power.",
-        track: "Reps + Weight",
-        vid: "-px4XoSZr1g",
-        dr: 6
-      }]
-    }, {
-      name: "B. MAIN LIFT",
-      sets: 4,
-      color: "var(--recovery)",
-      exercises: [{
-        name: "TRAP BAR DEADLIFT",
-        detail: "6 reps. RPE 8. Benchmark lift.",
-        track: "Reps + Weight",
-        key: true,
-        vid: "nZ4T7DPGa2g",
-        dr: 6
-      }]
-    }, {
-      name: "C. MAIN PULL",
-      sets: 3,
-      color: "#1565C0",
-      exercises: [{
-        name: "Pull-Ups",
-        detail: "8 reps. Full ROM. Add weight if needed.",
-        track: "Reps + Weight",
-        vid: "PbfFblcxWSo",
-        dr: 8
-      }]
-    }, {
-      name: "D. SECONDARY",
-      sets: 3,
-      color: "#FF6B35",
-      exercises: [{
-        name: "KB Vertical Pull",
-        detail: "8 reps. Floor to overhead. Explosive pull.",
-        track: "Reps + Weight",
-        vid: "S7jLS4f2FTI",
-        dr: 8
-      }, {
-        name: "Hamstring Bridge with Pullover",
-        detail: "10 reps. Bridge + DB pullover. Posterior chain.",
-        track: "Reps + Weight",
-        vid: "cU2YDlDA8Dw",
-        dr: 10
-      }]
-    }, {
-      name: "E. BACK VOLUME",
-      sets: 3,
-      color: "var(--ember)",
-      exercises: [{
-        name: "Lat Sweep",
-        detail: "8 reps. Single-arm lat pulldown sweep.",
-        track: "Reps + Weight",
-        vid: "zdTbE1yHygQ",
-        dr: 8
-      }, {
-        name: "Face Pull with External Rotation",
-        detail: "12 reps. Band face pull with ER hold.",
-        track: "Reps",
-        vid: "m8s7cblgdDQ",
-        dr: 12
-      }]
-    }, {
-      name: "F. FINISHER",
-      sets: 3,
-      color: "#37474F",
-      exercises: [{
-        name: "Dynamic Sled Row",
-        detail: "8 reps. Pull sled toward you.",
-        track: "Reps + Weight",
-        vid: "xdOhwytr0M8",
-        dr: 8
-      }]
-    }]
+    trainTitle: "PULL B · Deadlift + Back",
+    trainTime: "~50 min",
+    trainNote: "Pull day B. Snatch power, deadlift, pull-ups, back volume.",
+    blocks: [
+      {
+        name: "A. PREP",
+        sets: 1,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Facing Wall Hip Circle Rotations",
+            detail: "6 reps each direction. Hip CARs.",
+            track: "Reps",
+            vid: "odvEl4NkZuo",
+            dr: 6
+          },
+          {
+            name: "Heel Clicks",
+            detail: "8 reps. Prone, click heels. Glute + adductor activation.",
+            track: "Reps",
+            vid: "bBtfjTVPkus",
+            dr: 8
+          },
+          {
+            name: "Hip Flexor Loaded Arc Reach",
+            detail: "8 reps each leg. KB eccentric. Hip flexor prep for the hinge.",
+            track: "Reps + Weight",
+            vid: "LuNnBWO8wZ8",
+            dr: 8
+          },
+          {
+            name: "Band Assisted Straight Leg Raise",
+            detail: "8 reps each leg. Band-assisted hamstring stretch. Prime the hinge.",
+            track: "Reps",
+            vid: "Wnhc8hsTtpI",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "A2. POWER",
+        sets: 4,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Dumbbell Snatch",
+            detail: "6 reps each arm. Explosive single-arm power.",
+            track: "Reps + Weight",
+            vid: "-px4XoSZr1g",
+            dr: 6
+          }
+        ]
+      },
+      {
+        name: "B. MAIN LIFT",
+        sets: 4,
+        color: "var(--recovery)",
+        exercises: [
+          {
+            name: "TRAP BAR DEADLIFT",
+            detail: "6 reps. RPE 8. Benchmark lift.",
+            track: "Reps + Weight",
+            key: true,
+            vid: "nZ4T7DPGa2g",
+            dr: 6
+          }
+        ]
+      },
+      {
+        name: "C. MAIN PULL",
+        sets: 3,
+        color: "#1565C0",
+        exercises: [
+          {
+            name: "Pull-Ups",
+            detail: "8 reps. Full ROM. Add weight if needed.",
+            track: "Reps + Weight",
+            vid: "PbfFblcxWSo",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "D. SECONDARY",
+        sets: 3,
+        color: "#FF6B35",
+        exercises: [
+          {
+            name: "KB Vertical Pull",
+            detail: "8 reps. Floor to overhead. Explosive pull.",
+            track: "Reps + Weight",
+            vid: "S7jLS4f2FTI",
+            dr: 8
+          },
+          {
+            name: "Hamstring Bridge with Pullover",
+            detail: "10 reps. Bridge + DB pullover. Posterior chain.",
+            track: "Reps + Weight",
+            vid: "cU2YDlDA8Dw",
+            dr: 10
+          }
+        ]
+      },
+      {
+        name: "E. BACK VOLUME",
+        sets: 3,
+        color: "var(--ember)",
+        exercises: [
+          {
+            name: "Lat Sweep",
+            detail: "8 reps. Single-arm lat pulldown sweep.",
+            track: "Reps + Weight",
+            vid: "zdTbE1yHygQ",
+            dr: 8
+          },
+          {
+            name: "Face Pull with External Rotation",
+            detail: "12 reps. Band face pull with ER hold.",
+            track: "Reps",
+            vid: "m8s7cblgdDQ",
+            dr: 12
+          }
+        ]
+      }
+    ]
   },
-
-  // ─── TUESDAY B: BENCH ───
+  // TUESDAY B
   TUESDAY: {
     trainTitle: "PUSH B — Bench + Landmine + Core + Sled",
     trainTime: "~53 min",
     trainNote: "Push day B. T-spine prep, bench 4x4, landmine variations, core, sled.",
-    blocks: [{
-      name: "A. T-SPINE PREP",
-      sets: 1,
-      color: "var(--full)",
-      exercises: [{
-        name: "Cat Camel Diagonal",
-        detail: "6 reps. Slow spinal mobility.",
-        track: "Reps",
-        vid: "JrcOPzvdToQ",
-        dr: 6
-      }, {
-        name: "Kneeling T-Spine with Shoulder Opener",
-        detail: "8 reps each side.",
-        track: "Reps",
-        vid: "LnLsZ2gZUK4",
-        dr: 8
-      }, {
-        name: "Banded Face Pulls with ER Focus",
-        detail: "8 reps. Band face pull with external rotation.",
-        track: "Reps",
-        vid: "sQL4qGLDhX4",
-        dr: 8
-      },
-        { name: "Banded Needle Through", detail: "8 reps each side. Thread arm under body with band tension. Rotates with T-Spine Rotations week to week.", track: "Reps", vid: "1uRNvra9LLk", dr: 8 },
-        { name: "Banded Overhead Mobilization", detail: "10 reps. Band overhead, open the shoulders and lats before pressing.", track: "Reps", vid: "OuaUM7xZ1ls", dr: 10 }
-      , { name: "Lying Scap Lift Off", detail: "Prone, lift the shoulder blades off the floor without arching the low back. Isolated scap control.", track: "Reps", vid: "VTRg7NR83QQ", dr: 12 }]
-    }, {
-      name: "A2. SHOULDER STABILITY",
-      sets: 1,
-      color: "var(--full)",
-      exercises: [{
-        name: "Banded External Rotation",
-        detail: "8 reps each arm. Rotator cuff.",
-        track: "Reps",
-        vid: "7DqYesMRkzU",
-        dr: 8
-      },
-        { name: "Spider Crawls", detail: "8 reps each side. Hands walk up the wall, control the descent. Scapular control + shoulder stability.", track: "Reps", vid: "ZpsDv8EONdc", dr: 8 },
-        { name: "Swiss Ball Push", detail: "3 x 10 sec. Press into a swiss ball against the wall, brace and protract. Serratus and scapular stability.", track: "Seconds", vid: "STCC2DY96Mo", dr: 10 },
-        { name: "Banded Shoulder Internal Rotation", detail: "10 reps each arm. Elbow pinned, band internal rotation. Balances the external rotation work.", track: "Reps", vid: "xZQP0IkYmUs", dr: 10 },
-        { name: "Band Pull Aparts", detail: "15 reps. Light band, pull apart at chest height. Upper-back and posture balance.", track: "Reps", vid: "SuvO4TBwSu4", dr: 15 }
-      , { name: "Banded KB Shoulder Press", detail: "Light kettlebell press with a band loading the top. Joint-friendly overhead pattern.", track: "Reps + Weight", vid: "pp9YsHEzrV0", dr: 8 }]
-    }, { name: "A3. POWER", sets: 3, color: "#E65100", exercises: [ { name: "Med Ball Slam", detail: "5 reps. Explosive slam, full extension to floor.", track: "Reps", vid: "CkO1mfSBvv4", dr: 5 } ] },
+    blocks: [
       {
-      name: "B. BENCH PRESS",
-      sets: 4,
-      color: "var(--recovery)",
-      exercises: [{
-        name: "BENCH PRESS",
-        detail: "4 reps. RPE 8. Benchmark lift.",
-        track: "Reps + Weight",
-        key: true,
-        vid: "5lrpyee_asw",
-        dr: 4
-      }]
-    }, {
-      name: "C. PUSH VOLUME",
-      sets: 3,
-      color: "#FF6B35",
-      exercises: [{
-        name: "Overhead Barbell Press",
-        detail: "8 reps. LIGHT support \u2014 bench is heavy this block. Strict, no leg drive.",
-        track: "Reps + Weight",
-        vid: "G2qpTG1Eh40",
-        dr: 8
-      }, {
-        name: "Half Kneeling SA Landmine Press",
-        detail: "8 reps each side. Unilateral overhead.",
-        track: "Reps + Weight",
-        vid: "fx6lSVNvu-4",
-        dr: 8
-      }, {
-        name: "Incline DB Press",
-        detail: "10 reps. 30-45° incline. Upper chest + front delt. Progressive load.",
-        track: "Reps + Weight",
-        vid: "G1mCi5idEbk",
-        dr: 10
+        name: "A. T-SPINE PREP",
+        sets: 1,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Cat Camel Diagonal",
+            detail: "6 reps. Slow spinal mobility.",
+            track: "Reps",
+            vid: "JrcOPzvdToQ",
+            dr: 6
+          },
+          {
+            name: "Kneeling T-Spine with Shoulder Opener",
+            detail: "8 reps each side.",
+            track: "Reps",
+            vid: "LnLsZ2gZUK4",
+            dr: 8
+          },
+          {
+            name: "Banded Face Pulls with ER Focus",
+            detail: "8 reps. Band face pull with external rotation.",
+            track: "Reps",
+            vid: "sQL4qGLDhX4",
+            dr: 8
+          },
+          {
+            name: "Banded Needle Through",
+            detail: "8 reps each side. Thread arm under body with band tension. Rotates with T-Spine Rotations week to week.",
+            track: "Reps",
+            vid: "1uRNvra9LLk",
+            dr: 8
+          },
+          {
+            name: "Banded Overhead Mobilization",
+            detail: "10 reps. Band overhead, open the shoulders and lats before pressing.",
+            track: "Reps",
+            vid: "OuaUM7xZ1ls",
+            dr: 10
+          },
+          {
+            name: "Lying Scap Lift Off",
+            detail: "Prone, lift the shoulder blades off the floor without arching the low back. Isolated scap control.",
+            track: "Reps",
+            vid: "VTRg7NR83QQ",
+            dr: 12
+          }
+        ]
       },
-        { name: "Standing Banded Pec Fly", detail: "12 reps. Band anchored behind, hug the arms across. Chest under tension.", track: "Reps", vid: "BUOVM8nMeIE", dr: 12 }
-      ]
-    }, {
-      name: "D. CORE",
-      sets: 4,
-      color: "#1565C0",
-      exercises: [{
-        name: "Plank",
-        detail: "45-60 sec. Forearms down, body in a straight line, brace hard. Anti-extension hold.",
-        track: "Seconds",
-        vid: "O83fmDwTYpg",
-        dr: 60
-      }, {
-        name: "Dumbbell Diagonal Chop",
-        detail: "8 reps each side. Anti-rotation power.",
-        track: "Reps + Weight",
-        vid: "At6-Mna8za8",
-        dr: 8
-      }, { name: "Half-Kneeling Cable Rope Torso Rotations", detail: "Half kneeling, rotate against the cable and control the return. Rotational control.", track: "Reps", vid: "JU_P4iLU-dM", dr: 10 }]
-    }, {
-      name: "E. CONDITIONING",
-      sets: 4,
-      color: "#37474F",
-      exercises: [{
-        name: "Sled Push",
-        detail: "30 steps. Heavy. Full body conditioning.",
-        track: "Dist + Weight",
-        vid: "t68aeTBXZ7s",
-        dr: 30
-      }]
-    }]
+      {
+        name: "A2. SHOULDER STABILITY",
+        sets: 1,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Banded External Rotation",
+            detail: "8 reps each arm. Rotator cuff.",
+            track: "Reps",
+            vid: "7DqYesMRkzU",
+            dr: 8
+          },
+          {
+            name: "Spider Crawls",
+            detail: "8 reps each side. Hands walk up the wall, control the descent. Scapular control + shoulder stability.",
+            track: "Reps",
+            vid: "ZpsDv8EONdc",
+            dr: 8
+          },
+          {
+            name: "Swiss Ball Push",
+            detail: "3 x 10 sec. Press into a swiss ball against the wall, brace and protract. Serratus and scapular stability.",
+            track: "Seconds",
+            vid: "STCC2DY96Mo",
+            dr: 10
+          },
+          {
+            name: "Banded Shoulder Internal Rotation",
+            detail: "10 reps each arm. Elbow pinned, band internal rotation. Balances the external rotation work.",
+            track: "Reps",
+            vid: "xZQP0IkYmUs",
+            dr: 10
+          },
+          {
+            name: "Band Pull Aparts",
+            detail: "15 reps. Light band, pull apart at chest height. Upper-back and posture balance.",
+            track: "Reps",
+            vid: "SuvO4TBwSu4",
+            dr: 15
+          },
+          {
+            name: "Banded KB Shoulder Press",
+            detail: "Light kettlebell press with a band loading the top. Joint-friendly overhead pattern.",
+            track: "Reps + Weight",
+            vid: "pp9YsHEzrV0",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "A3. POWER",
+        sets: 3,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Med Ball Slam",
+            detail: "5 reps. Explosive slam, full extension to floor.",
+            track: "Reps",
+            vid: "CkO1mfSBvv4",
+            dr: 5
+          }
+        ]
+      },
+      {
+        name: "B. BENCH PRESS",
+        sets: 4,
+        color: "var(--recovery)",
+        exercises: [
+          {
+            name: "BENCH PRESS",
+            detail: "4 reps. RPE 8. Benchmark lift.",
+            track: "Reps + Weight",
+            key: true,
+            vid: "5lrpyee_asw",
+            dr: 4
+          }
+        ]
+      },
+      {
+        name: "C. PUSH VOLUME",
+        sets: 3,
+        color: "#FF6B35",
+        exercises: [
+          {
+            name: "Overhead Barbell Press",
+            detail: "8 reps. LIGHT support — bench is heavy this block. Strict, no leg drive.",
+            track: "Reps + Weight",
+            vid: "G2qpTG1Eh40",
+            dr: 8
+          },
+          {
+            name: "Half Kneeling SA Landmine Press",
+            detail: "8 reps each side. Unilateral overhead.",
+            track: "Reps + Weight",
+            vid: "fx6lSVNvu-4",
+            dr: 8
+          },
+          {
+            name: "Incline DB Press",
+            detail: "10 reps. 30-45° incline. Upper chest + front delt. Progressive load.",
+            track: "Reps + Weight",
+            vid: "G1mCi5idEbk",
+            dr: 10
+          },
+          {
+            name: "Standing Banded Pec Fly",
+            detail: "12 reps. Band anchored behind, hug the arms across. Chest under tension.",
+            track: "Reps",
+            vid: "BUOVM8nMeIE",
+            dr: 12
+          }
+        ]
+      },
+      {
+        name: "D. CORE",
+        sets: 4,
+        color: "#1565C0",
+        exercises: [
+          {
+            name: "Plank",
+            detail: "45-60 sec. Forearms down, body in a straight line, brace hard. Anti-extension hold.",
+            track: "Seconds",
+            vid: "O83fmDwTYpg",
+            dr: 60
+          },
+          {
+            name: "Dumbbell Diagonal Chop",
+            detail: "8 reps each side. Anti-rotation power.",
+            track: "Reps + Weight",
+            vid: "At6-Mna8za8",
+            dr: 8
+          },
+          {
+            name: "Half-Kneeling Cable Rope Torso Rotations",
+            detail: "Half kneeling, rotate against the cable and control the return. Rotational control.",
+            track: "Reps",
+            vid: "JU_P4iLU-dM",
+            dr: 10
+          }
+        ]
+      },
+      {
+        name: "E. CONDITIONING",
+        sets: 4,
+        color: "#37474F",
+        exercises: [
+          {
+            name: "Sled Push",
+            detail: "30 steps. Heavy. Full body conditioning.",
+            track: "Dist + Weight",
+            vid: "t68aeTBXZ7s",
+            dr: 30
+          }
+        ]
+      }
+    ]
   },
-
-  // ─── WEDNESDAY B: WORK CAPACITY ───
+  // WEDNESDAY B
   WEDNESDAY: {
-    trainTitle: "WORK CAPACITY B — Rows + Carries + Grip + Conditioning",
-    trainTime: "~50 min",
-    trainNote: "Work Capacity B. Different rows, carry variations, grip, conditioning.",
-    blocks: [{
-      name: "A. WARM-UP",
-      sets: 1,
-      color: "var(--full)",
-      exercises: [{
-        name: "Figure 4 Flow",
-        detail: "8 reps each side. Hip rotation + core stability.",
-        track: "Reps",
-        vid: "GAjN5llpzrE",
-        dr: 8
-      }, {
-        name: "Hip Flexor Plank",
-        detail: "20 sec each leg. Core activation for carries.",
-        track: "Seconds",
-        vid: "WCkrF6B4sdg",
-        dr: 20
+    trainTitle: "WORK CAPACITY B · Rows + Carries + Sled",
+    trainTime: "~54 min",
+    trainNote: "Work Capacity B. Different rows, carry circuit, sled row and reverse drag.",
+    blocks: [
+      {
+        name: "A. WARM-UP",
+        sets: 1,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Figure 4 Flow",
+            detail: "8 reps each side. Hip rotation + core stability.",
+            track: "Reps",
+            vid: "GAjN5llpzrE",
+            dr: 8
+          },
+          {
+            name: "Hip Flexor Plank",
+            detail: "20 sec each leg. Core activation for carries.",
+            track: "Seconds",
+            vid: "WCkrF6B4sdg",
+            dr: 20
+          },
+          {
+            name: "KB Bottoms-Up Carry",
+            detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.",
+            track: "Reps",
+            vid: "wtBDkYRHlr4",
+            dr: 20
+          }
+        ]
       },
-        { name: "KB Bottoms-Up Carry", detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.", track: "Reps", vid: "wtBDkYRHlr4", dr: 20 }
-      ]
-    }, {
-      name: "A2. DEAD HANG",
-      sets: 3,
-      color: "var(--full)",
-      exercises: [{
-        name: "Dead Hang",
-        detail: "30 sec. Full hang. Grip endurance + shoulder and spinal decompression.",
-        track: "Seconds",
-        vid: "XPcT3capkyk",
-        dr: 30
-      }]
-    }, {
-      name: "A3. POWER PRIMER",
-      sets: 3,
-      color: "#E65100",
-      exercises: [{ name: "Rotational Banded Punch", detail: "8 reps each side. Muay Thaï transfer.", track: "Reps", vid: "UKsjca_cNUs", dr: 8 }]
-    }, {
-      name: "B. LOADED ROWS",
-      sets: 2,
-      color: "#1565C0",
-      exercises: [{
-        name: "Renegade Row",
-        detail: "8 reps each side. Row from plank position. Fight the hip rotation.",
-        track: "Reps + Weight",
-        vid: "Q28cLuweLv4",
-        dr: 8
-      }, {
-        name: "TRX Facepull",
-        detail: "8 reps. Squeeze scaps, external rotation.",
-        track: "Reps",
-        vid: "PoBbZrY9zTE",
-        dr: 8
-      }]
-    }, {
-      name: "C. PULL + CARRY CIRCUIT",
-      sets: 3,
-      color: "var(--recovery)",
-      exercises: [{
-        name: "Lateral Bridge with Row",
-        detail: "8 reps each side. Side plank + row. Anti-rotation + pull.",
-        track: "Reps + Weight",
-        vid: "kiBDuPbWg2A",
-        dr: 8
-      }, {
-        name: "Inverted Row",
-        detail: "4 reps. 3 sec eccentric lowering. Eccentric overload.",
-        track: "Reps",
-        vid: "pIMXcgvVg3U",
-        dr: 4
-      }, {
-        name: "Single-Arm DB Row",
-        detail: "8 reps each side. Strict unilateral row. Brace the core.",
-        track: "Reps + Weight",
-        vid: "i9BJwVCK5VQ",
-        dr: 8
-      }, {
-        name: "Towel Kettlebell Carry",
-        detail: "20 steps. Towel over KB handle. Grip + carry.",
-        track: "Dist + Weight",
-        vid: "NEkUGE_gOLg",
-        dr: 20
-      }]
-    }, {
-      name: "D. FOREARMS",
-      sets: 2,
-      color: "#E65100",
-      exercises: [{
-        name: "Plate Pinch Hold",
-        detail: "Max hold. Pinch grip endurance.",
-        track: "Seconds + Weight",
-        vid: "woJifu7hSD8",
-        dr: 30
-      }, {
-        name: "Wrist Roller",
-        detail: "Roll up and down. Forearm pump.",
-        track: "Reps",
-        vid: "8ARDRJjhnSw",
-        dr: 4
-      }]
-    }, {
-      name: "E. CONDITIONING FINISHER",
-      sets: 3,
-      color: "#37474F",
-      exercises: [{
-        name: "Reverse Sled Drag",
-        detail: "20 steps. Walk backwards. Knee health + conditioning.",
-        track: "Dist + Weight",
-        vid: "wa3tZH_yaRY",
-        dr: 20
-      }]
-    }]
+      {
+        name: "A2. DEAD HANG",
+        sets: 3,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Dead Hang",
+            detail: "30 sec. Full hang. Grip endurance + shoulder and spinal decompression.",
+            track: "Seconds",
+            vid: "XPcT3capkyk",
+            dr: 30
+          }
+        ]
+      },
+      {
+        name: "A3. POWER PRIMER",
+        sets: 3,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Rotational Banded Punch",
+            detail: "8 reps each side. Muay Thaï transfer.",
+            track: "Reps",
+            vid: "UKsjca_cNUs",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "B. LOADED ROWS",
+        sets: 2,
+        color: "#1565C0",
+        exercises: [
+          {
+            name: "Renegade Row",
+            detail: "8 reps each side. Row from plank position. Fight the hip rotation.",
+            track: "Reps + Weight",
+            vid: "Q28cLuweLv4",
+            dr: 8
+          },
+          {
+            name: "TRX Facepull",
+            detail: "8 reps. Squeeze scaps, external rotation.",
+            track: "Reps",
+            vid: "PoBbZrY9zTE",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "C. PULL + CARRY CIRCUIT",
+        sets: 3,
+        color: "var(--recovery)",
+        exercises: [
+          {
+            name: "Lateral Bridge with Row",
+            detail: "8 reps each side. Side plank + row. Anti-rotation + pull.",
+            track: "Reps + Weight",
+            vid: "kiBDuPbWg2A",
+            dr: 8
+          },
+          {
+            name: "Inverted Row",
+            detail: "4 reps. 3 sec eccentric lowering. Eccentric overload.",
+            track: "Reps",
+            vid: "pIMXcgvVg3U",
+            dr: 4
+          },
+          {
+            name: "Single-Arm DB Row",
+            detail: "8 reps each side. Strict unilateral row. Brace the core.",
+            track: "Reps + Weight",
+            vid: "i9BJwVCK5VQ",
+            dr: 8
+          },
+          {
+            name: "Towel Kettlebell Carry",
+            detail: "20 steps. Towel over KB handle. Grip + carry.",
+            track: "Dist + Weight",
+            vid: "NEkUGE_gOLg",
+            dr: 20
+          }
+        ]
+      },
+      {
+        name: "E. CONDITIONING FINISHER",
+        sets: 3,
+        color: "#37474F",
+        exercises: [
+          {
+            name: "Reverse Sled Drag",
+            detail: "20 steps. Walk backwards. Knee health + conditioning.",
+            track: "Dist + Weight",
+            vid: "wa3tZH_yaRY",
+            dr: 20
+          }
+        ]
+      },
+      {
+        name: "F. SLED FINISHER",
+        sets: 2,
+        color: "#37474F",
+        exercises: [
+          {
+            name: "Dynamic Sled Row",
+            detail: "8 reps. Pull sled toward you.",
+            track: "Reps + Weight",
+            vid: "xdOhwytr0M8",
+            dr: 8
+          }
+        ]
+      }
+    ]
   },
-
-  // ─── THURSDAY B: SQUAT ───
+  // THURSDAY B
   THURSDAY: {
-    trainTitle: "LEGS B — Squat + Carry + Sled + Walk",
-    trainTime: "~60 min",
-    trainNote: "Leg day B. Squat 4x4, knee health, split jumps, carries, sled, walk.",
-    blocks: [{
-      name: "A. PREP",
-      sets: 1,
-      color: "var(--full)",
-      exercises: [{
-        name: "Hip Flexor Rock Back",
-        detail: "6 reps each leg. Open hip flexors for squat depth.",
-        track: "Reps",
-        vid: "a5kTnLk1Dks",
-        dr: 6
-      }, {
-        name: "Elevated Heels Deep Squat Opener",
-        detail: "5 reps. Heels on plate. Slow eccentric.",
-        track: "Reps",
-        vid: "jKED44TDKIE",
-        dr: 5
-      }, {
-        name: "Adductor Rock to Hip Walk Out",
-        detail: "8 reps. Open the adductors and hips for squat depth.",
-        track: "Reps",
-        vid: "JvQzXBr8sPQ",
-        dr: 8
-      }, 
-        { name: "Banded Hip External Rotation (Seated)", detail: "15 reps. Seated, band above knees, drive knees apart and control back. Hip external rotators.", track: "Reps", vid: "GH_IQsyOKwI", dr: 15 }
-      ]
-    }, { name: "A2. POWER", sets: 3, color: "#E65100", exercises: [ { name: "TRX Jump Squat", detail: "5 reps. Hold TRX, assisted explosive jump. Gentle landing, knee-friendly power.", track: "Reps", vid: "o0b5XFfd0wQ", dr: 5 }, { name: "Single Leg Hinge KB Swing", detail: "5 reps each leg. Explosive single leg hip drive. Control the landing.", track: "Reps + Weight", vid: "VRnk5QEBevI", dr: 5 } , {
-        name: "Front Foot Elevated Split Jumps",
-        detail: "5 reps each leg. Explosive single-leg power.",
-        track: "Reps",
-        vid: "3qCQQl-fpOQ",
-        dr: 5
-      }] },
+    trainTitle: "LEGS B · Squat + Knee Health + Single Leg",
+    trainTime: "~55 min",
+    trainNote: "Leg day B. Power, squat, knee health, posterior chain, single leg work.",
+    blocks: [
       {
-      name: "B. MAIN LIFT",
-      sets: 4,
-      color: "var(--recovery)",
-      exercises: [{
-        name: "BACK SQUAT",
-        detail: "4 reps. RPE 8. Benchmark lift.",
-        track: "Reps + Weight",
-        key: true,
-        vid: "pWWBjAvJuoA",
-        dr: 4
-      }]
-    }, {
-      name: "C. KNEE HEALTH",
-      sets: 3,
-      color: "var(--ember)",
-      exercises: [{
-        name: "Banded Terminal Knee Extension",
-        detail: "15 reps each leg. Band around knee.",
-        track: "Reps",
-        vid: "CU7Fn11YMTw",
-        dr: 15
-      }, {
-        name: "Poliquin Step Down with TKE",
-        detail: "8 reps each leg. Slow controlled step down. Knee tracking.",
-        track: "Reps",
-        vid: "xFKCoWuP94Y",
-        dr: 8
-      }]
-    }, {
-      name: "C2. POSTERIOR CHAIN",
-      sets: 3,
-      color: "var(--ember)",
-      exercises: [{
-        name: "Banded Hamstring Curls",
-        detail: "12 reps. Prone, curl band toward glutes.",
-        track: "Reps",
-        vid: "gTVC0qZJLzk",
-        dr: 12
-      }, { name: "Plate Kang Squats", detail: "Plate at the chest, hinge then sink into a squat, reverse it. Hamstring + hip strength under control.", track: "Reps + Weight", vid: "f4fnfrKUfHE", dr: 6 }]
-    }, {
-      name: "D. UNILATERAL",
-      sets: 3,
-      color: "#FF6B35",
-      exercises: [{
-        name: "Skater Squat",
-        detail: "6 reps each leg. Single-leg squat, opposite leg behind.",
-        track: "Reps",
-        vid: "xa2Dy8fyN1Q",
-        dr: 6
+        name: "A. PREP",
+        sets: 1,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Hip Flexor Rock Back",
+            detail: "6 reps each leg. Open hip flexors for squat depth.",
+            track: "Reps",
+            vid: "a5kTnLk1Dks",
+            dr: 6
+          },
+          {
+            name: "Elevated Heels Deep Squat Opener",
+            detail: "5 reps. Heels on plate. Slow eccentric.",
+            track: "Reps",
+            vid: "jKED44TDKIE",
+            dr: 5
+          },
+          {
+            name: "Adductor Rock to Hip Walk Out",
+            detail: "8 reps. Open the adductors and hips for squat depth.",
+            track: "Reps",
+            vid: "JvQzXBr8sPQ",
+            dr: 8
+          },
+          {
+            name: "Banded Hip External Rotation (Seated)",
+            detail: "15 reps. Seated, band above knees, drive knees apart and control back. Hip external rotators.",
+            track: "Reps",
+            vid: "GH_IQsyOKwI",
+            dr: 15
+          }
+        ]
       },
-        { name: "Step Up with TKE", detail: "8 reps each leg.", track: "Reps", vid: "4cauIKTDIrk", dr: 8 }
-      , { name: "Landmine Lateral Split Squat Iso", detail: "Lateral split stance on the landmine, hold at depth. Frontal-plane single-leg strength.", track: "Seconds", vid: "70mzPCghYhA", dr: 20 }]
-    }, {
-      name: "E. CARRY",
-      sets: 3,
-      color: "#E65100",
-      exercises: [{
-        name: "FARMER\'S CARRY",
-        detail: "175ft (53m) at bodyweight. Benchmark.",
-        track: "Dist + Weight",
-        key: true,
-        vid: "fPwwaXCgDNE",
-        dr: 175
-      }, {
-        name: "Towel Kettlebell Carry",
-        detail: "80ft. Towel over KB handle. Grip carry.",
-        track: "Dist + Weight",
-        vid: "NEkUGE_gOLg",
-        dr: 80
-      }]
-    }, {
-      name: "F. CONDITIONING",
-      sets: 4,
-      color: "#37474F",
-      exercises: [
-        { name: "Loaded Leg Lifts", detail: "8 reps. Hanging or lying, weight between feet. Core finisher.", track: "Reps + Weight", vid: "PpZxg66ftYc", dr: 8 }
-      ]
-    }]
+      {
+        name: "A2. POWER",
+        sets: 3,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "TRX Jump Squat",
+            detail: "5 reps. Hold TRX, assisted explosive jump. Gentle landing, knee-friendly power.",
+            track: "Reps",
+            vid: "o0b5XFfd0wQ",
+            dr: 5
+          },
+          {
+            name: "Single Leg Hinge KB Swing",
+            detail: "5 reps each leg. Explosive single leg hip drive. Control the landing.",
+            track: "Reps + Weight",
+            vid: "VRnk5QEBevI",
+            dr: 5
+          },
+          {
+            name: "Front Foot Elevated Split Jumps",
+            detail: "5 reps each leg. Explosive single-leg power.",
+            track: "Reps",
+            vid: "3qCQQl-fpOQ",
+            dr: 5
+          }
+        ]
+      },
+      {
+        name: "B. MAIN LIFT",
+        sets: 4,
+        color: "var(--recovery)",
+        exercises: [
+          {
+            name: "BACK SQUAT",
+            detail: "4 reps. RPE 8. Benchmark lift.",
+            track: "Reps + Weight",
+            key: true,
+            vid: "pWWBjAvJuoA",
+            dr: 4
+          }
+        ]
+      },
+      {
+        name: "C. KNEE HEALTH",
+        sets: 3,
+        color: "var(--ember)",
+        exercises: [
+          {
+            name: "Banded Terminal Knee Extension",
+            detail: "15 reps each leg. Band around knee.",
+            track: "Reps",
+            vid: "CU7Fn11YMTw",
+            dr: 15
+          },
+          {
+            name: "Poliquin Step Down with TKE",
+            detail: "8 reps each leg. Slow controlled step down. Knee tracking.",
+            track: "Reps",
+            vid: "xFKCoWuP94Y",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "C2. POSTERIOR CHAIN",
+        sets: 3,
+        color: "var(--ember)",
+        exercises: [
+          {
+            name: "Banded Hamstring Curls",
+            detail: "12 reps. Prone, curl band toward glutes.",
+            track: "Reps",
+            vid: "gTVC0qZJLzk",
+            dr: 12
+          },
+          {
+            name: "Plate Kang Squats",
+            detail: "Plate at the chest, hinge then sink into a squat, reverse it. Hamstring + hip strength under control.",
+            track: "Reps + Weight",
+            vid: "f4fnfrKUfHE",
+            dr: 6
+          }
+        ]
+      },
+      {
+        name: "D. UNILATERAL",
+        sets: 3,
+        color: "#FF6B35",
+        exercises: [
+          {
+            name: "Skater Squat",
+            detail: "6 reps each leg. Single-leg squat, opposite leg behind.",
+            track: "Reps",
+            vid: "xa2Dy8fyN1Q",
+            dr: 6
+          },
+          {
+            name: "Step Up with TKE",
+            detail: "8 reps each leg.",
+            track: "Reps",
+            vid: "4cauIKTDIrk",
+            dr: 8
+          },
+          {
+            name: "Landmine Lateral Split Squat Iso",
+            detail: "Lateral split stance on the landmine, hold at depth. Frontal-plane single-leg strength.",
+            track: "Seconds",
+            vid: "70mzPCghYhA",
+            dr: 20
+          }
+        ]
+      }
+    ]
   },
-
-  // ─── FRIDAY B: ARMS ───
+  // FRIDAY B
   FRIDAY: {
-    trainTitle: "ARMS B — Close Grip + Biceps + Triceps + Forearms",
-    trainTime: "~44 min",
-    trainNote: "Arms day B. Compound push, arm variations, forearm work.",
-    blocks: [{
-      name: "A. WARM-UP",
-      sets: 2,
-      color: "var(--full)",
-      exercises: [{
-        name: "Band Pull Aparts",
-        detail: "12 reps. Light band. Open chest.",
-        track: "Reps",
-        vid: "SuvO4TBwSu4",
-        dr: 12
-      }, {
-        name: "Banded External Rotation",
-        detail: "10 reps each arm. Rotator cuff prep before pressing.",
-        track: "Reps",
-        vid: "7DqYesMRkzU",
-        dr: 10
-      }, {
-        name: "Push-Up to Pike",
-        detail: "8 reps. Shoulder + tricep activation.",
-        track: "Reps",
-        vid: "oNj5I72Yskg",
-        dr: 8
-      }]
-    }, { name: "A2. POWER", sets: 3, color: "#E65100", exercises: [ { name: "Plyo Push-Up", detail: "5 reps. Explode off the floor, hands leave ground. Horizontal push power.", track: "Reps", vid: "zHqxyD9_364", dr: 5 } ] },
+    trainTitle: "ARMS B · Close Grip + Biceps + Triceps + Forearms",
+    trainTime: "~50 min",
+    trainNote: "Arms day B. Compound push, shoulders, arm variations, forearm work.",
+    blocks: [
       {
-      name: "B. COMPOUND PUSH",
-      sets: 3,
-      color: "var(--recovery)",
-      exercises: [{
-        name: "Close Grip Barbell Bench Press",
-        detail: "12 reps. Narrow grip. Tricep compound.",
-        track: "Reps + Weight",
-        key: true,
-        vid: "Inj9b3jhREY",
-        dr: 12
+        name: "A. WARM-UP",
+        sets: 2,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Band Pull Aparts",
+            detail: "12 reps. Light band. Open chest.",
+            track: "Reps",
+            vid: "SuvO4TBwSu4",
+            dr: 12
+          },
+          {
+            name: "Banded External Rotation",
+            detail: "10 reps each arm. Rotator cuff prep before pressing.",
+            track: "Reps",
+            vid: "7DqYesMRkzU",
+            dr: 10
+          },
+          {
+            name: "Push-Up to Pike",
+            detail: "8 reps. Shoulder + tricep activation.",
+            track: "Reps",
+            vid: "oNj5I72Yskg",
+            dr: 8
+          }
+        ]
       },
-        { name: "DIPS", detail: "8 reps. Controlled descent. Tricep focus.", track: "Reps + Weight", key: true, vid: "0326dy_-CzM", dr: 8 }
-      ]
-    }, { name: "B2. SHOULDERS", sets: 3, color: "#EF6C00", exercises: [ { name: "DB Lateral Raises", detail: "8 reps. Moderate weight. Shoulder width.", track: "Reps + Weight", vid: "KkynA3FpkhE", dr: 8 }, { name: "Shoulder Arm Bar", detail: "5 reps each side. KB held overhead, roll under control. Loaded shoulder stability.", track: "Reps + Weight", vid: "g2EhWlBX_Qw", dr: 5 } ] },
       {
-      name: "C. BICEPS",
-      sets: 3,
-      color: "#FF6B35",
-      exercises: [{
-        name: "Barbell Bicep Curl",
-        detail: "10 reps. Strict.",
-        track: "Reps + Weight",
-        vid: "yRMQoSLOl6g",
-        dr: 10
-      }, {
-        name: "Hammer Curl",
-        detail: "10 reps each arm. Neutral grip. Brachialis.",
-        track: "Reps + Weight",
-        vid: "0qzSDAfBzSw",
-        dr: 10
-      }]
-    }, {
-      name: "D. TRICEPS",
-      sets: 3,
-      color: "#1565C0",
-      exercises: [{
-        name: "Tricep Dive Ins with Rope",
-        detail: "10 reps. Full extension.",
-        track: "Reps + Weight",
-        vid: "DrnY3A9p4Cs",
-        dr: 10
-      }, {
-        name: "Overhead Tricep Extension",
-        detail: "10 reps. Cable or DB. Long head stretch.",
-        track: "Reps + Weight",
-        vid: "T3e390Dl3XU",
-        dr: 10
-      }]
-    }, {
-      name: "E. FOREARMS",
-      sets: 2,
-      color: "#E65100",
-      exercises: [{
-        name: "Kettlebell Forearm Rotation",
-        detail: "8 reps. KB rotation for forearm strength.",
-        track: "Reps",
-        vid: "FwCuyV208bU",
-        dr: 8
-      }, {
-        name: "Forearm Twist + Curl with Towel",
-        detail: "8 reps. Towel over bar, twist and curl.",
-        track: "Reps",
-        vid: "Bc3qLJnYwkI",
-        dr: 8
+        name: "A2. POWER",
+        sets: 3,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Plyo Push-Up",
+            detail: "5 reps. Explode off the floor, hands leave ground. Horizontal push power.",
+            track: "Reps",
+            vid: "zHqxyD9_364",
+            dr: 5
+          }
+        ]
       },
-        { name: "Banded Wrist Rotation", detail: "10 reps each direction. Band around the hand, rotate through the wrist. Wrist + forearm health.", track: "Reps", vid: "vXaF4LVlaic", dr: 10 }
-      ]
-    }, {
-      name: "F. NECK",
-      sets: 2,
-      color: "#546E7A",
-      exercises: [{
-        name: "Neck Prone ROM & Strengthening",
-        detail: "10 reps. Prone, controlled lift. Neck extensor strength.",
-        track: "Reps",
-        vid: "cjIDKy6z3zY",
-        dr: 10
-      }, {
-        name: "Neck Circles",
-        detail: "5 reps each direction. Slow, gentle. Neck mobility.",
-        track: "Reps",
-        vid: "9zP1BHF5eqQ",
-        dr: 5
-      }]
-    }]
+      {
+        name: "B. COMPOUND PUSH",
+        sets: 3,
+        color: "var(--recovery)",
+        exercises: [
+          {
+            name: "Close Grip Barbell Bench Press",
+            detail: "12 reps. Narrow grip. Tricep compound.",
+            track: "Reps + Weight",
+            key: true,
+            vid: "Inj9b3jhREY",
+            dr: 12
+          },
+          {
+            name: "DIPS",
+            detail: "8 reps. Controlled descent. Tricep focus.",
+            track: "Reps + Weight",
+            key: true,
+            vid: "0326dy_-CzM",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "B2. SHOULDERS",
+        sets: 3,
+        color: "#EF6C00",
+        exercises: [
+          {
+            name: "DB Lateral Raises",
+            detail: "8 reps. Moderate weight. Shoulder width.",
+            track: "Reps + Weight",
+            vid: "KkynA3FpkhE",
+            dr: 8
+          },
+          {
+            name: "Shoulder Arm Bar",
+            detail: "5 reps each side. KB held overhead, roll under control. Loaded shoulder stability.",
+            track: "Reps + Weight",
+            vid: "g2EhWlBX_Qw",
+            dr: 5
+          }
+        ]
+      },
+      {
+        name: "C. BICEPS",
+        sets: 3,
+        color: "#FF6B35",
+        exercises: [
+          {
+            name: "Barbell Bicep Curl",
+            detail: "10 reps. Strict.",
+            track: "Reps + Weight",
+            vid: "yRMQoSLOl6g",
+            dr: 10
+          },
+          {
+            name: "Hammer Curl",
+            detail: "10 reps each arm. Neutral grip. Brachialis.",
+            track: "Reps + Weight",
+            vid: "0qzSDAfBzSw",
+            dr: 10
+          }
+        ]
+      },
+      {
+        name: "D. TRICEPS",
+        sets: 3,
+        color: "#1565C0",
+        exercises: [
+          {
+            name: "Tricep Dive Ins with Rope",
+            detail: "10 reps. Full extension.",
+            track: "Reps + Weight",
+            vid: "DrnY3A9p4Cs",
+            dr: 10
+          },
+          {
+            name: "Overhead Tricep Extension",
+            detail: "10 reps. Cable or DB. Long head stretch.",
+            track: "Reps + Weight",
+            vid: "T3e390Dl3XU",
+            dr: 10
+          }
+        ]
+      },
+      {
+        name: "E. FOREARMS",
+        sets: 2,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Kettlebell Forearm Rotation",
+            detail: "8 reps. KB rotation for forearm strength.",
+            track: "Reps",
+            vid: "FwCuyV208bU",
+            dr: 8
+          },
+          {
+            name: "Forearm Twist + Curl with Towel",
+            detail: "8 reps. Towel over bar, twist and curl.",
+            track: "Reps",
+            vid: "Bc3qLJnYwkI",
+            dr: 8
+          },
+          {
+            name: "Banded Wrist Rotation",
+            detail: "10 reps each direction. Band around the hand, rotate through the wrist. Wrist + forearm health.",
+            track: "Reps",
+            vid: "vXaF4LVlaic",
+            dr: 10
+          }
+        ]
+      }
+    ]
   },
-
-  // ─── SATURDAY B: MOBILITY ───
+  // ARMOR B
+  ARMOR: {
+    trainTitle: "FIGHTER ARMOR B · Carries + Grip + Neck + Core",
+    trainTime: "~37 min",
+    trainNote: "Armor day B. Carries, grip, neck strength, core.",
+    blocks: [
+      {
+        name: "A. WARM-UP",
+        sets: 1,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Deadbug",
+            detail: "8 reps each leg. Low back pressed to floor. Anti-extension brace before pulling.",
+            track: "Reps",
+            vid: "rvNkdS3qAyM",
+            dr: 8
+          },
+          {
+            name: "Birddog to Gecko",
+            detail: "8 reps each side. Crawl pattern + scapular stability.",
+            track: "Reps",
+            vid: "ISp9hRUQQ3M",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "C. CARRY",
+        sets: 3,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "FARMER'S CARRY",
+            detail: "175ft (53m) at bodyweight. Benchmark.",
+            track: "Dist + Weight",
+            key: true,
+            vid: "fPwwaXCgDNE",
+            dr: 175
+          },
+          {
+            name: "Towel Kettlebell Carry",
+            detail: "80ft. Towel over KB handle. Grip carry.",
+            track: "Dist + Weight",
+            vid: "NEkUGE_gOLg",
+            dr: 80
+          }
+        ]
+      },
+      {
+        name: "D. FOREARMS + GRIP",
+        sets: 2,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Plate Pinch Hold",
+            detail: "Max hold. Pinch grip endurance.",
+            track: "Seconds + Weight",
+            vid: "woJifu7hSD8",
+            dr: 30
+          },
+          {
+            name: "Wrist Roller",
+            detail: "Roll up and down. Forearm pump.",
+            track: "Reps",
+            vid: "8ARDRJjhnSw",
+            dr: 4
+          }
+        ]
+      },
+      {
+        name: "E. NECK",
+        sets: 2,
+        color: "#546E7A",
+        exercises: [
+          {
+            name: "Neck Prone ROM & Strengthening",
+            detail: "10 reps. Prone, controlled lift. Neck extensor strength.",
+            track: "Reps",
+            vid: "cjIDKy6z3zY",
+            dr: 10
+          },
+          {
+            name: "Neck Circles",
+            detail: "5 reps each direction. Slow, gentle. Neck mobility.",
+            track: "Reps",
+            vid: "9zP1BHF5eqQ",
+            dr: 5
+          },
+          {
+            name: "Neck Lateral Band Resistance",
+            detail: "8 reps each side. Band around head.",
+            track: "Reps",
+            vid: "QEayGbDM1Do",
+            dr: 8
+          },
+          {
+            name: "Neck Supine ROM & Strengthening",
+            detail: "8 reps. Gentle.",
+            track: "Reps",
+            vid: "Gxu9U-8NKes",
+            dr: 8
+          },
+          {
+            name: "Neck Bridge",
+            detail: "Hold bridge position. Build neck strength progressively.",
+            track: "Seconds",
+            vid: "kgFFqbiqvW8",
+            dr: 20
+          }
+        ]
+      },
+      {
+        name: "F. CORE + HIP FLEXORS",
+        sets: 2,
+        color: "#1565C0",
+        exercises: [
+          {
+            name: "Loaded Leg Lifts",
+            detail: "8 reps. Hanging or lying, weight between feet. Core finisher.",
+            track: "Reps + Weight",
+            vid: "PpZxg66ftYc",
+            dr: 8
+          },
+          {
+            name: "Pallof Press",
+            detail: "8 reps each side. Light band.",
+            track: "Reps",
+            vid: "99evyH71IWs",
+            dr: 8
+          }
+        ]
+      }
+    ]
+  },
+  // SATURDAY B
   SATURDAY: {
-    trainTitle: "MOBILITY B — Full Body Recovery",
-    trainTime: "~29 min",
-    trainNote: "Active recovery B. T-spine focus, hip mobility, calves, neck, stretches.",
-    blocks: [{
-      name: "A. JOINT CARs",
-      sets: 1,
-      color: "var(--full)",
-      exercises: [{
-        name: "Shoulder CARs",
-        detail: "5 slow circles each direction. Full ROM.",
-        track: "Reps",
-        vid: "ZOP6RPjdAhA",
-        dr: 5
-      }, {
-        name: "Ankle CARs",
-        detail: "5 slow circles each direction, each ankle.",
-        track: "Reps",
-        vid: "UVtCSGJmGEY",
-        dr: 5
-      }]
-    }, {
-      name: "A2. T-SPINE + SHOULDER",
-      sets: 2,
-      color: "var(--full)",
-      exercises: [{
-        name: "Cat Camel Diagonal",
-        detail: "6 reps. Slow spinal mobility.",
-        track: "Reps",
-        vid: "JrcOPzvdToQ",
-        dr: 6
-      }, {
-        name: "Shoulder Hovers",
-        detail: "8 reps. Prone, hover arms. Posterior shoulder.",
-        track: "Reps",
-        vid: "A0KY0DKZ1h4",
-        dr: 8
-      }, {
-        name: "Crawl Shoulder Tap",
-        detail: "8 reps each side. Core + shoulder stability.",
-        track: "Reps",
-        vid: "cMeBUqa4d3E",
-        dr: 8
+    trainTitle: "MOBILITY B · Full Body Recovery + Zone 2",
+    trainTime: "~56 min",
+    trainNote: "Mobility day B. T-spine, hips, calves, loaded stretches, recovery drills, 20 min zone 2 walk.",
+    blocks: [
+      {
+        name: "A. JOINT CARs",
+        sets: 1,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Shoulder CARs",
+            detail: "5 slow circles each direction. Full ROM.",
+            track: "Reps",
+            vid: "ZOP6RPjdAhA",
+            dr: 5
+          },
+          {
+            name: "Ankle CARs",
+            detail: "5 slow circles each direction, each ankle.",
+            track: "Reps",
+            vid: "UVtCSGJmGEY",
+            dr: 5
+          }
+        ]
       },
-        { name: "Crawl to Kick Through", detail: "6 reps each side. Coordination.", track: "Reps", vid: "wqt9IdcUxig", dr: 6 },
-        { name: "Shoulder Airplanes", detail: "6 reps each side. Hinged rotation. Balance + stability.", track: "Reps", vid: "T9j_ArUIxWw", dr: 6 },
-        { name: "Banded Rotations", detail: "8 reps each side. Controlled rotation under band resistance.", track: "Reps", vid: "ViWJ1u2u4d0", dr: 8 }
-      ]
-    }, {
-      name: "B. HIP MOBILITY",
-      sets: 2,
-      color: "#009688",
-      exercises: [{
-        name: "Shin Box Fold",
-        detail: "8 reps. Deep hip rotation.",
-        track: "Reps",
-        vid: "A9vhRbwH2Sw",
-        dr: 8
-      }, {
-        name: "Hip Airplane",
-        detail: "6 reps each leg.",
-        track: "Reps",
-        vid: "AA8zZh8Iz9I",
-        dr: 6
-      }, {
-        name: "Facing Wall Hip Circle Rotations",
-        detail: "8 reps each direction.",
-        track: "Reps",
-        vid: "odvEl4NkZuo",
-        dr: 8
-      }]
-    }, {
-      name: "C. CALVES + ANKLES",
-      sets: 2,
-      color: "var(--ember)",
-      exercises: [{
-        name: "Loaded SL Calf Raise",
-        detail: "10 reps each. Slow eccentric.",
-        track: "Reps + Weight",
-        vid: "wZfr_svtSr0",
-        dr: 10
-      }, {
-        name: "Ankle Mobility",
-        detail: "8 reps each. Wall knee drives.",
-        track: "Reps",
-        vid: "qXvA35UHs2w",
-        dr: 8
-      }]
-    }, {
-      name: "D. NECK",
-      sets: 2,
-      color: "#546E7A",
-      exercises: [{
-        name: "Neck Lateral Band Resistance",
-        detail: "8 reps each side. Band around head.",
-        track: "Reps",
-        vid: "QEayGbDM1Do",
-        dr: 8
-      }, {
-        name: "Neck Supine ROM & Strengthening",
-        detail: "8 reps. Gentle.",
-        track: "Reps",
-        vid: "Gxu9U-8NKes",
-        dr: 8
+      {
+        name: "A2. T-SPINE + SHOULDER",
+        sets: 2,
+        color: "var(--full)",
+        exercises: [
+          {
+            name: "Cat Camel Diagonal",
+            detail: "6 reps. Slow spinal mobility.",
+            track: "Reps",
+            vid: "JrcOPzvdToQ",
+            dr: 6
+          },
+          {
+            name: "Shoulder Hovers",
+            detail: "8 reps. Prone, hover arms. Posterior shoulder.",
+            track: "Reps",
+            vid: "A0KY0DKZ1h4",
+            dr: 8
+          },
+          {
+            name: "Crawl Shoulder Tap",
+            detail: "8 reps each side. Core + shoulder stability.",
+            track: "Reps",
+            vid: "cMeBUqa4d3E",
+            dr: 8
+          },
+          {
+            name: "Crawl to Kick Through",
+            detail: "6 reps each side. Coordination.",
+            track: "Reps",
+            vid: "wqt9IdcUxig",
+            dr: 6
+          },
+          {
+            name: "Shoulder Airplanes",
+            detail: "6 reps each side. Hinged rotation. Balance + stability.",
+            track: "Reps",
+            vid: "T9j_ArUIxWw",
+            dr: 6
+          },
+          {
+            name: "Banded Rotations",
+            detail: "8 reps each side. Controlled rotation under band resistance.",
+            track: "Reps",
+            vid: "ViWJ1u2u4d0",
+            dr: 8
+          }
+        ]
       },
-        { name: "Neck Bridge", detail: "Hold bridge position. Build neck strength progressively.", track: "Seconds", vid: "kgFFqbiqvW8", dr: 20 }
-      ]
-    }, {
-      name: "E. LOADED STRETCHES",
-      sets: 1,
-      color: "#009688",
-      exercises: [{
-        name: "On Bench Lat Stretch to Hip Stretch",
-        detail: "30 sec. Flow between lat and hip.",
-        track: "Seconds",
-        vid: "NmohIiacpK0",
-        dr: 30
-      }, {
-        name: "Posterior Capsule Stretch",
-        detail: "30 sec each side. Cross-body shoulder.",
-        track: "Seconds",
-        vid: "a4ihXemdOZY",
-        dr: 30
-      }, {
-        name: "Seated ER Stretch",
-        detail: "30 sec each side. External rotation.",
-        track: "Seconds",
-        vid: "h6_gNo5Cd4Q",
-        dr: 30
-      }, { name: "Half-Kneeling Loaded Lateral Tilts", detail: "Half kneeling, loaded side bend and return. Obliques and QL under load.", track: "Reps", vid: "JMah290u6tM", dr: 10 }]
-    }]
+      {
+        name: "B. HIP MOBILITY",
+        sets: 2,
+        color: "#009688",
+        exercises: [
+          {
+            name: "Shin Box Fold",
+            detail: "8 reps. Deep hip rotation.",
+            track: "Reps",
+            vid: "A9vhRbwH2Sw",
+            dr: 8
+          },
+          {
+            name: "Hip Airplane",
+            detail: "6 reps each leg.",
+            track: "Reps",
+            vid: "AA8zZh8Iz9I",
+            dr: 6
+          },
+          {
+            name: "Facing Wall Hip Circle Rotations",
+            detail: "8 reps each direction.",
+            track: "Reps",
+            vid: "odvEl4NkZuo",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "C. CALVES + ANKLES",
+        sets: 2,
+        color: "var(--ember)",
+        exercises: [
+          {
+            name: "Loaded SL Calf Raise",
+            detail: "10 reps each. Slow eccentric.",
+            track: "Reps + Weight",
+            vid: "wZfr_svtSr0",
+            dr: 10
+          },
+          {
+            name: "Ankle Mobility",
+            detail: "8 reps each. Wall knee drives.",
+            track: "Reps",
+            vid: "qXvA35UHs2w",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "E. LOADED STRETCHES",
+        sets: 1,
+        color: "#009688",
+        exercises: [
+          {
+            name: "On Bench Lat Stretch to Hip Stretch",
+            detail: "30 sec. Flow between lat and hip.",
+            track: "Seconds",
+            vid: "NmohIiacpK0",
+            dr: 30
+          },
+          {
+            name: "Posterior Capsule Stretch",
+            detail: "30 sec each side. Cross-body shoulder.",
+            track: "Seconds",
+            vid: "a4ihXemdOZY",
+            dr: 30
+          },
+          {
+            name: "Seated ER Stretch",
+            detail: "30 sec each side. External rotation.",
+            track: "Seconds",
+            vid: "h6_gNo5Cd4Q",
+            dr: 30
+          },
+          {
+            name: "Half-Kneeling Loaded Lateral Tilts",
+            detail: "Half kneeling, loaded side bend and return. Obliques and QL under load.",
+            track: "Reps",
+            vid: "JMah290u6tM",
+            dr: 10
+          }
+        ]
+      },
+      {
+        name: "G. RECOVERY DRILLS",
+        sets: 1,
+        color: "#009688",
+        exercises: [
+          {
+            name: "Eccentric Calf Drop",
+            detail: "8 reps each leg. Slow.",
+            track: "Reps",
+            vid: "BaPKay895ks",
+            dr: 8
+          },
+          {
+            name: "Push-Up to Toe Touch",
+            detail: "8 reps. Mobility pattern.",
+            track: "Reps",
+            vid: "L-K771jlxXE",
+            dr: 8
+          },
+          {
+            name: "Shoulder Upright Isometric Hold",
+            detail: "15 sec each side. Gentle isometric.",
+            track: "Seconds",
+            vid: "SCr3DEwIu_0",
+            dr: 8
+          }
+        ]
+      },
+      {
+        name: "H. ZONE 2",
+        sets: 1,
+        color: "#37474F",
+        exercises: [
+          {
+            name: "Incline Walk",
+            detail: "20 min. Easy pace, nose breathing (zone 2). Replaces the aerobic of Pull and the walk of Legs.",
+            track: "Minutes",
+            vid: null,
+            dr: 15
+          }
+        ]
+      }
+    ]
   }
 };
 
@@ -4974,3 +5808,7 @@ function zoneLabel(z) {
 const recoveryBlocks = ["PREP","MOBILITY","CORE ACTIVATION","HIP MOBILITY","HEALTH","ANKLE","STRETCH","T-SPINE","SHOULDER PREP","SHOULDER HEALTH"];
 function isRecoveryBlock(blockName) { return recoveryBlocks.some(rb => blockName.toUpperCase().includes(rb)); }
 
+
+// 14-session queue: ARMOR has no legacy weekday record, its content lives in tier6OverridesA/B.ARMOR
+workoutsA.ARMOR = { title: "FIGHTER ARMOR", time: "", note: "", blocks: [] };
+workoutsB.ARMOR = { title: "FIGHTER ARMOR B", time: "", note: "", blocks: [] };
