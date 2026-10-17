@@ -12,24 +12,6 @@ const days = [
   { name: "STANDARD", subtitle: "Performance Benchmarks", type: "standard" }
 ];
 
-// Vacation blocks mapped to specific dates for calendar highlighting
-const vacationData = [
-  { name: "Summer Break 2026", emoji: "\u2600\uFE0F", color: "var(--full)", start: "2026-07-04", end: "2026-08-16", vacDays: 0 },
-  { name: "Fall Toussaint", emoji: "\uD83C\uDFD6\uFE0F", color: "var(--light)", start: "2026-10-03", end: "2026-10-18", vacDays: 5 },
-  { name: "Christmas Mega", emoji: "\uD83C\uDF84", color: "var(--recovery)", start: "2026-12-24", end: "2027-01-10", vacDays: 0 },
-  { name: "Winter Ski", emoji: "\uD83C\uDFD4\uFE0F", color: "#4FC3F7", start: "2027-02-13", end: "2027-02-21", vacDays: 5 },
-  { name: "Easter Giga Bridge", emoji: "\uD83C\uDF38", color: "#FF7043", start: "2027-03-26", end: "2027-04-11", vacDays: 4 },
-  { name: "Ascension Bridge", emoji: "\u26F0\uFE0F", color: "var(--ember)", start: "2027-05-05", end: "2027-05-09", vacDays: 2 },
-  { name: "Summer Balkans", emoji: "\uD83D\uDE90", color: "var(--full)", start: "2027-07-10", end: "2027-07-25", vacDays: 10 }
-];
-
-// Check if a date falls within a vacation
-function getVacationForDate(d) {
-  if (!d) return null;
-  const dStr = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
-  return vacationData.find(v => dStr >= v.start && dStr <= v.end) || null;
-}
-
 // Custom session exercise library by body part
 const customLib = {
   shoulders: { label: "Shoulders", icon: "\uD83D\uDEE1\uFE0F", color: "#1565C0", exercises: [

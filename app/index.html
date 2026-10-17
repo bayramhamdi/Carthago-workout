@@ -948,7 +948,6 @@ function Carthago() {
   };
   const [workoutHistory, setWorkoutHistory] = useState(() => loadLS("workoutHistory", {}));
   const [monthOffset, setMonthOffset] = useState(0);
-  const [showVacations, setShowVacations] = useState(true);
   const [cloudLoaded, setCloudLoaded] = useState(false);
   const [syncTick, setSyncTick] = useState(0);
   const [fbUser, setFbUser] = useState(null);
@@ -2502,7 +2501,6 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
                 const isCustom = isDone && entry.day === "CUSTOM";
                 // Custom sessions = purple; otherwise condition color
                 const savedColor = isCustom ? "var(--ember)" : savedCond === "full" ? "var(--full)" : savedCond === "light" ? "var(--light)" : savedCond === "recovery" ? "var(--recovery)" : null;
-                const vac = getVacationForDate(d);
                 const testType = getTestDayType(d);
                 // Saved workouts override everything — colored solid with checkmark
                 if (isDone) {
@@ -2522,13 +2520,6 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
                   return React.createElement("div", { key: di, style: { aspectRatio: "1", background: "rgba(244,181,63,0.082)", border: "1px solid rgba(244,181,63,0.376)", borderRadius: 10, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative" } },
                     React.createElement("div", { style: { fontSize: 10, fontWeight: 700, color: "var(--light)" } }, d.getDate()),
                     React.createElement("div", { style: { fontSize: 8, lineHeight: 0.8 } }, "\uD83D\uDCA4")
-                  );
-                }
-                // Vacation days — colored with emoji
-                if (vac) {
-                  return React.createElement("div", { key: di, style: { aspectRatio: "1", background: vac.color + (today2 ? "" : "40"), border: "2px solid " + vac.color, borderRadius: 10, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative" } },
-                    React.createElement("div", { style: { fontSize: 10, fontWeight: 700, color: "#fff" } }, d.getDate()),
-                    React.createElement("div", { style: { fontSize: 8, lineHeight: 0.8 } }, vac.emoji)
                   );
                 }
                 const qr = qMap[dk] || { role: "rest" };
@@ -2557,46 +2548,8 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
               React.createElement("div", { style: { width: 10, height: 10, background: l.color, borderRadius: 2 } }),
               React.createElement("span", { style: { fontSize: 8, color: "var(--smoke)", fontWeight: 600 } }, l.label)
             ))
-          ),
-
-          // VACATION TOGGLE + CARDS
-          React.createElement("div", { style: { marginTop: 18, paddingTop: 14, borderTop: "1px solid var(--line)" } },
-            React.createElement("button", { onClick: () => setShowVacations(!showVacations), style: { width: "100%", padding: "10px", border: "1px solid rgba(244,181,63,0.251)", borderRadius: 6, background: showVacations ? "rgba(244,181,63,0.125)" : "transparent", color: "var(--light)", cursor: "pointer", fontSize: 11, fontWeight: 700, letterSpacing: 0.5, marginBottom: showVacations ? 12 : 0 } },
-              "\uD83C\uDFD6\uFE0F " + (showVacations ? "HIDE" : "SHOW") + " VACATIONS"
-            ),
-            showVacations && React.createElement("div", null,
-              React.createElement("div", { style: { fontSize: 9, color: "var(--smoke)", marginBottom: 10, textAlign: "center" } }, "26 days used \xB7 67 calendar days off \xB7 2.6x average return"),
-              [
-                { emoji: "\uD83C\uDFD6\uFE0F", title: "Fall Toussaint", dates: "Oct 24 \u2013 Nov 1, 2026", vacDays: "5 days", calDays: "9 days off", where: "Sicily or Malta", vibe: "Warm Mediterranean\u00a0\u00b7 slow pace\u00a0\u00b7 no adventure sports", mult: "1.8x", color: "var(--light)" },
-                { emoji: "\uD83C\uDF84", title: "Christmas Mega", dates: "Dec 24, 2026 \u2013 Jan 10, 2027", vacDays: "0 days (closed)", calDays: "17 days off", where: "Porrentruy + French Jura ski", vibe: "Family\u00a0\u00b7 Isabelle\u00a0\u00b7 rest\u00a0\u00b7 late-week ski", mult: "\u221E", color: "var(--recovery)" },
-                { emoji: "\uD83C\uDFD4\uFE0F", title: "Winter Ski", dates: "Feb 13 \u2013 21, 2027", vacDays: "5 days", calDays: "9 days off", where: "Dolomites or Austrian Alps", vibe: "Peak physical\u00a0\u00b7 guided tours\u00a0\u00b7 full send", mult: "1.8x", color: "#4FC3F7" },
-                { emoji: "\uD83C\uDF38", title: "Easter Giga Bridge", dates: "Apr 3 \u2013 12, 2027", vacDays: "4 days", calDays: "10 days off \uD83D\uDD25", where: "Morocco or Tunisia (Mom)", vibe: "Vendredi Saint + Lundi P\u00e2ques built-in bridges", mult: "2.5x", color: "#FF7043" },
-                { emoji: "\u26F0\uFE0F", title: "Ascension Bridge", dates: "May 5 \u2013 9, 2027", vacDays: "2 days", calDays: "5 days off \uD83D\uDD25\uD83D\uDD25", where: "Bologna / Prague / Lisbon", vibe: "Best multiplier \u2014 Thursday holiday magic", mult: "3x", color: "var(--ember)" },
-                { emoji: "\uD83D\uDE90", title: "Summer Balkans", dates: "Jul 10 \u2013 25, 2027", vacDays: "10 days", calDays: "16 days off", where: "Balkans road trip", vibe: "The big one\u00a0\u00b7 overlanding\u00a0\u00b7 full disconnect", mult: "1.6x", color: "var(--full)" }
-              ].map((v, i) => React.createElement("div", { key: i, style: { background: "var(--ash)", border: "1px solid " + v.color + "40", borderLeft: "4px solid " + v.color, borderRadius: 6, padding: "10px 12px", marginBottom: 8 } },
-                React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 } },
-                  React.createElement("span", { style: { fontSize: 12, fontWeight: 700, color: v.color } }, v.emoji + " " + v.title),
-                  React.createElement("span", { style: { fontSize: 10, fontWeight: 700, color: v.color, background: v.color + "20", padding: "2px 8px", borderRadius: 3 } }, v.mult)
-                ),
-                React.createElement("div", { style: { fontSize: 10, color: "var(--bone)", fontWeight: 600, marginBottom: 3 } }, v.dates),
-                React.createElement("div", { style: { display: "flex", gap: 10, marginBottom: 3 } },
-                  React.createElement("span", { style: { fontSize: 9, color: "var(--light)", fontWeight: 600 } }, "\uD83D\uDCC5 " + v.vacDays),
-                  React.createElement("span", { style: { fontSize: 9, color: "var(--full)", fontWeight: 600 } }, "= " + v.calDays)
-                ),
-                React.createElement("div", { style: { fontSize: 9, color: "var(--smoke)", marginBottom: 2 } }, "\uD83D\uDCCD " + v.where),
-                React.createElement("div", { style: { fontSize: 9, color: "var(--smoke)" } }, v.vibe)
-              )),
-              React.createElement("div", { style: { background: "rgba(54,194,144,0.082)", border: "1px solid rgba(54,194,144,0.251)", borderRadius: 8, padding: "10px 14px", marginTop: 12, display: "flex", justifyContent: "space-between", alignItems: "center" } },
-                React.createElement("div", null,
-                  React.createElement("div", { style: { fontSize: 12, fontWeight: 700, color: "var(--full)" } }, "Total: 26 used / 27 days"),
-                  React.createElement("div", { style: { fontSize: 9, color: "var(--smoke)" } }, "2.2 months of freedom")
-                ),
-                React.createElement("div", { style: { width: 80, height: 8, background: "var(--line)", borderRadius: 4, overflow: "hidden" } },
-                  React.createElement("div", { style: { width: "96%", height: "100%", background: "var(--full)" } })
-                )
-              )
-            )
           )
+
         );
       })(),
       // PROGRESS (courbe de charge par exercice)
