@@ -55,6 +55,8 @@ Gate 0 en plus pendant le renommage : `tools/rename-audit.sh` (zéro occurrence 
 - Chrono : `carthagoSaneTimer` l'arrete si la seance de son jour est terminee (`completedAt` >= depart) ou s'il tourne depuis plus de 6 h. Applique a l'init, au chargement cloud et en continu.
 - File de seances : bouton "Set today's session" (ou "Set next session" si aujourd'hui est fait) = ecrit `cyclePos[tier]`. L'auto-avance au Mark Complete reste inchangee.
 - Vue publique (non connecté) : uniquement le programme, aucune donnée perso. Ne pas casser.
+- Onglets (proprietaire) : Workout, Progress, Nutrition. Onglet Schedule retire le 17.10.2026 (donnees `schedule` gardees dans program.js, plus affichees). "Progress" = id de vue interne `calendar` (calendrier + progression + backup + rappel).
+- Couleurs d'intensite : une seule palette `CARTHAGO_COND_COLOR` (FULL `--full`, LIGHT `--light`, RECOVERY `--recovery`, repos `--smoke`/`--dim`) pour la bande des jours, le calendrier Progress, le choix de seance et les jours faits.
 
 ## Renommage BURN THE SHIPS -> CARTHAGO
 Règle : tout ce que l'utilisateur VOIT et tout le code interne passe à Carthago. Ce qui stocke des DONNÉES ne change jamais sans migration.

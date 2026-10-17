@@ -11,18 +11,18 @@ const { APP, wait, readApp } = require("./_harness");
   const w = dom.window, L = w.localStorage, fails = []; let L0;
   const chk = (c, m) => { if (!c) fails.push(m); };
   chk(typeof w.carthagoBuildBackup === "function", "helpers absents");
-  // 0. UI : connecte en proprietaire, onglet Calendar, carte BACKUP visible
+  // 0. UI : connecte en proprietaire, onglet Progress, carte BACKUP visible
   chk(typeof w.carthagoOnAuthChange === "function", "auth hook absent");
   if (typeof w.carthagoOnAuthChange === "function") {
     w.carthagoOnAuthChange({ email: "med.bayram.hamdi@gmail.com" });
     await wait(300);
-    const tab = Array.from(w.document.querySelectorAll("button")).find(b => b.textContent.trim().toLowerCase() === "calendar");
-    chk(!!tab, "onglet calendar absent");
+    const tab = Array.from(w.document.querySelectorAll("button")).find(b => b.textContent.trim().toLowerCase() === "progress");
+    chk(!!tab, "onglet progress absent");
     if (tab) { tab.click(); await wait(300); }
     const txt = w.document.getElementById("root").textContent;
-    chk(txt.includes("Export backup") && txt.includes("Import backup"), "carte BACKUP absente du Calendar");
+    chk(txt.includes("Export backup") && txt.includes("Import backup"), "carte BACKUP absente de Progress");
     chk(!!w.document.querySelector('input[type="file"]'), "input fichier absent");
-    chk(txt.includes("REMINDER") && txt.includes("Reminder OFF"), "carte REMINDER absente du Calendar");
+    chk(txt.includes("REMINDER") && txt.includes("Reminder OFF"), "carte REMINDER absente de Progress");
     chk(txt.includes("No backup yet"), "statut de sauvegarde absent (jamais exporte)");
     chk(!!w.document.querySelector('span[title="Backup due"]'), "pastille de rappel absente");
   }

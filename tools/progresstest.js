@@ -1,4 +1,4 @@
-// CARTHAGO : sessions par exercice, suggestion de charge, chip NEXT, carte PROGRESS du Calendar.
+// CARTHAGO : sessions par exercice, suggestion de charge, chip NEXT, carte PROGRESS de l onglet Progress.
 const { JSDOM, VirtualConsole } = require("jsdom");
 const { APP, wait, readApp } = require("./_harness");
 (async () => {
@@ -35,7 +35,7 @@ const { APP, wait, readApp } = require("./_harness");
     await wait(1500);
     const w = dom.window;
     w.carthagoOnAuthChange({ email: "med.bayram.hamdi@gmail.com", uid: "u1" }); await wait(400);
-    const tab = Array.from(w.document.querySelectorAll("button")).find(b => b.textContent.trim().toLowerCase() === "calendar");
+    const tab = Array.from(w.document.querySelectorAll("button")).find(b => b.textContent.trim().toLowerCase() === "progress");
     if (tab) { tab.click(); await wait(400); }
     const txt = w.document.getElementById("root").textContent;
     chk(txt.includes("PROGRESS") && txt.includes(found.name) && txt.includes("4 sessions") && txt.includes("+7.5 kg since 2026-09-14"), "carte PROGRESS incorrecte : " + txt.slice(txt.indexOf("PROGRESS"), txt.indexOf("PROGRESS") + 120));

@@ -643,6 +643,8 @@ function carthagoDaysSince(iso) { if (!iso) return null; const t = Date.parse(is
 // File de 14 seances (depuis le 17.10.2026). Migration unique de l'ancienne file de 12 : meme seance, nouvel index.
 // cyclePos garde { [tier]: index, c[tier]: tour 0/1 (rotation des FULL), q: 14 }.
 const CARTHAGO_QN = 14;
+// Une seule palette d'intensite partout (bande des jours, Progress, choix de seance, jours faits).
+const CARTHAGO_COND_COLOR = { full: "var(--full)", light: "var(--light)", recovery: "var(--recovery)" };
 const CARTHAGO_Q12_TO_14 = [0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 13];
 function carthagoQueue14(cp) {
   if (!cp || typeof cp !== "object" || cp.q === CARTHAGO_QN) return cp;
@@ -1455,8 +1457,6 @@ function Carthago() {
   const dtc = { training: { accent: "var(--recovery)", label: "TRAIN" }, fight: { accent: "var(--light)", label: "FIGHT" }, rest: { accent: "#1565C0", label: "REST" }, custom: { accent: "var(--ember)", label: "CUSTOM" }, standard: { accent: "var(--full)", label: "BENCH" } };
   const ac = "var(--recovery)";
 
-  const schedType = dayName === "CUSTOM" ? "rest" : dayName === "WEDNESDAY" ? "wednesday" : dayName === "FRIDAY" ? "friday" : dayName === "SATURDAY" ? "saturday" : dayName === "TUESDAY" ? "fight_bjj" : dayName === "THURSDAY" ? "fight_mt" : days[selectedDay].type === "rest" ? "rest" : "training";
-  const sched = schedule[schedType];
 
   // Progression de la seance (meme regle que la jauge SESSION FUEL) : { total, done }
   const calcFuel = () => {
@@ -1583,7 +1583,7 @@ function Carthago() {
 
     // VIEW TABS — only Workout tab shown publicly; rest require sign-in
     React.createElement("div", { style: { display: "flex", gap: 4, marginBottom: 14, justifyContent: "center", width: "100%", borderBottom: "1px solid var(--line)" } },
-      (isOwner ? ["workout", "schedule", "calendar", "nutrition"] : ["workout"]).map(v => React.createElement("button", { key: v, onClick: () => setView(v), style: { flex: "1 1 0", minWidth: 0, textAlign: "center", whiteSpace: "nowrap", padding: "0 0 10px", fontSize: 11, fontWeight: 600, fontFamily: "var(--disp)", textTransform: "uppercase", letterSpacing: "0.04em", border: "0", borderBottom: view === v ? "2px solid var(--ember)" : "2px solid transparent", cursor: "pointer", background: "transparent", color: view === v ? "var(--bone)" : "var(--dim)", marginBottom: -1, transition: ".18s" } }, v.charAt(0).toUpperCase() + v.slice(1), (v === "calendar" && backupOverdue) ? React.createElement("span", { "aria-label": "Backup due", title: "Backup due", style: { display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "var(--light)", marginLeft: 5, verticalAlign: "middle" } }) : null))
+      (isOwner ? ["workout", "calendar", "nutrition"] : ["workout"]).map(v => React.createElement("button", { key: v, onClick: () => setView(v), style: { flex: "1 1 0", minWidth: 0, textAlign: "center", whiteSpace: "nowrap", padding: "0 0 10px", fontSize: 11, fontWeight: 600, fontFamily: "var(--disp)", textTransform: "uppercase", letterSpacing: "0.04em", border: "0", borderBottom: view === v ? "2px solid var(--ember)" : "2px solid transparent", cursor: "pointer", background: "transparent", color: view === v ? "var(--bone)" : "var(--dim)", marginBottom: -1, transition: ".18s" } }, (v === "calendar" ? "Progress" : v.charAt(0).toUpperCase() + v.slice(1)), (v === "calendar" && backupOverdue) ? React.createElement("span", { "aria-label": "Backup due", title: "Backup due", style: { display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "var(--light)", marginLeft: 5, verticalAlign: "middle" } }) : null))
     ),
 
     // DAY SELECTOR (workout shows all 8; schedule hides CUS + STD)
@@ -1592,7 +1592,7 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
         const wd = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
         return (_wq || []).map(c => {
           const r = c.r;
-          const isTest = c.tt === "test"; const isTRest = c.tt === "pre_rest" || c.tt === "post_rest"; const col = isTest ? "#FFD700" : isTRest ? "var(--light)" : r.role === "fight" ? "var(--recovery)" : r.role === "rest" ? "var(--smoke)" : r.role === "recovery" ? "var(--light)" : (r.session && (r.session.label === "Work Cap" || r.session.label === "Mobility")) ? "var(--light)" : "var(--full)";
+          const isTest = c.tt === "test"; const isTRest = c.tt === "pre_rest" || c.tt === "post_rest"; const col = isTest ? "#FFD700" : isTRest ? "var(--smoke)" : r.role === "fight" ? "var(--bone)" : r.role === "rest" ? "var(--smoke)" : r.role === "recovery" ? "var(--recovery)" : (r.session && CARTHAGO_COND_COLOR[r.session.cond]) || "var(--full)";
           const lab = isTest ? "TEST" : isTRest ? "Rest" : r.role === "lift" ? r.session.label : r.role === "fight" ? "Fight" : r.role === "recovery" ? "Recov" : "Rest";
           const sel = c.k === selectedDay;
           return React.createElement("button", { key: c.k, onClick: () => { setSelectedDay(c.k); setUserChangedDay(true); }, style: { flex: 1, padding: "10px 2px 9px", borderRadius: 14, cursor: "pointer", border: "1px solid " + (sel ? "var(--ember)" : "var(--line)"), background: sel ? "var(--ember)" : "var(--coal)", display: "flex", flexDirection: "column", alignItems: "stretch", gap: 7, transition: ".18s" } },
@@ -1603,10 +1603,9 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
         });
       })()
     ),
-    (view === "workout" || view === "schedule") && !queueMode && React.createElement("div", { style: { display: "flex", gap: 6, marginBottom: 16 } },
+    view === "workout" && !queueMode && React.createElement("div", { style: { display: "flex", gap: 6, marginBottom: 16 } },
       days.map((d, i) => {
         // Hide CUS and STD in schedule view
-        if (view === "schedule" && (d.type === "custom" || d.type === "standard")) return null;
         const tc = dtc[(tier >= 6 && (d.name === "TUESDAY" || d.name === "THURSDAY")) ? "training" : d.type];
         return React.createElement("button", { key: i, onClick: () => { setSelectedDay(i); setOpenTip(null); setUserChangedDay(true); setAutoMode(false); }, style: { flex: 1, minWidth: 36, padding: "9px 1px", border: "1px solid", borderColor: selectedDay === i ? "var(--ember)" : "var(--line)", borderRadius: 12, background: selectedDay === i ? "var(--ash-hi)" : "var(--coal)", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2, transition: ".18s" } },
           React.createElement("span", { style: { fontSize: 12, fontWeight: 600, fontFamily: "var(--disp)", letterSpacing: "0.05em", color: "var(--bone)" } }, d.name.slice(0, 3)),
@@ -1664,7 +1663,7 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
             const cur = qmod(cyclePos[tier] || 0, QN);
             const lbl = doneT ? "Set next session" : "Set today's session";
             const choose = (i) => { const n = { ...cyclePos, [tier]: i }; saveLS("cyclePos", n); setCyclePos(n); setPickOpen(false); setUserChangedDay(false); setWeekOffset(0); setSelectedDay(now.getDay() === 0 ? 6 : now.getDay() - 1); };
-            const cc = { full: "var(--full)", light: "var(--light)", recovery: "var(--recovery)" }; const turnP = cyclePos["c" + tier] || 0;
+            const cc = CARTHAGO_COND_COLOR; const turnP = cyclePos["c" + tier] || 0;
             return React.createElement("div", { style: { marginTop: 6 } },
               React.createElement("button", { onClick: () => setPickOpen(!pickOpen), style: { width: "100%", padding: "9px", borderRadius: 12, cursor: "pointer", fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--disp)", textTransform: "uppercase", border: "1px solid " + (pickOpen ? "var(--ember)" : "var(--line-2)"), background: pickOpen ? "rgba(255,90,31,.10)" : "transparent", color: pickOpen ? "var(--ember-2)" : "var(--smoke)" } }, "⇅ " + lbl + " · " + (cur + 1) + "/" + QN + " " + SESSION_QUEUE[cur].label),
               pickOpen && React.createElement("div", { style: { marginTop: 6, padding: 8, background: "var(--ash)", border: "1px solid var(--line-2)", borderRadius: 14 } },
@@ -1701,7 +1700,7 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
               });
             })()
           )
-        ) : React.createElement("div", { style: { fontSize: 11, color: "var(--bone)", lineHeight: 1.5 } }, "Classic weekday mode \u2014 the queue is off and the app works exactly as before. Flip to Queue to preview the rolling 12-session schedule for the selected tier (Tier " + tier + ").")
+        ) : React.createElement("div", { style: { fontSize: 11, color: "var(--bone)", lineHeight: 1.5 } }, "Classic weekday mode: the queue is off and the app works exactly as before. Flip to Queue to preview the rolling 14-session schedule for the selected tier (Tier " + tier + ").")
       ),
 
       // PHASE TRACKER (hidden on STD day)
@@ -2369,69 +2368,7 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
       })()
     ),
 
-    // ═══ SCHEDULE VIEW ═══
-    view === "schedule" && isOwner && React.createElement("div", { className: "wv" },
-      (() => {
-        // Check if viewing today's day (to enable live highlight)
-        const jsDay = now.getDay();
-        const todayIdx = jsDay === 0 ? 6 : jsDay - 1;
-        const viewingToday = selectedDay === todayIdx;
-        const nowMin = now.getHours() * 60 + now.getMinutes();
-        const timeToMin = t => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
-        // Find current activity (the latest one whose time has passed)
-        let currentIdx = -1;
-        if (viewingToday) {
-          for (let i = 0; i < sched.length; i++) {
-            if (sched[i].time && timeToMin(sched[i].time) <= nowMin) currentIdx = i;
-          }
-        }
-        const nextIdx = currentIdx >= 0 && currentIdx < sched.length - 1 ? currentIdx + 1 : -1;
-        const currentTimeStr = String(now.getHours()).padStart(2,"0") + ":" + String(now.getMinutes()).padStart(2,"0");
-
-        return React.createElement("div", null,
-          React.createElement("div", { style: { fontSize: 13, fontWeight: 700, color: dtc[days[selectedDay].type].accent, marginBottom: 4 } }, days[selectedDay].name + " \u2014 " + ((tier >= 6 && days[selectedDay].name === "TUESDAY") ? woTitle : (tier >= 6 && days[selectedDay].name === "THURSDAY") ? woTitle : days[selectedDay].subtitle)),
-          viewingToday && React.createElement("div", { style: { fontSize: 9, color: "var(--full)", marginBottom: 8, fontWeight: 600 } }, "\uD83D\uDD34 LIVE \xB7 " + currentTimeStr),
-          !viewingToday && React.createElement("div", { style: { fontSize: 9, color: "var(--smoke)", marginBottom: 8 } }, "Preview mode \u2014 showing " + days[selectedDay].name.toLowerCase()),
-          sched.map((s, i) => {
-            const isCurrent = i === currentIdx;
-            const isNext = i === nextIdx;
-            const isPast = viewingToday && i < currentIdx;
-            return React.createElement("div", { key: i, style: {
-              display: "flex", gap: 10, padding: "10px 10px",
-              borderBottom: "1px solid var(--ash)",
-              borderRadius: isCurrent ? 6 : 0,
-              background: isCurrent ? "rgba(54,194,144,0.125)" : isNext ? "rgba(244,181,63,0.063)" : "transparent",
-              border: isCurrent ? "2px solid var(--full)" : "none",
-              borderBottomColor: !isCurrent ? "var(--ash)" : undefined,
-              marginBottom: isCurrent ? 4 : 0,
-              opacity: isPast ? 0.4 : 1,
-              position: "relative"
-            } },
-              isCurrent && React.createElement("div", { style: { position: "absolute", top: -8, right: 8, background: "var(--full)", color: "#000", fontSize: 8, fontWeight: 700, padding: "2px 6px", borderRadius: 3, letterSpacing: 0.5 } }, "NOW"),
-              isNext && React.createElement("div", { style: { position: "absolute", top: -8, right: 8, background: "var(--light)", color: "#000", fontSize: 8, fontWeight: 700, padding: "2px 6px", borderRadius: 3, letterSpacing: 0.5 } }, "NEXT"),
-              React.createElement("div", { style: { width: 42, fontSize: 10, fontWeight: 700, color: isCurrent ? "var(--full)" : isNext ? "var(--light)" : ac, flexShrink: 0 } }, s.time),
-              React.createElement("div", { style: { fontSize: 18, width: 24, textAlign: "center", flexShrink: 0 } }, s.icon),
-              React.createElement("div", null,
-                React.createElement("div", { style: { fontSize: 11, fontWeight: isCurrent ? 700 : 600, color: isCurrent ? "#fff" : "var(--bone)" } }, s.activity),
-                React.createElement("div", { style: { fontSize: 9, color: isCurrent ? "var(--bone)" : "var(--smoke)", marginTop: 1 } }, s.detail)
-              )
-            );
-          }),
-          React.createElement("div", { style: { background: "var(--ash)", borderRadius: 8, padding: "10px 12px", marginTop: 14 } },
-            React.createElement("div", { style: { fontSize: 11, fontWeight: 700, color: ac, marginBottom: 8 } }, "PEMF FREQUENCY GUIDE"),
-            pemfGuide.map((f, i) => React.createElement("div", { key: i, style: { display: "flex", padding: "5px 0", borderBottom: "1px solid var(--ash)" } },
-              React.createElement("span", { style: { width: 50, fontSize: 11, fontWeight: 700, color: f.c } }, f.hz),
-              React.createElement("div", null,
-                React.createElement("div", { style: { fontSize: 10, fontWeight: 600, color: "var(--bone)" } }, f.mode),
-                React.createElement("div", { style: { fontSize: 8, color: "var(--smoke)" } }, f.when)
-              )
-            ))
-          )
-        );
-      })()
-    ),
-
-    // ═══ CALENDAR VIEW ═══
+    // ═══ PROGRESS VIEW (calendrier + progression) ═══
     view === "calendar" && isOwner && React.createElement("div", { className: "wv" },
       (() => {
         const today = new Date();
@@ -2494,10 +2431,7 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
             React.createElement("button", { onClick: () => setMonthOffset(0), style: { padding: "4px 10px", border: "1px solid var(--ember)", borderRadius: 4, background: "rgba(255,90,31,0.125)", color: "var(--ember)", cursor: "pointer", fontSize: 9, fontWeight: 600 } }, "\u2190 Back to current month")
           ),
           React.createElement("div", { style: { display: "flex", gap: 10, marginBottom: 10, fontSize: 8, color: "var(--smoke)", justifyContent: "center" } },
-            React.createElement("span", null, React.createElement("span", { style: { display: "inline-block", width: 8, height: 8, background: "var(--ember)", borderRadius: 2, marginRight: 4, verticalAlign: "middle" } }), " LIFT"),
-            React.createElement("span", null, React.createElement("span", { style: { display: "inline-block", width: 8, height: 8, background: "var(--recovery)", borderRadius: 2, marginRight: 4, verticalAlign: "middle" } }), " FIGHT"),
-            React.createElement("span", null, React.createElement("span", { style: { display: "inline-block", width: 8, height: 8, background: "var(--light)", borderRadius: 2, marginRight: 4, verticalAlign: "middle" } }), " RECOVERY"),
-            React.createElement("span", null, React.createElement("span", { style: { display: "inline-block", width: 8, height: 8, background: "var(--bone)", borderRadius: 2, marginRight: 4, verticalAlign: "middle" } }), " REST")
+            [["var(--full)", "FULL"], ["var(--light)", "LIGHT"], ["var(--recovery)", "RECOVERY"], ["var(--dim)", "REST"]].map((l, i) => React.createElement("span", { key: i }, React.createElement("span", { style: { display: "inline-block", width: 8, height: 8, background: l[0], borderRadius: 2, marginRight: 4, verticalAlign: "middle" } }), " " + l[1]))
           ),
           React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 2, marginBottom: 4 } },
             ["M","T","W","T","F","S","S"].map((l, i) => React.createElement("div", { key: i, style: { fontSize: 9, color: "var(--smoke)", textAlign: "center", fontWeight: 700, padding: "4px 0" } }, l))
@@ -2540,7 +2474,7 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
                   );
                 }
                 const qr = qMap[dk] || { role: "rest" };
-                const rcol = qr.role === "lift" ? "var(--ember)" : qr.role === "fight" ? "var(--recovery)" : qr.role === "recovery" ? "var(--light)" : "var(--bone)";
+                const rcol = qr.role === "lift" ? ((qr.session && CARTHAGO_COND_COLOR[qr.session.cond]) || "var(--full)") : qr.role === "fight" ? "var(--bone)" : qr.role === "recovery" ? "var(--recovery)" : "var(--dim)";
                 const rlab = qr.role === "lift" ? (qr.session ? qr.session.label : "Lift") : qr.role === "fight" ? "Fight" : qr.role === "recovery" ? "Recov" : "Rest";
                 const liftLike = qr.role === "lift" || qr.role === "fight" || qr.role === "recovery";
                 return React.createElement("div", { key: di, style: { minHeight: 42, background: today2 ? rcol : (liftLike ? rcol + "20" : "var(--ash)"), border: "1px solid " + (today2 ? rcol : (liftLike ? rcol + "55" : "var(--line)")), borderRadius: 10, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "2px 1px", gap: 1 } },
@@ -2555,10 +2489,10 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
           // CALENDAR LEGEND
           React.createElement("div", { style: { marginTop: 12, padding: "8px 10px", background: "var(--ash)", border: "1px solid var(--line)", borderRadius: 6, display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center" } },
             [
-              { color: "var(--ember)", label: "LIFT" },
-              { color: "var(--recovery)", label: "FIGHT" },
-              { color: "var(--light)", label: "RECOVERY" },
-              { color: "var(--bone)", label: "REST" },
+              { color: "var(--full)", label: "FULL" },
+              { color: "var(--light)", label: "LIGHT" },
+              { color: "var(--recovery)", label: "RECOVERY" },
+              { color: "var(--dim)", label: "REST" },
               { color: "var(--ember)", label: "CUSTOM \uD83C\uDFAF" },
               { color: "#FFD700", label: "TEST \uD83C\uDFAF" }
             ].map((l, i) => React.createElement("div", { key: i, style: { display: "flex", alignItems: "center", gap: 4 } },

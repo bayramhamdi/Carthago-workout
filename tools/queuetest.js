@@ -59,7 +59,15 @@ async function run(local, after) {
 const base = { tier: 5, cpMode: "v2", queueMode: true, workoutHistory: {}, view: "workout" };
 (async () => {
   // 4 + 5
-  let r = await run({ ...base, cyclePos: { 4: 0, 5: 6, 6: 0 } });
+  let strip = null;
+  let r = await run({ ...base, cyclePos: { 4: 0, 5: 6, 6: 0 } }, async (o) => {
+    const cells = [...o.w.document.querySelectorAll("button")].filter(b => b.children.length === 3 && /^[MTWFS]$/.test(b.children[0].textContent));
+    strip = cells.slice(0, 7).map(b => b.children[1].style.background + "|" + b.children[2].textContent);
+  });
+  // 9. Couleurs de la bande = intensite reelle (lun Pull B light, mar Push B full, mer Work Cap light)
+  chk(strip && strip.length === 7, "9: bande des jours introuvable");
+  if (strip) { chk(/^rgba\(255, 255, 255|var\(--light\)\|Pull/.test(strip[0]) || strip[0].startsWith("rgba"), "9: lundi " + strip[0]); chk(strip[1] === "var(--full)|Push", "9: mardi " + strip[1]); chk(strip[2] === "var(--light)|Work Cap", "9: mercredi " + strip[2]); chk(strip[3] === "var(--light)|Legs", "9: jeudi " + strip[3]); chk(strip[4] === "var(--full)|Arms", "9: vendredi " + strip[4]); chk(strip[6] === "var(--smoke)|Rest", "9: dimanche " + strip[6]); }
+  chk(!/Schedule/.test(r.text), "10: onglet Schedule encore la");
   chk(r.cp && r.cp.q === 14 && r.cp[5] === 7, "4: migration " + JSON.stringify(r.cp));
   chk(/Session 8\/14/.test(r.text), "4: hero pas sur Session 8/14");
   const pullB = P.tier6OverridesB.MONDAY.blocks.flatMap(b => b.exercises.map(e => e.name));
