@@ -53,7 +53,7 @@ Gate 0 en plus pendant le renommage : `tools/rename-audit.sh` (zéro occurrence 
 - Mise a jour de l'app installee : `reg.update()` au retour (visibilitychange / focus / 30 min) ; le nouveau sw (skipWaiting + clients.claim) declenche `controllerchange` => un seul reload. Pas de reload au tout premier controle (premiere installation).
 - Envoi cloud : debounce 1.5 s, mais vide immediatement a `visibilitychange: hidden` et `pagehide`.
 - Chrono : `carthagoSaneTimer` l'arrete si la seance de son jour est terminee (`completedAt` >= depart) ou s'il tourne depuis plus de 6 h. Applique a l'init, au chargement cloud et en continu.
-- File de seances : bouton "Set today's session" (ou "Set next session" si aujourd'hui est fait) = ecrit `cyclePos[tier]`. L'auto-avance au Mark Complete reste inchangee.
+- File de seances : bouton "Set today's session" (ou "Set next session" si aujourd'hui est fait) = ecrit `cyclePos[tier]`. L'auto-avance au Mark Complete reste inchangee. Sur un jour de repos (week-end ou Rest Day), choisir une seance ecrit aussi `trainDays[YYYY-MM-DD] = true` (synchro) : `resolveQueueDay` renvoie alors une seance ce jour-la, et "Back to rest day" l'annule.
 - Vue publique (non connecté) : uniquement le programme, aucune donnée perso. Ne pas casser.
 - Onglets (proprietaire) : Workout, Progress, Nutrition. Onglet Schedule retire le 17.10.2026 (donnees `schedule` gardees dans program.js, plus affichees). "Progress" = id de vue interne `calendar` (calendrier + progression + backup + rappel).
 - Couleurs d'intensite : une seule palette `CARTHAGO_COND_COLOR` (FULL `--full`, LIGHT `--light`, RECOVERY `--recovery`, repos `--smoke`/`--dim`) pour la bande des jours, le calendrier Progress, le choix de seance et les jours faits.

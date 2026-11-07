@@ -3,7 +3,7 @@ const fs = require("fs");
 const { APP, readApp } = require("./_harness");
 const src = readApp(APP);
 const save = (src.match(/const payload = [{]([^}]*)[}]/) || [])[1] || "";
-const KEYS = ["week","completedEx","logData","condition","cycleWeek","injuries","customParts","workoutHistory","sessionTimer","autoMode","tier","testDraft","testHistory","queueMode","cyclePos","qAnchorDate","qAnchorPos","cpMode","xSets","skipDays","swapMap"];
+const KEYS = ["week","completedEx","logData","condition","cycleWeek","injuries","customParts","workoutHistory","sessionTimer","autoMode","tier","testDraft","testHistory","queueMode","cyclePos","qAnchorDate","qAnchorPos","cpMode","xSets","skipDays","swapMap","trainDays"];
 const fails = [];
 for (const k of KEYS) {
   const w = "(^|[^A-Za-z0-9_])" + k + "($|[^A-Za-z0-9_])";

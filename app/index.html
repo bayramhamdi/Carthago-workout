@@ -593,7 +593,7 @@ function SessionClock({ startedAt }) {
 }
 
 // ─── Fusion de sync (module level, testable) ───
-const CARTHAGO_SYNC_KEYS = ["week", "completedEx", "logData", "condition", "cycleWeek", "injuries", "customParts", "workoutHistory", "sessionTimer", "autoMode", "tier", "testDraft", "testHistory", "queueMode", "cyclePos", "qAnchorDate", "qAnchorPos", "cpMode", "xSets", "skipDays", "swapMap"];
+const CARTHAGO_SYNC_KEYS = ["week", "completedEx", "logData", "condition", "cycleWeek", "injuries", "customParts", "workoutHistory", "sessionTimer", "autoMode", "tier", "testDraft", "testHistory", "queueMode", "cyclePos", "qAnchorDate", "qAnchorPos", "cpMode", "xSets", "skipDays", "swapMap", "trainDays"];
 const carthagoEq = (x, y) => JSON.stringify(x) === JSON.stringify(y);
 const carthagoIsObj = (v) => !!v && typeof v === "object" && !Array.isArray(v);
 function carthagoMergeMap(b, r, l, prefer) {
@@ -821,15 +821,18 @@ function Carthago() {
   const QN = SESSION_QUEUE.length;
   const qmod = (n, m) => ((n % m) + m) % m;
   const [skipDays, setSkipDays] = useState(() => loadLS("skipDays", {}));
+  // Jours de repos transformes en jour d'entrainement via "Set today's session" (cle YYYY-MM-DD).
+  const [trainDays, setTrainDays] = useState(() => loadLS("trainDays", {}));
   const dkey = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   const resolveQueueDay = (tr, date, pos) => {
     const js = date.getDay();
     const dow = js === 0 ? 6 : js - 1;
     const wkNum = weeksSinceAnchor(date);
     const deload = qmod(wkNum, 4) === 3;
+    const lift = () => { const i = qmod(pos, QN); const turn = qmod((cyclePos["c" + tr] || 0) + Math.floor(pos / QN), 2); const sq = SESSION_QUEUE[i]; return { role: "lift", idx: i, turn: turn, session: { ...sq, cond: turn ? sq.cond2 : sq.cond }, deload: deload, dow: dow }; };
+    if (trainDays[dkey(date)]) return { ...lift(), extra: true };
     if (dow >= 5) return { role: "rest", deload: deload, dow: dow };
     if (skipDays[dkey(date)]) return { role: "rest", skipped: true, deload: deload, dow: dow };
-    const lift = () => { const i = qmod(pos, QN); const turn = qmod((cyclePos["c" + tr] || 0) + Math.floor(pos / QN), 2); const sq = SESSION_QUEUE[i]; return { role: "lift", idx: i, turn: turn, session: { ...sq, cond: turn ? sq.cond2 : sq.cond }, deload: deload, dow: dow }; };
     if (tr >= 6) {
       if (dow === 1 || dow === 3) return { role: "fight", fight: dow === 1 ? "BJJ" : "Muay Thai", deload: deload, dow: dow };
       return lift();
@@ -987,6 +990,7 @@ function Carthago() {
   useEffect(() => saveLS("swapMap", swapMap), [swapMap]);
   useEffect(() => saveLS("lastDone", lastDone), [lastDone]);
   useEffect(() => saveLS("skipDays", skipDays), [skipDays]);
+  useEffect(() => saveLS("trainDays", trainDays), [trainDays]);
   // QUEUE MODE drives week + condition from today's resolved session (Stage 2)
   useEffect(() => {
     if (!queueMode || selectedDay >= 7) return;
@@ -1038,7 +1042,7 @@ function Carthago() {
     if (data.testHistory) setTestHistory(data.testHistory);
     if (data.qAnchorDate) setQAnchorDate(data.qAnchorDate); if (data.qAnchorPos) setQAnchorPos(data.qAnchorPos); if (data.cpMode === "v2") { setCpMode("v2"); if (data.cyclePos) { const cq = carthagoQueue14(data.cyclePos); setCyclePos(cq); setQueueHome(cq); } }
     if (typeof data.queueMode === "boolean") setQueueMode(data.queueMode);
-    if (data.customParts) setCustomParts(data.customParts); if (data.xSets) setXSets(data.xSets); if (data.skipDays) setSkipDays(data.skipDays); if (data.swapMap) setSwapMap(data.swapMap);
+    if (data.customParts) setCustomParts(data.customParts); if (data.xSets) setXSets(data.xSets); if (data.skipDays) setSkipDays(data.skipDays); if (data.trainDays) setTrainDays(data.trainDays); if (data.swapMap) setSwapMap(data.swapMap);
     if (data.tier) setTier(data.tier);
 
     // Smart load: if today's session is completed, don't restore old checkmarks/logData
@@ -1154,7 +1158,7 @@ function Carthago() {
     const push = () => {
       if (sent) return; sent = true; flushPush.current = null;
       setSyncStatus("saving");
-      const payload = { week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap };
+      const payload = { week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap, trainDays };
       const dayK = carthagoTodayKey();
       if (typeof window.carthagoFirebase.snapshotBackup === "function" && cloudBackupTried.current !== dayK && loadLS("lastCloudBackup", "") !== dayK && syncBase.current) {
         cloudBackupTried.current = dayK;
@@ -1173,7 +1177,7 @@ function Carthago() {
     flushPush.current = push;
     const timer = setTimeout(push, 1500);
     return () => clearTimeout(timer);
-  }, [fbUser, week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap, cloudLoaded, syncTick]);
+  }, [fbUser, week, completedEx, logData, condition, cycleWeek, injuries, customParts, workoutHistory, sessionTimer, autoMode, tier, testDraft, testHistory, queueMode, cyclePos, qAnchorDate, qAnchorPos, cpMode, xSets, skipDays, swapMap, trainDays, cloudLoaded, syncTick]);
 
   const [shipBurned, setShipBurned] = useState(false);
   const [igniting, setIgniting] = useState(!(typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches));
@@ -1662,12 +1666,15 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
             const doneT = !!(workoutHistory[dkey(t0)] && workoutHistory[dkey(t0)].completed);
             const cur = qmod(cyclePos[tier] || 0, QN);
             const lbl = doneT ? "Set next session" : "Set today's session";
-            const choose = (i) => { const n = { ...cyclePos, [tier]: i }; saveLS("cyclePos", n); setCyclePos(n); setPickOpen(false); setUserChangedDay(false); setWeekOffset(0); setSelectedDay(now.getDay() === 0 ? 6 : now.getDay() - 1); };
+            const tK = dkey(t0); const restToday = !doneT && resolveQueueDay(tier, t0, 0).role !== "lift"; const extraToday = !!trainDays[tK];
+            const choose = (i) => { const n = { ...cyclePos, [tier]: i }; saveLS("cyclePos", n); setCyclePos(n); setPickOpen(false);
+              if (restToday) { const td = { ...trainDays, [tK]: true }; saveLS("trainDays", td); setTrainDays(td); if (skipDays[tK]) { const sd = { ...skipDays }; delete sd[tK]; saveLS("skipDays", sd); setSkipDays(sd); } } setUserChangedDay(false); setWeekOffset(0); setSelectedDay(now.getDay() === 0 ? 6 : now.getDay() - 1); };
             const cc = CARTHAGO_COND_COLOR; const turnP = cyclePos["c" + tier] || 0;
             return React.createElement("div", { style: { marginTop: 6 } },
               React.createElement("button", { onClick: () => setPickOpen(!pickOpen), style: { width: "100%", padding: "9px", borderRadius: 12, cursor: "pointer", fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "var(--disp)", textTransform: "uppercase", border: "1px solid " + (pickOpen ? "var(--ember)" : "var(--line-2)"), background: pickOpen ? "rgba(255,90,31,.10)" : "transparent", color: pickOpen ? "var(--ember-2)" : "var(--smoke)" } }, "⇅ " + lbl + " · " + (cur + 1) + "/" + QN + " " + SESSION_QUEUE[cur].label),
               pickOpen && React.createElement("div", { style: { marginTop: 6, padding: 8, background: "var(--ash)", border: "1px solid var(--line-2)", borderRadius: 14 } },
-                React.createElement("div", { style: { fontSize: 9, color: "var(--dim)", marginBottom: 6, lineHeight: 1.4 } }, (doneT ? "Today is done. Pick the session you do next." : "Pick the session you do today.") + " The queue keeps moving on its own after each Mark Complete."),
+                React.createElement("div", { style: { fontSize: 9, color: "var(--dim)", marginBottom: 6, lineHeight: 1.4 } }, (doneT ? "Today is done. Pick the session you do next." : restToday ? "Rest day. Pick a session to train today anyway." : "Pick the session you do today.") + " The queue keeps moving on its own after each Mark Complete."),
+                (extraToday && !doneT) && React.createElement("button", { onClick: () => { const td = { ...trainDays }; delete td[tK]; saveLS("trainDays", td); setTrainDays(td); setPickOpen(false); }, style: { width: "100%", marginBottom: 6, padding: "8px", borderRadius: 10, cursor: "pointer", fontSize: 9, fontWeight: 700, letterSpacing: "0.07em", fontFamily: "var(--disp)", textTransform: "uppercase", border: "1px solid var(--line-2)", background: "transparent", color: "var(--dim)" } }, "\u21BA Back to rest day"),
                 React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 5 } },
                   SESSION_QUEUE.map((sq, i) => React.createElement("button", { key: i, onClick: () => choose(i), style: { display: "flex", alignItems: "center", gap: 7, padding: "9px 10px", borderRadius: 10, cursor: "pointer", textAlign: "left", border: "1px solid " + (i === cur ? "var(--ember)" : "var(--line)"), background: i === cur ? "rgba(255,90,31,.12)" : "var(--coal)", color: "var(--bone)" } },
                     React.createElement("span", { style: { fontSize: 10, fontWeight: 800, color: i === cur ? "var(--ember-2)" : "var(--dim)", minWidth: 30, fontVariantNumeric: "tabular-nums" } }, (i + 1) + "/" + QN),

@@ -36,7 +36,7 @@ const fullLabels = new Set(Q.filter(s => s.cond === "full" || s.cond2 === "full"
 ["Pull", "Push", "Legs", "Arms"].forEach(l => chk(fullLabels.has(l), l + " jamais FULL"));
 chk(!Q.some(s => s.label === "Mobility" && s.cond !== "recovery"), "Mobility pas en recovery");
 
-const MON = new Date(2026, 9, 19, 9, 0, 0); // lundi 19.10.2026
+let MON = new Date(2026, 9, 19, 9, 0, 0); // lundi 19.10.2026 (samedi pour le cas 11)
 async function run(local, after) {
   const errors = [];
   const vc = new VirtualConsole(); vc.on("jsdomError", e => errors.push(e.message));
@@ -91,6 +91,28 @@ const base = { tier: 5, cpMode: "v2", queueMode: true, workoutHistory: {}, view:
     b.dispatchEvent(new o.w.MouseEvent("click", { bubbles: true })); await wait(400);
   });
   chk(r.cp && r.cp[5] === 0 && r.cp.c5 === 1, "8: fin de tour " + JSON.stringify(r.cp));
+  // 11. Jour de repos (samedi) : "Set today's session" -> on s'entraine aujourd'hui, puis Mark Complete avance la file
+  MON = new Date(2026, 10, 7, 10, 0, 0);
+  let td = null;
+  r = await run({ ...base, cyclePos: { 4: 0, 5: 7, 6: 0, q: 14 } }, async (o) => {
+    const btns = () => [...o.w.document.querySelectorAll("button")];
+    const open = btns().find(b => /Set today's session/.test(b.textContent));
+    chk(!!open, "11: bouton Set today's session absent le samedi"); if (!open) return;
+    open.dispatchEvent(new o.w.MouseEvent("click", { bubbles: true })); await wait(200);
+    chk(/Rest day\. Pick a session/.test(o.text()), "11: texte jour de repos absent");
+    const pick = btns().find(b => /^9\/14Push/.test(b.textContent.replace(/\s+/g, "")));
+    chk(!!pick, "11: choix 9/14 absent"); if (!pick) return;
+    pick.dispatchEvent(new o.w.MouseEvent("click", { bubbles: true })); await wait(400);
+    chk(/Session 9\/14/.test(o.text()), "11: hero pas sur Session 9/14 apres le choix");
+    chk(o.text().includes("Med Ball Slam") && o.text().includes("Sled Push"), "11: seance Push B pas affichee");
+    td = o.ls("trainDays");
+    const mc = btns().find(x => /MARK SESSION COMPLETE/i.test(x.textContent));
+    chk(!!mc, "11: Mark Complete absent"); if (!mc) return;
+    mc.dispatchEvent(new o.w.MouseEvent("click", { bubbles: true })); await wait(400);
+  });
+  chk(td && td["2026-11-07"] === true, "11: trainDays " + JSON.stringify(td));
+  chk(r.cp && r.cp[5] === 9, "11: file pas avancee apres Mark Complete " + JSON.stringify(r.cp));
+  chk(!r.errors.length, "11: erreurs " + r.errors.join(" | "));
   if (fails.length) { console.log("ECHEC queuetest :\n  " + fails.join("\n  ")); process.exit(1); }
   console.log("OK queuetest : 14 seances, " + lib.size + " exercices couverts, <= 60 min, FULL espaces (ecart min " + minGap + "), migration 12->14, LIGHT sans saut, Mobility reelle, Armor, fin de tour");
 })();
