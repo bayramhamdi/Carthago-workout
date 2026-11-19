@@ -644,6 +644,8 @@ function carthagoDaysSince(iso) { if (!iso) return null; const t = Date.parse(is
 // cyclePos garde { [tier]: index, c[tier]: tour 0/1 (rotation des FULL), q: 14 }.
 const CARTHAGO_QN = 14;
 // Une seule palette d'intensite partout (bande des jours, Progress, choix de seance, jours faits).
+// Modele recovery par type de seance (cles de recoveryWorkouts dans program.js).
+const CARTHAGO_RECOVERY_FOR = { Pull: "MONDAY", Push: "WEDNESDAY", "Work Cap": "TUESDAY", Legs: "FRIDAY", Arms: "THURSDAY", Armor: "SATURDAY" };
 const CARTHAGO_COND_COLOR = { full: "var(--full)", light: "var(--light)", recovery: "var(--recovery)" };
 const CARTHAGO_Q12_TO_14 = [0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 13];
 function carthagoQueue14(cp) {
@@ -1416,7 +1418,11 @@ function Carthago() {
   const woRaw = workouts[dayName];
   const isTierTraining = woRaw && woRaw.tierRequired ? tier >= woRaw.tierRequired : true;
   const qMob = qLift && qDay.session.label === "Mobility";
-  const recWo = (effCond === "recovery" && isTierTraining && !qMob && recoveryWorkouts[dayName]) ? recoveryWorkouts[dayName] : null;
+  // RECOVERY choisi a la main sur une seance de la file : modele recovery qui soigne les zones de CETTE seance
+  // (les modeles etaient ranges par jour de semaine : Legs tombait sur "Rotator Cuff + Neck", Push n'avait rien et restait FULL).
+  // Mobility garde sa vraie seance (c'est deja la seance de recuperation).
+  const recKey = qLift ? CARTHAGO_RECOVERY_FOR[qDay.session.label] : dayName;
+  const recWo = (effCond === "recovery" && !qMob && (qLift || isTierTraining) && recKey && recoveryWorkouts[recKey]) ? recoveryWorkouts[recKey] : null;
   // File de 14 : sur une seance de la file, rien n'est saute. LIGHT = memes exercices, une serie de moins. RECOVERY choisi a la main = modele recovery.
   const qNoSkip = qLift && !recWo;
   const skipCond = qNoSkip ? "full" : condition;

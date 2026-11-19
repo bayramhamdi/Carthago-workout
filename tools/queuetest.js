@@ -113,6 +113,18 @@ const base = { tier: 5, cpMode: "v2", queueMode: true, workoutHistory: {}, view:
   chk(td && td["2026-11-07"] === true, "11: trainDays " + JSON.stringify(td));
   chk(r.cp && r.cp[5] === 9, "11: file pas avancee apres Mark Complete " + JSON.stringify(r.cp));
   chk(!r.errors.length, "11: erreurs " + r.errors.join(" | "));
+  // 12. RECOVERY a la main = modele de la zone travaillee par la seance (plus par jour de semaine)
+  MON = new Date(2026, 10, 23, 9, 0, 0);
+  for (const [i, title, not] of [[1, "CHEST + SHOULDER THERAPY", "Med Ball Slam"], [3, "LEG + KNEE THERAPY", "ROTATOR CUFF"], [5, "FULL BODY FLOW", "Suitcase Carry"]]) {
+    let txt = "";
+    await run({ ...base, cyclePos: { 4: 0, 5: i, 6: 0, q: 14 } }, async (o) => {
+      const b = [...o.w.document.querySelectorAll("button")].find(x => x.textContent.trim() === "RECOVERY");
+      chk(!!b, "12: bouton RECOVERY absent"); if (!b) return;
+      b.dispatchEvent(new o.w.MouseEvent("click", { bubbles: true })); await wait(300); txt = o.text();
+    });
+    chk(txt.includes(title), "12: seance " + (i + 1) + "/14 en RECOVERY sans " + title);
+    chk(!txt.includes(not), "12: seance " + (i + 1) + "/14 en RECOVERY montre encore " + not);
+  }
   if (fails.length) { console.log("ECHEC queuetest :\n  " + fails.join("\n  ")); process.exit(1); }
   console.log("OK queuetest : 14 seances, " + lib.size + " exercices couverts, <= 60 min, FULL espaces (ecart min " + minGap + "), migration 12->14, LIGHT sans saut, Mobility reelle, Armor, fin de tour");
 })();
