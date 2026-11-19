@@ -862,7 +862,7 @@ const tier6OverridesA = {
             name: "Banded Shoulder Internal Rotation",
             detail: "10 reps each arm. Elbow pinned, band internal rotation. Balances the external rotation work.",
             track: "Reps",
-            vid: "xZQP0IkYmUs",
+            vid: "5n10NSwfp2U",
             dr: 10
           },
           {
@@ -2021,7 +2021,7 @@ const tier6OverridesB = {
             name: "Banded Shoulder Internal Rotation",
             detail: "10 reps each arm. Elbow pinned, band internal rotation. Balances the external rotation work.",
             track: "Reps",
-            vid: "xZQP0IkYmUs",
+            vid: "5n10NSwfp2U",
             dr: 10
           },
           {
@@ -3147,7 +3147,7 @@ const workoutsA = {
       },
         { name: "Banded Shoulder External Rotation with Arm Behind", detail: "12 reps each side. Arm behind low back, band external rotation. Posterior cuff angle.", track: "Reps", vid: "tJDOsft6JJE", dr: 12 },
         { name: "KB Bottoms-Up Carry", detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.", track: "Reps", vid: "wtBDkYRHlr4", dr: 20 }
-      , { name: "Banded T-Spine Rotations", detail: "8 reps each side. Banded thoracic rotation.", track: "Reps", vid: "75hleCEfV_I", dr: 8 }, { name: "Banded Shoulder Internal Rotation", detail: "10 reps each arm. Elbow pinned, band internal rotation.", track: "Reps", vid: "xZQP0IkYmUs", dr: 10 }, { name: "Banded Overhead Mobilization", detail: "10 reps. Band overhead, open shoulders and lats before pressing.", track: "Reps", vid: "OuaUM7xZ1ls", dr: 10 }, { name: "Banded Needle Through", detail: "8 reps each side. Thread the needle, thoracic rotation.", track: "Reps", vid: "1uRNvra9LLk", dr: 8 }, { name: "Banded Rotations", detail: "8 reps each side. Banded rotational mobility.", track: "Reps", vid: "ViWJ1u2u4d0", dr: 8 }, { name: "Shoulder Arm Bar", detail: "5 reps each side. KB overhead, roll under control. Loaded shoulder stability.", track: "Reps + Weight", vid: "g2EhWlBX_Qw", dr: 5 }, { name: "Swiss Ball Push", detail: "3 x 10 sec. Press into swiss ball on wall, brace and protract. Serratus stability.", track: "Seconds", vid: "STCC2DY96Mo", dr: 10 }]
+      , { name: "Banded T-Spine Rotations", detail: "8 reps each side. Banded thoracic rotation.", track: "Reps", vid: "75hleCEfV_I", dr: 8 }, { name: "Banded Shoulder Internal Rotation", detail: "10 reps each arm. Elbow pinned, band internal rotation.", track: "Reps", vid: "5n10NSwfp2U", dr: 10 }, { name: "Banded Overhead Mobilization", detail: "10 reps. Band overhead, open shoulders and lats before pressing.", track: "Reps", vid: "OuaUM7xZ1ls", dr: 10 }, { name: "Banded Needle Through", detail: "8 reps each side. Thread the needle, thoracic rotation.", track: "Reps", vid: "1uRNvra9LLk", dr: 8 }, { name: "Banded Rotations", detail: "8 reps each side. Banded rotational mobility.", track: "Reps", vid: "ViWJ1u2u4d0", dr: 8 }, { name: "Shoulder Arm Bar", detail: "5 reps each side. KB overhead, roll under control. Loaded shoulder stability.", track: "Reps + Weight", vid: "g2EhWlBX_Qw", dr: 5 }, { name: "Swiss Ball Push", detail: "3 x 10 sec. Press into swiss ball on wall, brace and protract. Serratus stability.", track: "Seconds", vid: "STCC2DY96Mo", dr: 10 }]
     }, {
       name: "B. MAIN LIFT",
       sets: 4,
@@ -4430,7 +4430,7 @@ const workoutsB = {
       },
         { name: "Spider Crawls", detail: "8 reps each side. Hands walk up the wall, control the descent. Scapular control + shoulder stability.", track: "Reps", vid: "ZpsDv8EONdc", dr: 8 },
         { name: "KB Bottoms-Up Carry", detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.", track: "Reps", vid: "wtBDkYRHlr4", dr: 20 }
-      , { name: "Banded T-Spine Rotations", detail: "8 reps each side. Banded thoracic rotation.", track: "Reps", vid: "75hleCEfV_I", dr: 8 }, { name: "Banded Shoulder Internal Rotation", detail: "10 reps each arm. Elbow pinned, band internal rotation.", track: "Reps", vid: "xZQP0IkYmUs", dr: 10 }, { name: "Banded Overhead Mobilization", detail: "10 reps. Band overhead, open shoulders and lats before pressing.", track: "Reps", vid: "OuaUM7xZ1ls", dr: 10 }, { name: "Banded Needle Through", detail: "8 reps each side. Thread the needle, thoracic rotation.", track: "Reps", vid: "1uRNvra9LLk", dr: 8 }, { name: "Banded Rotations", detail: "8 reps each side. Banded rotational mobility.", track: "Reps", vid: "ViWJ1u2u4d0", dr: 8 }, { name: "Shoulder Arm Bar", detail: "5 reps each side. KB overhead, roll under control. Loaded shoulder stability.", track: "Reps + Weight", vid: "g2EhWlBX_Qw", dr: 5 }, { name: "Swiss Ball Push", detail: "3 x 10 sec. Press into swiss ball on wall, brace and protract. Serratus stability.", track: "Seconds", vid: "STCC2DY96Mo", dr: 10 }]
+      , { name: "Banded T-Spine Rotations", detail: "8 reps each side. Banded thoracic rotation.", track: "Reps", vid: "75hleCEfV_I", dr: 8 }, { name: "Banded Shoulder Internal Rotation", detail: "10 reps each arm. Elbow pinned, band internal rotation.", track: "Reps", vid: "5n10NSwfp2U", dr: 10 }, { name: "Banded Overhead Mobilization", detail: "10 reps. Band overhead, open shoulders and lats before pressing.", track: "Reps", vid: "OuaUM7xZ1ls", dr: 10 }, { name: "Banded Needle Through", detail: "8 reps each side. Thread the needle, thoracic rotation.", track: "Reps", vid: "1uRNvra9LLk", dr: 8 }, { name: "Banded Rotations", detail: "8 reps each side. Banded rotational mobility.", track: "Reps", vid: "ViWJ1u2u4d0", dr: 8 }, { name: "Shoulder Arm Bar", detail: "5 reps each side. KB overhead, roll under control. Loaded shoulder stability.", track: "Reps + Weight", vid: "g2EhWlBX_Qw", dr: 5 }, { name: "Swiss Ball Push", detail: "3 x 10 sec. Press into swiss ball on wall, brace and protract. Serratus stability.", track: "Seconds", vid: "STCC2DY96Mo", dr: 10 }]
     }, {
       name: "B. MAIN LIFT",
       sets: 4,
