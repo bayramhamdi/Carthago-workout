@@ -356,6 +356,8 @@ const recoveryWorkouts = {
         name: "Cat Camel Diagonal", detail: "6 reps. Spinal segmental mobility.", track: "Reps", vid: "JrcOPzvdToQ", dr: 6
       }, {
         name: "Low Back Swivels", detail: "8 reps each side. Spinal rotation.", track: "Reps", vid: "gb5KeyG9i14", dr: 8
+      }, {
+        name: "Reverse Hyper", detail: "15 reps, bodyweight only. Slow swing, no load: blood flow and decompression for the lower back.", track: "Reps", vid: "omiBHCn36EI", dr: 15
       }]
     }, {
       name: "B. HIP + HAMSTRING RELEASE",
@@ -1453,8 +1455,8 @@ const tier6OverridesA = {
   // ARMOR
   ARMOR: {
     trainTitle: "FIGHTER ARMOR · Carries + Grip + Neck + Core",
-    trainTime: "~40 min",
-    trainNote: "Armor day. Carries, grip, neck strength, core and hip flexors.",
+    trainTime: "~46 min",
+    trainNote: "Armor day. Reverse hyper, carries, grip, neck strength, core and hip flexors.",
     blocks: [
       {
         name: "A. WARM-UP",
@@ -1481,6 +1483,20 @@ const tier6OverridesA = {
             track: "Reps",
             vid: "Fx4LvjovL_k",
             dr: 8
+          }
+        ]
+      },
+      {
+        name: "B. LOWER BACK",
+        sets: 3,
+        color: "#1565C0",
+        exercises: [
+          {
+            name: "Reverse Hyper",
+            detail: "12 to 15 reps. Hips on the edge of whatever you have (bench, box, ball or machine), torso still, legs hanging. Lift straight legs to hip height by squeezing glutes, pause 1 s, lower slow. No swinging, no arching past neutral. Bulletproofs the lower back.",
+            track: "Reps",
+            vid: "omiBHCn36EI",
+            dr: 15
           }
         ]
       },
@@ -2619,8 +2635,8 @@ const tier6OverridesB = {
   // ARMOR B
   ARMOR: {
     trainTitle: "FIGHTER ARMOR B · Carries + Grip + Neck + Core",
-    trainTime: "~37 min",
-    trainNote: "Armor day B. Carries, grip, neck strength, core.",
+    trainTime: "~43 min",
+    trainNote: "Armor day B. Reverse hyper, carries, grip, neck strength, core.",
     blocks: [
       {
         name: "A. WARM-UP",
@@ -2640,6 +2656,20 @@ const tier6OverridesB = {
             track: "Reps",
             vid: "ISp9hRUQQ3M",
             dr: 8
+          }
+        ]
+      },
+      {
+        name: "B. LOWER BACK",
+        sets: 3,
+        color: "#1565C0",
+        exercises: [
+          {
+            name: "Reverse Hyper",
+            detail: "12 to 15 reps. Hips on the edge of whatever you have (bench, box, ball or machine), torso still, legs hanging. Lift straight legs to hip height by squeezing glutes, pause 1 s, lower slow. No swinging, no arching past neutral. Bulletproofs the lower back.",
+            track: "Reps",
+            vid: "omiBHCn36EI",
+            dr: 15
           }
         ]
       },
