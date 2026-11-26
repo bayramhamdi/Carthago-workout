@@ -125,6 +125,14 @@ const base = { tier: 5, cpMode: "v2", queueMode: true, workoutHistory: {}, view:
     chk(txt.includes(title), "12: seance " + (i + 1) + "/14 en RECOVERY sans " + title);
     chk(!txt.includes(not), "12: seance " + (i + 1) + "/14 en RECOVERY montre encore " + not);
   }
+  // 13. Carries (Dist + Weight) : une ligne DIST et une ligne KG (avant : REPS + DIST, pas de poids)
+  let labels = null;
+  await run({ ...base, cyclePos: { 4: 0, 5: 5, 6: 0, q: 14 } }, async (o) => {
+    const name = [...o.w.document.querySelectorAll("*")].find(el => el.children.length === 0 && el.textContent.trim() === "FARMER'S CARRY");
+    let card = name; while (card && !/\+ SET/.test(card.textContent)) card = card.parentElement;
+    labels = card ? [...card.querySelectorAll("span")].map(x => x.textContent.trim()).filter(t => /^(REPS|DIST|KG|SEC)$/.test(t)) : null;
+  });
+  chk(labels && labels.join(",") === "DIST,KG", "13: lignes du Farmer's Carry = " + JSON.stringify(labels));
   if (fails.length) { console.log("ECHEC queuetest :\n  " + fails.join("\n  ")); process.exit(1); }
   console.log("OK queuetest : 14 seances, " + lib.size + " exercices couverts, <= 60 min, FULL espaces (ecart min " + minGap + "), migration 12->14, LIGHT sans saut, Mobility reelle, Armor, fin de tour");
 })();

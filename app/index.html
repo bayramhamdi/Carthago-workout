@@ -2150,7 +2150,7 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
               const tk = `custom-t-${partKey}-${ei}`;
               const dn = completedEx[ek];
               const io = openTip === tk;
-              const hw = ex.track && (ex.track.includes("Weight") || ex.track.includes("Dist"));
+              const hw = ex.track && ex.track.includes("Weight");
               const sq = encodeURIComponent(ex.name + " exercise form");
               const exZones = getZones(ex.name);
               const hasInjury = exZones.some(z => zoneToInjury(z, injuries));
@@ -2165,13 +2165,13 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
                 React.createElement("div", { style: { fontSize: 9.5, color: "var(--bone)", marginBottom: 6, paddingLeft: 28 } }, ex.detail),
                 React.createElement("div", { style: { paddingLeft: 28, marginTop: 4 } },
                   React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 3, marginBottom: hw ? 4 : 0 } },
-                    React.createElement("span", { style: { width: 34, fontSize: 10, color: "var(--bone)", fontFamily: "var(--disp)", letterSpacing: "0.06em", fontWeight: 700 } }, ex && ex.track === "Seconds" ? "SEC" : "REPS"),
+                    React.createElement("span", { style: { width: 34, fontSize: 10, color: "var(--bone)", fontFamily: "var(--disp)", letterSpacing: "0.06em", fontWeight: 700 } }, ex && ex.track === "Seconds" ? "SEC" : (ex && ex.track && ex.track.includes("Dist")) ? "DIST" : "REPS"),
                     ...Array.from({ length: nSetsC }, (_, si) =>
                       React.createElement("input", { key: si, type: "tel", value: gL(ek, "r" + (si + 1)) || (ex.dr ? String(ex.dr) : ""), onChange: e => sL(ek, "r" + (si + 1), e.target.value), style: { width: 38, height: 30, textAlign: "center", background: gL(ek, "r" + (si + 1)) ? "var(--ash-hi)" : "var(--coal)", border: "1px solid " + (gL(ek, "r" + (si + 1)) ? "rgba(255,90,31,.5)" : "var(--line)"), borderRadius: 9, color: gL(ek, "r" + (si + 1)) ? "var(--bone)" : "var(--smoke)", fontSize: 12, fontWeight: 700, outline: "none", transition: ".15s" }, placeholder: "\u2014" })
                     )
                   ),
                   hw && React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 3 } },
-                    React.createElement("span", { style: { width: 34, fontSize: 10, color: "var(--bone)", fontFamily: "var(--disp)", letterSpacing: "0.06em", fontWeight: 700 } }, ex.track.includes("Dist") ? "DIST" : "KG"),
+                    React.createElement("span", { style: { width: 34, fontSize: 10, color: "var(--bone)", fontFamily: "var(--disp)", letterSpacing: "0.06em", fontWeight: 700 } }, "KG"),
                     ...Array.from({ length: nSetsC }, (_, si) =>
                       React.createElement("input", { key: si, type: "tel", value: gL(ek, "w" + (si + 1)), onChange: e => sL(ek, "w" + (si + 1), e.target.value), style: { width: 38, height: 30, textAlign: "center", background: gL(ek, "w" + (si + 1)) ? "var(--ash-hi)" : "var(--coal)", border: "1px solid " + (gL(ek, "w" + (si + 1)) ? "rgba(255,90,31,.5)" : "var(--line)"), borderRadius: 9, color: gL(ek, "w" + (si + 1)) ? "var(--bone)" : "var(--smoke)", fontSize: 12, fontWeight: 700, outline: "none", transition: ".15s" }, placeholder: "\u2014" })
                     )
@@ -2295,7 +2295,7 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
             const tk = `${wk}-t-${bi}-${ei}`;
             const dn = completedEx[ek];
             const io = openTip === tk;
-            const hw = ex.track && (ex.track.includes("Weight") || ex.track.includes("Dist"));
+            const hw = ex.track && ex.track.includes("Weight");
             const sq = encodeURIComponent(ex.name + " exercise form");
             const exZones = getZones(ex.name);
             const hasInjury = exZones.some(z => zoneToInjury(z, injuries));
@@ -2326,13 +2326,13 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
               React.createElement("div", { style: { fontSize: 9.5, color: "var(--bone)", marginBottom: 6, paddingLeft: 28 } }, ex.detail),
               React.createElement("div", { style: { paddingLeft: 28, marginTop: 4 } },
                 React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 3, marginBottom: hw ? 4 : 0 } },
-                  React.createElement("span", { style: { width: 34, fontSize: 10, color: "var(--bone)", fontFamily: "var(--disp)", letterSpacing: "0.06em", fontWeight: 700 } }, ex && ex.track === "Seconds" ? "SEC" : "REPS"),
+                  React.createElement("span", { style: { width: 34, fontSize: 10, color: "var(--bone)", fontFamily: "var(--disp)", letterSpacing: "0.06em", fontWeight: 700 } }, ex && ex.track === "Seconds" ? "SEC" : (ex && ex.track && ex.track.includes("Dist")) ? "DIST" : "REPS"),
                   ...Array.from({ length: nSets }, (_, si) =>
                     React.createElement("input", { key: si, type: "tel", value: gL(ek, "r" + (si + 1)) || (ex.dr ? String(ex.dr) : ""), onChange: e => sL(ek, "r" + (si + 1), e.target.value), style: { width: 38, height: 30, textAlign: "center", background: gL(ek, "r" + (si + 1)) ? "var(--ash-hi)" : "var(--coal)", border: "1px solid " + (gL(ek, "r" + (si + 1)) ? "rgba(255,90,31,.5)" : "var(--line)"), borderRadius: 9, color: gL(ek, "r" + (si + 1)) ? "var(--bone)" : "var(--smoke)", fontSize: 12, fontWeight: 700, outline: "none", transition: ".15s" }, placeholder: "\u2014" })
                   )
                 ),
                 hw && React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 3 } },
-                  React.createElement("span", { style: { width: 34, fontSize: 10, color: "var(--bone)", fontFamily: "var(--disp)", letterSpacing: "0.06em", fontWeight: 700 } }, ex.track.includes("Dist") ? "DIST" : "KG"),
+                  React.createElement("span", { style: { width: 34, fontSize: 10, color: "var(--bone)", fontFamily: "var(--disp)", letterSpacing: "0.06em", fontWeight: 700 } }, "KG"),
                   ...Array.from({ length: nSets }, (_, si) =>
                     React.createElement("input", { key: si, type: "tel", value: gL(ek, "w" + (si + 1)), onChange: e => sL(ek, "w" + (si + 1), e.target.value), style: { width: 38, height: 30, textAlign: "center", background: gL(ek, "w" + (si + 1)) ? "var(--ash-hi)" : "var(--coal)", border: "1px solid " + (gL(ek, "w" + (si + 1)) ? "rgba(255,90,31,.5)" : "var(--line)"), borderRadius: 9, color: gL(ek, "w" + (si + 1)) ? "var(--bone)" : "var(--smoke)", fontSize: 12, fontWeight: 700, outline: "none", transition: ".15s" }, placeholder: "\u2014" })
                   )
