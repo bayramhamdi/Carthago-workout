@@ -107,8 +107,7 @@ const customLib = {
     { name: "Neck Bridge", detail: "Hold bridge position. Build neck strength progressively.", track: "Seconds", vid: "kgFFqbiqvW8", dr: 20 },
     { name: "Neck Lateral Band Resistance", detail: "8 reps each side. Band on side of head, resist lateral flexion.", track: "Reps", vid: "QEayGbDM1Do", dr: 8 },
     { name: "Neck Prone ROM & Strengthening", detail: "8 reps. Face down, controlled range of motion.", track: "Reps", vid: "cjIDKy6z3zY", dr: 8 },
-    { name: "Neck Supine ROM & Strengthening", detail: "8 reps. Face up, controlled range of motion.", track: "Reps", vid: "Gxu9U-8NKes", dr: 8 },
-    { name: "Neck Rotations", detail: "8 reps each direction. Slow, full ROM. Neck mobility.", track: "Reps", vid: "Fx4LvjovL_k", dr: 8 }
+    { name: "Neck Supine ROM & Strengthening", detail: "8 reps. Face up, controlled range of motion.", track: "Reps", vid: "Gxu9U-8NKes", dr: 8 }
   ]},
   stretch: { label: "Stretch", icon: "\uD83E\uDDD8", color: "#009688", exercises: [
     { name: "Loaded Lat Stretch", detail: "30 sec each side. Hang from bar or rack.", track: "Seconds", vid: "9Pik5qPNgCo", dr: 30 },
@@ -278,10 +277,6 @@ const rotationMap = {
   "Isolated Forearm Dumbbell Front, Back, Side": {
     light: null,
     recovery: null
-  },
-  "Neck Rotations": {
-    light: { name: "Neck Circles", detail: "5 slow circles each direction. Full ROM.", track: "Reps", vid: "9zP1BHF5eqQ", dr: 5 },
-    recovery: { name: "Neck Supine ROM & Strengthening", detail: "8 reps. Face up, gentle nods and turns.", track: "Reps", vid: "Gxu9U-8NKes", dr: 8 }
   },
   "Deep Chest Stretch ISO": {
     recovery: { name: "Pec Doorway Stretch", detail: "30 sec each side. Doorway pec stretch, full extension.", track: "Seconds", vid: "W1WcacpQ_RM", dr: 30 }
@@ -1476,13 +1471,6 @@ const tier6OverridesA = {
             track: "Reps",
             vid: "A0KY0DKZ1h4",
             dr: 10
-          },
-          {
-            name: "Neck Rotations",
-            detail: "8 reps each direction. Slow, full ROM. Neck mobility.",
-            track: "Reps",
-            vid: "Fx4LvjovL_k",
-            dr: 8
           }
         ]
       },
@@ -3565,12 +3553,6 @@ const workoutsA = {
         track: "Seconds",
         vid: "kgFFqbiqvW8",
         dr: 20
-      }, {
-        name: "Neck Rotations",
-        detail: "8 reps each direction. Slow.",
-        track: "Reps",
-        vid: "Fx4LvjovL_k",
-        dr: 8
       }, { name: "Neck Prone ROM & Strengthening", detail: "8 reps. Prone, controlled neck ROM.", track: "Reps", vid: "cjIDKy6z3zY", dr: 8 }]
     }, {
       name: "F. STRETCH",
@@ -4022,12 +4004,6 @@ const workoutsA = {
         track: "Seconds",
         vid: "kgFFqbiqvW8",
         dr: 20
-      }, {
-        name: "Neck Rotations",
-        detail: "8 reps each direction. Slow.",
-        track: "Reps",
-        vid: "Fx4LvjovL_k",
-        dr: 8
       }]
     }, {
       name: "F. STRETCH",
@@ -4229,12 +4205,6 @@ const workoutsA = {
         track: "Reps",
         vid: "kgFFqbiqvW8",
         dr: 4
-      }, {
-        name: "Neck Rotations",
-        detail: "8 reps each direction. Band or manual resistance.",
-        track: "Reps",
-        vid: "Fx4LvjovL_k",
-        dr: 8
       }]
     }, {
       name: "E. STRETCH",
@@ -4842,12 +4812,6 @@ const workoutsB = {
         track: "Reps + Weight",
         vid: "cjIDKy6z3zY",
         dr: 12
-      }, {
-        name: "Neck Rotations",
-        detail: "8 reps each direction.",
-        track: "Reps",
-        vid: "Fx4LvjovL_k",
-        dr: 8
       }, { name: "Neck Prone ROM & Strengthening", detail: "8 reps. Prone, controlled neck ROM.", track: "Reps", vid: "cjIDKy6z3zY", dr: 8 }]
     }, {
       name: "F. STRETCH",
@@ -5299,12 +5263,6 @@ const workoutsB = {
         track: "Reps + Weight",
         vid: "cjIDKy6z3zY",
         dr: 12
-      }, {
-        name: "Neck Rotations",
-        detail: "8 reps each direction.",
-        track: "Reps",
-        vid: "Fx4LvjovL_k",
-        dr: 8
       }]
     }, {
       name: "F. STRETCH",
