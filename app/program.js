@@ -58,7 +58,7 @@ const customLib = {
     { name: "Dumbbell Lateral Squat Drop In", detail: "8 reps each side.", track: "Reps + Weight", vid: "O62PpPfpsis", dr: 8 },
     { name: "Seated Box Jump", detail: "5 reps. Dead stop. Explode. Broad jump builder.", track: "Reps", vid: "_vs2m-8NHTI", dr: 5 },
     { name: "Elevated Heels Deep Squat Opener", detail: "5 reps. Heels on plate. Slow eccentric. Squat warm-up.", track: "Reps", vid: "jKED44TDKIE", dr: 5 },
-    { name: "Sled Push", detail: "30 steps. Heavy. Full body conditioning.", track: "Dist + Weight", vid: "t68aeTBXZ7s", dr: 30 }
+    { name: "Sled Push", detail: "20m. Heavy. Full body conditioning.", track: "Dist + Weight", vid: "t68aeTBXZ7s", dr: 20 }
   ]},
   hips: { label: "Hips", icon: "\uD83D\uDD04", color: "#FF6B35", exercises: [
     { name: "Banded Hip Distraction", detail: "30 sec each side. Ease in/out, push into extension.", track: "Seconds", vid: "mDUrMKDZS-U", dr: 30 },
@@ -89,9 +89,9 @@ const customLib = {
     { name: "Dynamic Sled Row", detail: "20m. Pull sled toward you.", track: "Dist + Weight", vid: "xdOhwytr0M8", dr: 20 },
     
     { name: "Suitcase Carry", detail: "20m each hand. Anti-lateral flexion.", track: "Dist + Weight", vid: "iTjwbts8Djw", dr: 20 },
-    { name: "FARMER'S CARRY", detail: "175ft (53m) at bodyweight. Benchmark.", track: "Dist + Weight", key: true, vid: "fPwwaXCgDNE", dr: 175 },
+    { name: "FARMER'S CARRY", detail: "53m at bodyweight. Benchmark.", track: "Dist + Weight", key: true, vid: "fPwwaXCgDNE", dr: 53 },
     { name: "KB Bottoms-Up Carry", detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.", track: "Reps", vid: "wtBDkYRHlr4", dr: 20 },
-    { name: "Towel Kettlebell Carry", detail: "20 steps. Towel over KB handle. Grip + carry.", track: "Dist + Weight", vid: "NEkUGE_gOLg", dr: 20 }
+    { name: "Towel Kettlebell Carry", detail: "15m. Towel over KB handle. Grip + carry.", track: "Dist + Weight", vid: "NEkUGE_gOLg", dr: 15 }
   ]},
   forearms: { label: "Forearms", icon: "\uD83D\uDCAA", color: "var(--ember)", exercises: [
     { name: "Forearm Twist + Curl with Towel", detail: "12 reps. Rotate palm up under load.", track: "Reps + Weight", vid: "Bc3qLJnYwkI", dr: 12 },
@@ -982,10 +982,10 @@ const tier6OverridesA = {
         exercises: [
           {
             name: "Sled Push",
-            detail: "30 steps. Heavy. Full body conditioning.",
+            detail: "20m. Heavy. Full body conditioning.",
             track: "Dist + Weight",
             vid: "t68aeTBXZ7s",
-            dr: 30
+            dr: 20
           }
         ]
       }
@@ -1102,10 +1102,10 @@ const tier6OverridesA = {
           },
           {
             name: "Towel Kettlebell Carry",
-            detail: "20 steps. Towel over KB handle. Grip + carry.",
+            detail: "15m. Towel over KB handle. Grip + carry.",
             track: "Dist + Weight",
             vid: "NEkUGE_gOLg",
-            dr: 20
+            dr: 15
           }
         ]
       },
@@ -1116,10 +1116,10 @@ const tier6OverridesA = {
         exercises: [
           {
             name: "Reverse Sled Drag",
-            detail: "20 steps. Walk backwards. Knee health + conditioning.",
+            detail: "15m. Walk backwards. Knee health + conditioning.",
             track: "Dist + Weight",
             vid: "wa3tZH_yaRY",
-            dr: 20
+            dr: 15
           }
         ]
       },
@@ -1507,18 +1507,18 @@ const tier6OverridesA = {
         exercises: [
           {
             name: "FARMER'S CARRY",
-            detail: "175ft (53m) at bodyweight. Benchmark.",
+            detail: "53m at bodyweight. Benchmark.",
             track: "Dist + Weight",
             key: true,
             vid: "fPwwaXCgDNE",
-            dr: 175
+            dr: 53
           },
           {
             name: "Suitcase Carry",
-            detail: "80ft each hand. Core anti-lateral flexion.",
+            detail: "25m each hand. Core anti-lateral flexion.",
             track: "Dist + Weight",
             vid: "iTjwbts8Djw",
-            dr: 80
+            dr: 25
           }
         ]
       },
@@ -2155,10 +2155,10 @@ const tier6OverridesB = {
         exercises: [
           {
             name: "Sled Push",
-            detail: "30 steps. Heavy. Full body conditioning.",
+            detail: "20m. Heavy. Full body conditioning.",
             track: "Dist + Weight",
             vid: "t68aeTBXZ7s",
-            dr: 30
+            dr: 20
           }
         ]
       }
@@ -2275,10 +2275,10 @@ const tier6OverridesB = {
           },
           {
             name: "Towel Kettlebell Carry",
-            detail: "20 steps. Towel over KB handle. Grip + carry.",
+            detail: "15m. Towel over KB handle. Grip + carry.",
             track: "Dist + Weight",
             vid: "NEkUGE_gOLg",
-            dr: 20
+            dr: 15
           }
         ]
       },
@@ -2289,10 +2289,10 @@ const tier6OverridesB = {
         exercises: [
           {
             name: "Reverse Sled Drag",
-            detail: "20 steps. Walk backwards. Knee health + conditioning.",
+            detail: "15m. Walk backwards. Knee health + conditioning.",
             track: "Dist + Weight",
             vid: "wa3tZH_yaRY",
-            dr: 20
+            dr: 15
           }
         ]
       },
@@ -2680,18 +2680,18 @@ const tier6OverridesB = {
         exercises: [
           {
             name: "FARMER'S CARRY",
-            detail: "175ft (53m) at bodyweight. Benchmark.",
+            detail: "53m at bodyweight. Benchmark.",
             track: "Dist + Weight",
             key: true,
             vid: "fPwwaXCgDNE",
-            dr: 175
+            dr: 53
           },
           {
             name: "Towel Kettlebell Carry",
-            detail: "80ft. Towel over KB handle. Grip carry.",
+            detail: "25m. Towel over KB handle. Grip carry.",
             track: "Dist + Weight",
             vid: "NEkUGE_gOLg",
-            dr: 80
+            dr: 25
           }
         ]
       },
@@ -3369,10 +3369,10 @@ const workoutsA = {
         dr: 20
       }, {
         name: "Suitcase Carry",
-        detail: "20 steps each side. One hand. Anti-lateral flexion.",
+        detail: "15m each side. One hand. Anti-lateral flexion.",
         track: "Dist + Weight",
         vid: "iTjwbts8Djw",
-        dr: 20
+        dr: 15
       }]
     }, {
       name: "E. KNEE HEALTH",
@@ -3386,10 +3386,10 @@ const workoutsA = {
         dr: 15
       }, {
         name: "Reverse Sled Drag",
-        detail: "20 steps. Walk backwards. Bulletproof knees.",
+        detail: "15m. Walk backwards. Bulletproof knees.",
         track: "Dist + Weight",
         vid: "wa3tZH_yaRY",
-        dr: 20
+        dr: 15
       }, {
         name: "BW Knee Extension (Reverse Nordic)",
         detail: "6-8 reps. Kneel, lean back with hips locked. Eccentric quad loading at long muscle length. Go slow.",
@@ -3525,7 +3525,7 @@ const workoutsA = {
       color: "#E65100",
       exercises: [{
         name: "Grip Plate Walk",
-        detail: "45lb plates pinch grip, 30-40ft.",
+        detail: "20kg plates pinch grip, 10-12m.",
         track: "Dist + Weight",
         vid: "KaP9yXoFeNU",
         dr: 0
@@ -3826,10 +3826,10 @@ const workoutsA = {
         dr: 20
       }, {
         name: "Suitcase Carry",
-        detail: "20 steps each side. One hand. Anti-lateral flexion.",
+        detail: "15m each side. One hand. Anti-lateral flexion.",
         track: "Dist + Weight",
         vid: "iTjwbts8Djw",
-        dr: 20
+        dr: 15
       }]
     }, {
       name: "E. KNEE HEALTH",
@@ -3843,10 +3843,10 @@ const workoutsA = {
         dr: 15
       }, {
         name: "Reverse Sled Drag",
-        detail: "20 steps. Walk backwards. Bulletproof knees.",
+        detail: "15m. Walk backwards. Bulletproof knees.",
         track: "Dist + Weight",
         vid: "wa3tZH_yaRY",
-        dr: 20
+        dr: 15
       }, {
         name: "BW Knee Extension (Reverse Nordic)",
         detail: "6-8 reps. Kneel, lean back with hips locked. Eccentric quad loading at long muscle length. Go slow.",
@@ -3982,7 +3982,7 @@ const workoutsA = {
       color: "#E65100",
       exercises: [{
         name: "Grip Plate Walk",
-        detail: "45lb plates pinch grip, 30-40ft.",
+        detail: "20kg plates pinch grip, 10-12m.",
         track: "Dist + Weight",
         vid: "KaP9yXoFeNU",
         dr: 0
@@ -4104,17 +4104,17 @@ const workoutsA = {
       color: "var(--recovery)",
       exercises: [{
         name: "FARMER\'S CARRY",
-        detail: "175ft (53m) at bodyweight. Benchmark.",
+        detail: "53m at bodyweight. Benchmark.",
         track: "Dist + Weight",
         key: true,
         vid: "fPwwaXCgDNE",
-        dr: 175
+        dr: 53
       }, {
         name: "Sled Push",
-        detail: "20 steps. Heavy. Full body conditioning.",
+        detail: "15m. Heavy. Full body conditioning.",
         track: "Dist + Weight",
         vid: "t68aeTBXZ7s",
-        dr: 20
+        dr: 15
       }]
     }, {
       name: "D. CORE",
@@ -4647,17 +4647,17 @@ const workoutsB = {
       color: "#E65100",
       exercises: [{
         name: "Towel Kettlebell Carry",
-        detail: "20 steps. Towel over handle = grip killer.",
+        detail: "15m. Towel over handle = grip killer.",
         track: "Dist + Weight",
         key: true,
         vid: "NEkUGE_gOLg",
-        dr: 20
+        dr: 15
       }, {
         name: "Sled Push",
-        detail: "30 steps heavy. Leg drive, full extension.",
+        detail: "20m heavy. Leg drive, full extension.",
         track: "Dist + Weight",
         vid: "t68aeTBXZ7s",
-        dr: 30
+        dr: 20
       }]
     }, {
       name: "E. KNEE HEALTH",
@@ -4786,7 +4786,7 @@ const workoutsB = {
         dr: 12
       }, {
         name: "Hammer Curl Hold Carry",
-        detail: "5 curls → hold 90° → walk 20ft → 5 more → walk back.",
+        detail: "5 curls → hold 90° → walk 6m → 5 more → walk back.",
         track: "Reps + Weight",
         vid: "EQRvLdkJxEw",
         dr: 5
@@ -5104,17 +5104,17 @@ const workoutsB = {
       color: "#E65100",
       exercises: [{
         name: "Towel Kettlebell Carry",
-        detail: "20 steps. Towel over handle = grip killer.",
+        detail: "15m. Towel over handle = grip killer.",
         track: "Dist + Weight",
         key: true,
         vid: "NEkUGE_gOLg",
-        dr: 20
+        dr: 15
       }, {
         name: "Sled Push",
-        detail: "30 steps heavy. Leg drive, full extension.",
+        detail: "20m heavy. Leg drive, full extension.",
         track: "Dist + Weight",
         vid: "t68aeTBXZ7s",
-        dr: 30
+        dr: 20
       }]
     }, {
       name: "E. KNEE HEALTH",
@@ -5243,7 +5243,7 @@ const workoutsB = {
         dr: 12
       }, {
         name: "Hammer Curl Hold Carry",
-        detail: "5 curls → hold 90° → walk 20ft → 5 more → walk back.",
+        detail: "5 curls → hold 90° → walk 6m → 5 more → walk back.",
         track: "Reps + Weight",
         vid: "EQRvLdkJxEw",
         dr: 5
@@ -5381,17 +5381,17 @@ const workoutsB = {
       color: "var(--recovery)",
       exercises: [{
         name: "Towel Kettlebell Carry",
-        detail: "80ft. Towel over KB handle. Grip + carry.",
+        detail: "25m. Towel over KB handle. Grip + carry.",
         track: "Dist + Weight",
         key: true,
         vid: "NEkUGE_gOLg",
-        dr: 80
+        dr: 25
       }, {
         name: "Reverse Sled Drag",
-        detail: "20 steps. Walk backwards. Knee health + conditioning.",
+        detail: "15m. Walk backwards. Knee health + conditioning.",
         track: "Dist + Weight",
         vid: "wa3tZH_yaRY",
-        dr: 20
+        dr: 15
       }]
     }, {
       name: "D. CORE",

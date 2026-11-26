@@ -1814,18 +1814,20 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
           const deadKg = parseFloat(data.deadlift) || 0;
           const deadRatio = BW > 0 ? deadKg / BW : 0;
           const run800Sec = parseTime(data.run800);
-          const broadJumpIn = parseFloat(data.broadJump) || 0;
+          // Metrique depuis le 26.11.2026 : les tests enregistres avant (sans units: "m") sont en pouces / pieds, convertis a la lecture.
+          const legacyImp = data.units !== "m" && data.date;
+          const broadJumpCm = (parseFloat(data.broadJump) || 0) * (legacyImp ? 2.54 : 1);
           const plankSec = parseTime(data.plank);
-          const carryFt = parseFloat(data.carry) || 0;
+          const carryM = (parseFloat(data.carry) || 0) * (legacyImp ? 0.3048 : 1);
 
           return [
             { name: "Bench\nPress", value: benchReps, std: 10, eli: 15, pro: 20, hasData: benchReps > 0, display: benchReps + " reps" },
             { name: "Pull-Ups", value: pullupsVal, std: 10, eli: 15, pro: 20, hasData: pullupsVal > 0, display: pullupsVal + " reps" },
             { name: "Deadlift", value: deadRatio, std: 1.5, eli: 1.75, pro: 2.0, hasData: deadKg > 0, display: deadKg > 0 ? deadRatio.toFixed(2) + "x BW" : "—" },
             { name: "800m\nRun", value: run800Sec > 0 ? (195 - run800Sec) : 0, std: 0, eli: 15, pro: 30, hasData: run800Sec > 0, display: run800Sec > 0 ? Math.floor(run800Sec/60) + ":" + String(run800Sec % 60).padStart(2,"0") : "—", isReverse: true, realValue: run800Sec, realStd: 195, realEli: 180, realPro: 165 },
-            { name: "Broad\nJump", value: broadJumpIn - HEIGHT_IN, std: 0, eli: 12, pro: 24, hasData: broadJumpIn > 0, display: broadJumpIn > 0 ? broadJumpIn.toFixed(0) + '"' : "—" },
+            { name: "Broad\nJump", value: broadJumpCm - HEIGHT_CM, std: 0, eli: 30, pro: 60, hasData: broadJumpCm > 0, display: broadJumpCm > 0 ? broadJumpCm.toFixed(0) + " cm" : "—" },
             { name: "Plank", value: plankSec, std: 120, eli: 150, pro: 180, hasData: plankSec > 0, display: plankSec > 0 ? Math.floor(plankSec/60) + ":" + String(Math.floor(plankSec) % 60).padStart(2,"0") : "—" },
-            { name: "Farmer's\nCarry", value: carryFt, std: 175, eli: 225, pro: 250, hasData: carryFt > 0, display: carryFt > 0 ? carryFt + " ft" : "—" }
+            { name: "Farmer's\nCarry", value: carryM, std: 53, eli: 69, pro: 76, hasData: carryM > 0, display: carryM > 0 ? carryM.toFixed(0) + " m" : "—" }
           ];
         };
 
@@ -1859,7 +1861,7 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
           if (!fbUser) return;
           const now = new Date();
           const dateStr = now.getFullYear() + "-" + String(now.getMonth()+1).padStart(2,"0") + "-" + String(now.getDate()).padStart(2,"0");
-          const completedTest = { date: dateStr, ...testDraft };
+          const completedTest = { date: dateStr, ...testDraft, units: "m" };
           setTestHistory([...testHistory, completedTest]);
           setTestDraft({ bench: "", pullups: "", deadlift: "", run800: "", broadJump: "", plank: "", carry: "" });
         };
@@ -1934,9 +1936,9 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
               { key: "pullups", label: "Pull-Ups", placeholder: "15", unit: "strict reps", std: "10", eli: "15", pro: "20" },
               { key: "deadlift", label: "Trap Bar Deadlift", placeholder: "160", unit: "kg for 5 reps (1.5×90=135 STD)", std: "135", eli: "158", pro: "180" },
               { key: "run800", label: "800m Run", placeholder: "3:00", unit: "mm:ss", std: "3:15", eli: "3:00", pro: "2:45" },
-              { key: "broadJump", label: "Broad Jump", placeholder: "84", unit: "inches (height 72\" + inches)", std: "72", eli: "84", pro: "96" },
+              { key: "broadJump", label: "Broad Jump", placeholder: "213", unit: "cm (your height + 30 cm = ELI)", std: "183", eli: "213", pro: "244" },
               { key: "plank", label: "Plank", placeholder: "2:30", unit: "mm:ss hold", std: "2:00", eli: "2:30", pro: "3:00" },
-              { key: "carry", label: "Farmer's Carry", placeholder: "225", unit: "feet at BW (90kg each hand)", std: "175", eli: "225", pro: "250" }
+              { key: "carry", label: "Farmer's Carry", placeholder: "69", unit: "meters at BW (90kg each hand)", std: "53", eli: "69", pro: "76" }
             ].map((f, i) => React.createElement("div", { key: i, style: { marginBottom: 8 } },
               React.createElement("div", { style: { display: "flex", justifyContent: "space-between", marginBottom: 2 } },
                 React.createElement("label", { style: { fontSize: 12, color: "var(--bone)", fontWeight: 700 } }, f.label),
@@ -1954,7 +1956,7 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
             testHistory.slice().reverse().map((t, i) => React.createElement("div", { key: i, style: { padding: "6px 0", borderBottom: i < testHistory.length - 1 ? "1px solid var(--ash)" : "none" } },
               React.createElement("div", { style: { fontSize: 10, fontWeight: 700, color: "var(--light)", marginBottom: 2 } }, "\uD83D\uDCC5 " + t.date),
               React.createElement("div", { style: { fontSize: 8, color: "var(--smoke)", lineHeight: 1.4 } },
-                "Bench " + (t.bench || "—") + " \xB7 Pull-ups " + (t.pullups || "—") + " \xB7 DL " + (t.deadlift || "—") + "kg \xB7 800m " + (t.run800 || "—") + " \xB7 Jump " + (t.broadJump ? t.broadJump + '"' : "—") + " \xB7 Plank " + (t.plank || "—") + " \xB7 Carry " + (t.carry ? t.carry + "ft" : "—")
+                "Bench " + (t.bench || "—") + " \xB7 Pull-ups " + (t.pullups || "—") + " \xB7 DL " + (t.deadlift || "—") + "kg \xB7 800m " + (t.run800 || "—") + " \xB7 Jump " + (t.broadJump ? (t.units === "m" ? t.broadJump + " cm" : Math.round(t.broadJump * 2.54) + " cm") : "—") + " \xB7 Plank " + (t.plank || "—") + " \xB7 Carry " + (t.carry ? (t.units === "m" ? t.carry + " m" : Math.round(t.carry * 0.3048) + " m") : "—")
               )
             ))
           )
