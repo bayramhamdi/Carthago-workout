@@ -645,7 +645,7 @@ function carthagoDaysSince(iso) { if (!iso) return null; const t = Date.parse(is
 const CARTHAGO_QN = 14;
 // Une seule palette d'intensite partout (bande des jours, Progress, choix de seance, jours faits).
 // Modele recovery par type de seance (cles de recoveryWorkouts dans program.js).
-const CARTHAGO_RECOVERY_FOR = { Pull: "MONDAY", Push: "WEDNESDAY", "Work Cap": "TUESDAY", Legs: "FRIDAY", Arms: "THURSDAY", Armor: "SATURDAY" };
+const CARTHAGO_RECOVERY_FOR = { Pull: "MONDAY", Push: "WEDNESDAY", "Work Cap": "TUESDAY", Legs: "FRIDAY", Arms: "THURSDAY", Armor: "SATURDAY", Mobility: "SATURDAY" };
 const CARTHAGO_COND_COLOR = { full: "var(--full)", light: "var(--light)", recovery: "var(--recovery)" };
 const CARTHAGO_Q12_TO_14 = [0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 13];
 function carthagoQueue14(cp) {
@@ -817,8 +817,8 @@ function Carthago() {
   const [weekOffset, setWeekOffset] = useState(0);
   // 14 seances. cond = tour 1, cond2 = tour 2 : les FULL tournent d'un tour a l'autre, toujours 2 seances minimum entre deux FULL.
   const SESSION_QUEUE = [
-    { w: "A", d: "MONDAY", label: "Pull", cond: "full", cond2: "light" }, { w: "A", d: "TUESDAY", label: "Push", cond: "light", cond2: "full" }, { w: "A", d: "WEDNESDAY", label: "Work Cap", cond: "light", cond2: "light" }, { w: "A", d: "THURSDAY", label: "Legs", cond: "full", cond2: "light" }, { w: "A", d: "FRIDAY", label: "Arms", cond: "light", cond2: "full" }, { w: "A", d: "ARMOR", label: "Armor", cond: "light", cond2: "light" }, { w: "A", d: "SATURDAY", label: "Mobility", cond: "recovery", cond2: "recovery" },
-    { w: "B", d: "MONDAY", label: "Pull", cond: "light", cond2: "full" }, { w: "B", d: "TUESDAY", label: "Push", cond: "full", cond2: "light" }, { w: "B", d: "WEDNESDAY", label: "Work Cap", cond: "light", cond2: "light" }, { w: "B", d: "THURSDAY", label: "Legs", cond: "light", cond2: "full" }, { w: "B", d: "FRIDAY", label: "Arms", cond: "full", cond2: "light" }, { w: "B", d: "ARMOR", label: "Armor", cond: "light", cond2: "light" }, { w: "B", d: "SATURDAY", label: "Mobility", cond: "recovery", cond2: "recovery" }
+    { w: "A", d: "MONDAY", label: "Pull", cond: "full", cond2: "light" }, { w: "A", d: "TUESDAY", label: "Push", cond: "light", cond2: "full" }, { w: "A", d: "WEDNESDAY", label: "Work Cap", cond: "light", cond2: "light" }, { w: "A", d: "THURSDAY", label: "Legs", cond: "full", cond2: "light" }, { w: "A", d: "FRIDAY", label: "Arms", cond: "light", cond2: "full" }, { w: "A", d: "ARMOR", label: "Armor", cond: "light", cond2: "light" }, { w: "A", d: "SATURDAY", label: "Mobility", cond: "full", cond2: "full" },
+    { w: "B", d: "MONDAY", label: "Pull", cond: "light", cond2: "full" }, { w: "B", d: "TUESDAY", label: "Push", cond: "full", cond2: "light" }, { w: "B", d: "WEDNESDAY", label: "Work Cap", cond: "light", cond2: "light" }, { w: "B", d: "THURSDAY", label: "Legs", cond: "light", cond2: "full" }, { w: "B", d: "FRIDAY", label: "Arms", cond: "full", cond2: "light" }, { w: "B", d: "ARMOR", label: "Armor", cond: "light", cond2: "light" }, { w: "B", d: "SATURDAY", label: "Mobility", cond: "full", cond2: "full" }
   ];
   const QN = SESSION_QUEUE.length;
   const qmod = (n, m) => ((n % m) + m) % m;
@@ -1417,12 +1417,11 @@ function Carthago() {
   const dayName = qLift ? qDay.session.d : days[selectedDay].name;
   const woRaw = workouts[dayName];
   const isTierTraining = woRaw && woRaw.tierRequired ? tier >= woRaw.tierRequired : true;
-  const qMob = qLift && qDay.session.label === "Mobility";
   // RECOVERY choisi a la main sur une seance de la file : modele recovery qui soigne les zones de CETTE seance
   // (les modeles etaient ranges par jour de semaine : Legs tombait sur "Rotator Cuff + Neck", Push n'avait rien et restait FULL).
   // Mobility garde sa vraie seance (c'est deja la seance de recuperation).
   const recKey = qLift ? CARTHAGO_RECOVERY_FOR[qDay.session.label] : dayName;
-  const recWo = (effCond === "recovery" && !qMob && (qLift || isTierTraining) && recKey && recoveryWorkouts[recKey]) ? recoveryWorkouts[recKey] : null;
+  const recWo = (effCond === "recovery" && (qLift || isTierTraining) && recKey && recoveryWorkouts[recKey]) ? recoveryWorkouts[recKey] : null;
   // File de 14 : sur une seance de la file, rien n'est saute. LIGHT = memes exercices, une serie de moins. RECOVERY choisi a la main = modele recovery.
   const qNoSkip = qLift && !recWo;
   const skipCond = (qNoSkip || recWo) ? "full" : condition; // modele recovery : ses exercices sont deja choisis, pas de rotationMap dessus
@@ -1810,7 +1809,7 @@ view === "workout" && queueMode && React.createElement("div", { style: { display
             React.createElement("button", { key: k, onClick: () => toggleInj(k), style: { padding: "5px 11px", fontSize: 10.5, fontWeight: 600, border: "1px solid", borderColor: injuries[k] ? "var(--recovery)" : "var(--line)", borderRadius: 20, background: injuries[k] ? "rgba(240,96,76,.15)" : "var(--coal)", color: injuries[k] ? "var(--recovery)" : "var(--bone)", cursor: "pointer", transition: ".15s" } }, (injuries[k] ? "\u26A0\uFE0F " : "") + label)
           )
         ),
-        condition !== "full" && React.createElement("div", { style: { fontSize: 8.5, color: condition === "light" ? "var(--light)" : "var(--recovery)", marginTop: 8, textAlign: "center", fontWeight: 600, letterSpacing: "0.02em" } }, condition === "light" ? (qNoSkip ? "LIGHT: same exercises, one set less (never under 2 on the main work). Main lift: same weight, stop 2 reps short." : "LIGHT MODE: main lifts 4\u21923 sets, accessories 3\u21922 sets, finisher optional") : (qMob ? "RECOVERY: your Mobility session + 20 min zone 2 walk" : recWo ? "RECOVERY: therapy routine for the areas this session trains. No loading." : "RECOVERY MODE: prep + mobility only, no loading"))
+        condition !== "full" && React.createElement("div", { style: { fontSize: 8.5, color: condition === "light" ? "var(--light)" : "var(--recovery)", marginTop: 8, textAlign: "center", fontWeight: 600, letterSpacing: "0.02em" } }, condition === "light" ? (qNoSkip ? "LIGHT: same exercises, one set less (never under 2 on the main work). Main lift: same weight, stop 2 reps short." : "LIGHT MODE: main lifts 4\u21923 sets, accessories 3\u21922 sets, finisher optional") : (recWo ? "RECOVERY: therapy routine for the areas this session trains. No loading." : "RECOVERY MODE: prep + mobility only, no loading"))
       ),
 
       // SESSION TIMER WIDGET (only for training/fight/custom days; not STD)

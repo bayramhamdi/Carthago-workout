@@ -27,12 +27,13 @@ Q.forEach(s => { const d = (s.w === "A" ? P.tier6OverridesA : P.tier6OverridesB)
 const miss = [...lib].filter(n => !inQ.has(n));
 chk(miss.length === 0, "exercices hors file : " + miss.join(", "));
 // 3
-const seq = Q.map(s => s.cond).concat(Q.map(s => s.cond2)); const fullAt = []; seq.forEach((c, i) => { if (c === "full") fullAt.push(i); });
+// Mobility est FULL par defaut (seance complete) mais ne compte pas dans l'espacement : la regle vise les seances de force.
+const seq = Q.map(s => s.label === "Mobility" ? "mob" : s.cond).concat(Q.map(s => s.label === "Mobility" ? "mob" : s.cond2)); const fullAt = []; seq.forEach((c, i) => { if (c === "full") fullAt.push(i); });
 let minGap = 99; fullAt.forEach((p, i) => { const nx = i + 1 < fullAt.length ? fullAt[i + 1] : fullAt[0] + seq.length; minGap = Math.min(minGap, nx - p); });
 chk(minGap >= 3, "deux FULL trop proches (ecart " + minGap + ")");
 const fullLabels = new Set(Q.filter(s => s.cond === "full" || s.cond2 === "full").map(s => s.label));
 ["Pull", "Push", "Legs", "Arms"].forEach(l => chk(fullLabels.has(l), l + " jamais FULL"));
-chk(!Q.some(s => s.label === "Mobility" && s.cond !== "recovery"), "Mobility pas en recovery");
+chk(!Q.some(s => s.label === "Mobility" && (s.cond !== "full" || s.cond2 !== "full")), "Mobility pas FULL par defaut");
 
 let MON = new Date(2026, 9, 19, 9, 0, 0); // lundi 19.10.2026 (samedi pour le cas 11)
 async function run(local, after) {
@@ -193,6 +194,23 @@ const base = { tier: 5, cpMode: "v2", queueMode: true, workoutHistory: {}, view:
   });
   chk(plain && paced && +paced === Math.round(+plain * 1.25), "20: rythme reel, " + plain + " => " + paced);
   chk(saved && saved.estMin === +plain, "20: estMin non enregistre " + JSON.stringify(saved && saved.estMin));
+  // 21. Aucune seance n'est identique dans deux modes (bug : Mobility pareille en FULL / LIGHT / RECOVERY)
+  MON = new Date(2026, 10, 23, 9, 0, 0);
+  for (let i = 0; i < 14; i++) {
+    const sig = {};
+    for (const mode of ["FULL", "LIGHT", "RECOVERY"]) {
+      await run({ ...base, cyclePos: { 4: 0, 5: i, 6: 0, q: 14 } }, async (o) => {
+        const b = [...o.w.document.querySelectorAll("button")].find(x => x.textContent.trim() === mode);
+        if (b) { b.dispatchEvent(new o.w.MouseEvent("click", { bubbles: true })); await wait(250); }
+        sig[mode] = [...o.w.document.querySelectorAll("span")].filter(sp => /^[A-H]\d?\. /.test(sp.textContent.trim()) && sp.parentElement.children.length >= 2).map(sp => sp.textContent.trim() + "=" + sp.parentElement.children[1].textContent.trim()).join("|");
+      });
+    }
+    chk(sig.FULL && sig.FULL !== sig.LIGHT, "21: seance " + (i + 1) + "/14 identique en FULL et LIGHT");
+    chk(sig.RECOVERY && sig.RECOVERY !== sig.FULL && sig.RECOVERY !== sig.LIGHT, "21: seance " + (i + 1) + "/14 RECOVERY identique a un autre mode");
+  }
+  let mobDef = "";
+  await run({ ...base, cyclePos: { 4: 0, 5: 6, 6: 0, q: 14 } }, async (o) => { mobDef = o.text(); });
+  chk(mobDef.includes("Shin Box Fold") && !/FULL BODY FLOW/.test(mobDef), "21: Mobility par defaut n'est pas la seance complete");
   if (fails.length) { console.log("ECHEC queuetest :\n  " + fails.join("\n  ")); process.exit(1); }
   console.log("OK queuetest : 14 seances, " + lib.size + " exercices couverts, <= 60 min, FULL espaces (ecart min " + minGap + "), migration 12->14, LIGHT sans saut, Mobility reelle, Armor, fin de tour");
 })();
