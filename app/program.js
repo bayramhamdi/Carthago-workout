@@ -90,7 +90,7 @@ const customLib = {
     
     { name: "Suitcase Carry", detail: "20m each hand. Anti-lateral flexion.", track: "Dist + Weight", vid: "iTjwbts8Djw", dr: 20 },
     { name: "FARMER'S CARRY", detail: "53m at bodyweight. Benchmark.", track: "Dist + Weight", key: true, vid: "fPwwaXCgDNE", dr: 53 },
-    { name: "KB Bottoms-Up Carry", detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.", track: "Reps", vid: "wtBDkYRHlr4", dr: 20 },
+    { name: "KB Bottoms-Up Carry", detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.", track: "Dist + Weight", vid: "wtBDkYRHlr4", dr: 20 },
     { name: "Towel Kettlebell Carry", detail: "15m. Towel over KB handle. Grip + carry.", track: "Dist + Weight", vid: "NEkUGE_gOLg", dr: 15 }
   ]},
   forearms: { label: "Forearms", icon: "\uD83D\uDCAA", color: "var(--ember)", exercises: [
@@ -104,7 +104,7 @@ const customLib = {
   neck: { label: "Neck", icon: "\uD83E\uDDB4", color: "#00897B", exercises: [
     { name: "Neck Circles", detail: "Slow controlled circles. 5 each direction.", track: "Reps", vid: "9zP1BHF5eqQ", dr: 5 },
     { name: "Barbell Trap & Neck Release", detail: "Roll barbell on traps/neck. Self-myofascial release.", track: "Seconds", vid: "S19RfrYqlsk", dr: 30 },
-    { name: "Neck Bridge", detail: "Hold bridge position. Build neck strength progressively.", track: "Seconds", vid: "kgFFqbiqvW8", dr: 20 },
+    { name: "Neck Bridge", detail: "20 sec hold. Bridge position. Build neck strength progressively.", track: "Seconds", vid: "kgFFqbiqvW8", dr: 20 },
     { name: "Neck Lateral Band Resistance", detail: "8 reps each side. Band on side of head, resist lateral flexion.", track: "Reps", vid: "QEayGbDM1Do", dr: 8 },
     { name: "Neck Prone ROM & Strengthening", detail: "8 reps. Face down, controlled range of motion.", track: "Reps", vid: "cjIDKy6z3zY", dr: 8 },
     { name: "Neck Supine ROM & Strengthening", detail: "8 reps. Face up, controlled range of motion.", track: "Reps", vid: "Gxu9U-8NKes", dr: 8 }
@@ -514,7 +514,7 @@ const recoveryWorkouts = {
       exercises: [{
         name: "Birddog to Gecko", detail: "6 reps each side.", track: "Reps", vid: "ISp9hRUQQ3M", dr: 6
       }, {
-        name: "Shoulder Upright Isometric Hold", detail: "15 sec each side. Gentle isometric.", track: "Seconds", vid: "SCr3DEwIu_0", dr: 8
+        name: "Shoulder Upright Isometric Hold", detail: "15 sec each side. Gentle isometric.", track: "Seconds", vid: "SCr3DEwIu_0", dr: 15
       }, {
         name: "Loaded Lat Stretch", detail: "30 sec each side.", track: "Seconds", vid: "9Pik5qPNgCo", dr: 30
       }]
@@ -769,7 +769,7 @@ const tier6OverridesA = {
   },
   // TUESDAY
   TUESDAY: {
-    trainTitle: "PUSH — Bench + Shoulders + Core + Sled",
+    trainTitle: "PUSH · Bench + Shoulders + Core + Sled",
     trainTime: "~53 min",
     trainNote: "Push day. T-spine prep, bench 4x4, push volume, core, sled finisher.",
     blocks: [
@@ -871,7 +871,7 @@ const tier6OverridesA = {
           },
           {
             name: "Bottoms-Up KB Shoulder Stability",
-            detail: "Kettlebell upside down at shoulder height, crush the grip to keep it vertical. Cuff + grip.",
+            detail: "20 sec each arm. Kettlebell upside down at shoulder height, crush the grip to keep it vertical. Cuff + grip.",
             track: "Seconds",
             vid: "P7Nd4SAK1KM",
             dr: 20
@@ -1014,7 +1014,7 @@ const tier6OverridesA = {
           {
             name: "KB Bottoms-Up Carry",
             detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.",
-            track: "Reps",
+            track: "Dist + Weight",
             vid: "wtBDkYRHlr4",
             dr: 20
           }
@@ -1105,7 +1105,7 @@ const tier6OverridesA = {
         ]
       },
       {
-        name: "E. CONDITIONING FINISHER",
+        name: "D. CONDITIONING FINISHER",
         sets: 3,
         color: "#37474F",
         exercises: [
@@ -1119,7 +1119,7 @@ const tier6OverridesA = {
         ]
       },
       {
-        name: "F. SLED FINISHER",
+        name: "E. SLED FINISHER",
         sets: 2,
         color: "#37474F",
         exercises: [
@@ -1559,7 +1559,7 @@ const tier6OverridesA = {
           },
           {
             name: "Neck Bridge",
-            detail: "Hold bridge position. Build neck strength progressively.",
+            detail: "20 sec hold. Bridge position. Build neck strength progressively.",
             track: "Seconds",
             vid: "kgFFqbiqvW8",
             dr: 20
@@ -1722,7 +1722,7 @@ const tier6OverridesA = {
         ]
       },
       {
-        name: "F. LOADED STRETCHES",
+        name: "E. LOADED STRETCHES",
         sets: 1,
         color: "#009688",
         exercises: [
@@ -1757,7 +1757,7 @@ const tier6OverridesA = {
         ]
       },
       {
-        name: "G. RECOVERY DRILLS",
+        name: "F. RECOVERY DRILLS",
         sets: 1,
         color: "#009688",
         exercises: [
@@ -1792,16 +1792,16 @@ const tier6OverridesA = {
         ]
       },
       {
-        name: "H. ZONE 2",
+        name: "G. ZONE 2",
         sets: 1,
         color: "#37474F",
         exercises: [
           {
             name: "Incline Walk",
-            detail: "20 min. Easy pace, nose breathing (zone 2). Replaces the aerobic of Pull and the walk of Legs.",
+            detail: "20 min. Easy pace, nose breathing (zone 2).",
             track: "Minutes",
             vid: null,
-            dr: 15
+            dr: 20
           }
         ]
       }
@@ -1942,7 +1942,7 @@ const tier6OverridesB = {
   },
   // TUESDAY B
   TUESDAY: {
-    trainTitle: "PUSH B — Bench + Landmine + Core + Sled",
+    trainTitle: "PUSH B · Bench + Landmine + Core + Sled",
     trainTime: "~53 min",
     trainNote: "Push day B. T-spine prep, bench 4x4, landmine variations, core, sled.",
     blocks: [
@@ -2080,7 +2080,7 @@ const tier6OverridesB = {
         exercises: [
           {
             name: "Overhead Barbell Press",
-            detail: "8 reps. LIGHT support — bench is heavy this block. Strict, no leg drive.",
+            detail: "8 reps. LIGHT support: bench is heavy this block. Strict, no leg drive.",
             track: "Reps + Weight",
             vid: "G2qpTG1Eh40",
             dr: 8
@@ -2180,7 +2180,7 @@ const tier6OverridesB = {
           {
             name: "KB Bottoms-Up Carry",
             detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.",
-            track: "Reps",
+            track: "Dist + Weight",
             vid: "wtBDkYRHlr4",
             dr: 20
           }
@@ -2271,7 +2271,7 @@ const tier6OverridesB = {
         ]
       },
       {
-        name: "E. CONDITIONING FINISHER",
+        name: "D. CONDITIONING FINISHER",
         sets: 3,
         color: "#37474F",
         exercises: [
@@ -2285,7 +2285,7 @@ const tier6OverridesB = {
         ]
       },
       {
-        name: "F. SLED FINISHER",
+        name: "E. SLED FINISHER",
         sets: 2,
         color: "#37474F",
         exercises: [
@@ -2447,7 +2447,7 @@ const tier6OverridesB = {
           },
           {
             name: "Landmine Lateral Split Squat Iso",
-            detail: "Lateral split stance on the landmine, hold at depth. Frontal-plane single-leg strength.",
+            detail: "20 sec each side. Lateral split stance on the landmine, hold at depth. Frontal-plane single-leg strength.",
             track: "Seconds",
             vid: "70mzPCghYhA",
             dr: 20
@@ -2739,7 +2739,7 @@ const tier6OverridesB = {
           },
           {
             name: "Neck Bridge",
-            detail: "Hold bridge position. Build neck strength progressively.",
+            detail: "20 sec hold. Bridge position. Build neck strength progressively.",
             track: "Seconds",
             vid: "kgFFqbiqvW8",
             dr: 20
@@ -2797,7 +2797,7 @@ const tier6OverridesB = {
         ]
       },
       {
-        name: "A2. T-SPINE + SHOULDER",
+        name: "B. T-SPINE + SHOULDER",
         sets: 2,
         color: "var(--full)",
         exercises: [
@@ -2846,7 +2846,7 @@ const tier6OverridesB = {
         ]
       },
       {
-        name: "B. HIP MOBILITY",
+        name: "C. HIP MOBILITY",
         sets: 2,
         color: "#009688",
         exercises: [
@@ -2874,7 +2874,7 @@ const tier6OverridesB = {
         ]
       },
       {
-        name: "C. CALVES + ANKLES",
+        name: "D. CALVES + ANKLES",
         sets: 2,
         color: "var(--ember)",
         exercises: [
@@ -2930,7 +2930,7 @@ const tier6OverridesB = {
         ]
       },
       {
-        name: "G. RECOVERY DRILLS",
+        name: "F. RECOVERY DRILLS",
         sets: 1,
         color: "#009688",
         exercises: [
@@ -2953,21 +2953,21 @@ const tier6OverridesB = {
             detail: "15 sec each side. Gentle isometric.",
             track: "Seconds",
             vid: "SCr3DEwIu_0",
-            dr: 8
+            dr: 15
           }
         ]
       },
       {
-        name: "H. ZONE 2",
+        name: "G. ZONE 2",
         sets: 1,
         color: "#37474F",
         exercises: [
           {
             name: "Incline Walk",
-            detail: "20 min. Easy pace, nose breathing (zone 2). Replaces the aerobic of Pull and the walk of Legs.",
+            detail: "20 min. Easy pace, nose breathing (zone 2).",
             track: "Minutes",
             vid: null,
-            dr: 15
+            dr: 20
           }
         ]
       }
@@ -3164,7 +3164,7 @@ const workoutsA = {
         dr: 5
       },
         { name: "Banded Shoulder External Rotation with Arm Behind", detail: "12 reps each side. Arm behind low back, band external rotation. Posterior cuff angle.", track: "Reps", vid: "tJDOsft6JJE", dr: 12 },
-        { name: "KB Bottoms-Up Carry", detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.", track: "Reps", vid: "wtBDkYRHlr4", dr: 20 }
+        { name: "KB Bottoms-Up Carry", detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.", track: "Dist + Weight", vid: "wtBDkYRHlr4", dr: 20 }
       , { name: "Banded T-Spine Rotations", detail: "8 reps each side. Banded thoracic rotation.", track: "Reps", vid: "75hleCEfV_I", dr: 8 }, { name: "Banded Shoulder Internal Rotation", detail: "10 reps each arm. Elbow pinned, band internal rotation.", track: "Reps", vid: "5n10NSwfp2U", dr: 10 }, { name: "Banded Overhead Mobilization", detail: "10 reps. Band overhead, open shoulders and lats before pressing.", track: "Reps", vid: "OuaUM7xZ1ls", dr: 10 }, { name: "Banded Needle Through", detail: "8 reps each side. Thread the needle, thoracic rotation.", track: "Reps", vid: "1uRNvra9LLk", dr: 8 }, { name: "Banded Rotations", detail: "8 reps each side. Banded rotational mobility.", track: "Reps", vid: "ViWJ1u2u4d0", dr: 8 }, { name: "Shoulder Arm Bar", detail: "5 reps each side. KB overhead, roll under control. Loaded shoulder stability.", track: "Reps + Weight", vid: "g2EhWlBX_Qw", dr: 5 }, { name: "Swiss Ball Push", detail: "3 x 10 sec. Press into swiss ball on wall, brace and protract. Serratus stability.", track: "Seconds", vid: "STCC2DY96Mo", dr: 10 }]
     }, {
       name: "B. MAIN LIFT",
@@ -4429,7 +4429,7 @@ const workoutsB = {
         dr: 5
       },
         { name: "Spider Crawls", detail: "8 reps each side. Hands walk up the wall, control the descent. Scapular control + shoulder stability.", track: "Reps", vid: "ZpsDv8EONdc", dr: 8 },
-        { name: "KB Bottoms-Up Carry", detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.", track: "Reps", vid: "wtBDkYRHlr4", dr: 20 }
+        { name: "KB Bottoms-Up Carry", detail: "20m each side. Bell upside down, walk tall and controlled. Shoulder stability + cuff. Start light.", track: "Dist + Weight", vid: "wtBDkYRHlr4", dr: 20 }
       , { name: "Banded T-Spine Rotations", detail: "8 reps each side. Banded thoracic rotation.", track: "Reps", vid: "75hleCEfV_I", dr: 8 }, { name: "Banded Shoulder Internal Rotation", detail: "10 reps each arm. Elbow pinned, band internal rotation.", track: "Reps", vid: "5n10NSwfp2U", dr: 10 }, { name: "Banded Overhead Mobilization", detail: "10 reps. Band overhead, open shoulders and lats before pressing.", track: "Reps", vid: "OuaUM7xZ1ls", dr: 10 }, { name: "Banded Needle Through", detail: "8 reps each side. Thread the needle, thoracic rotation.", track: "Reps", vid: "1uRNvra9LLk", dr: 8 }, { name: "Banded Rotations", detail: "8 reps each side. Banded rotational mobility.", track: "Reps", vid: "ViWJ1u2u4d0", dr: 8 }, { name: "Shoulder Arm Bar", detail: "5 reps each side. KB overhead, roll under control. Loaded shoulder stability.", track: "Reps + Weight", vid: "g2EhWlBX_Qw", dr: 5 }, { name: "Swiss Ball Push", detail: "3 x 10 sec. Press into swiss ball on wall, brace and protract. Serratus stability.", track: "Seconds", vid: "STCC2DY96Mo", dr: 10 }]
     }, {
       name: "B. MAIN LIFT",
@@ -5765,13 +5765,13 @@ const pemfGuide = [
 
 // Body part stress mapping - keywords in exercise names → body parts they load
 const bodyZones = {
-  shoulder: ["Pull-Up","Pull Up","Chin-Up","Chin Up","Bench Press","Push-up","Push Up","Shoulder Press","Landmine Press","Facepull","Face Pull","Shoulder Arm Bar","Inverted Row","Bear Row","KB Vertical","Lat Sweep","Cable Vertical","Dumbbell Snatch","Plank Kettlebell Saw","Pec Fly","Overhead","Crawl Shoulder Tap","TRX Facepull","Banded Face","Lateral Bridge with Row","Kettlebell Vertical","Shoulder CARs","Shoulder Angel","Shoulder Airplane","Banded External Rotation","Banded Needle","Banded Rotation","Perturbation"],
-  knee: ["Squat","Split Squat","Lunge","Step Up","Step Down","TKE","Sled Drag","ISO Squat","Box Jump","Split Jump","Incline Walk","Lateral Squat","Calf Raise","Sled Push","Poliquin","Banded Terminal"],
-  lower_back: ["Deadlift","Hamstring Bridge","Glute Bridge","Farmer","Suitcase Carry","Dynamic Sled Row","Kettlebell Swing","Dumbbell Snatch","Shoulder Arm Bar","Neck Bridge"],
-  hip: ["Hip Flexor","Hip Distraction","Hip Airplane","Hip Hike","Hip Walk","Hip Circle","Hip Stretch","Adductor","Glute Mobilization","Shin Box","Figure 4","Split Squat Drift","Back Squat","Split Squat","Lateral Squat","Landmine Single Leg"],
+  shoulder: ["Pull-Up","Pull Up","Chin-Up","Chin Up","Bench Press","Push-up","Push Up","Shoulder Press","Landmine Press","Facepull","Face Pull","Shoulder Arm Bar","Inverted Row","Bear Row","KB Vertical","Lat Sweep","Cable Vertical","Dumbbell Snatch","Plank Kettlebell Saw","Pec Fly","Overhead","Crawl Shoulder Tap","TRX Facepull","Banded Face","Lateral Bridge with Row","Kettlebell Vertical","Shoulder CARs","Shoulder Angel","Shoulder Airplane","Banded External Rotation","Banded Needle","Banded Rotation","Perturbation","Dips","Lateral Raise","Push Press","Incline DB Press","Renegade Row","Bent Over Row","DB Row","Med Ball Slam","Clean and Press","Bottoms-Up","Swiss Ball Push","Wall Contours","Scap","Spider Crawl","Shoulder External Rotation","Shoulder Internal Rotation","Shoulder Hovers","Shoulder Upright","Rotational Throw","Band Pull Aparts"],
+  knee: ["Squat","Split Squat","Lunge","Step Up","Step Down","TKE","Sled Drag","ISO Squat","Box Jump","Split Jump","Incline Walk","Lateral Squat","Calf Raise","Sled Push","Poliquin","Banded Terminal","Knee Extension","Hamstring Curl"],
+  lower_back: ["Deadlift","Hamstring Bridge","Glute Bridge","Farmer","Suitcase Carry","Dynamic Sled Row","Kettlebell Swing","Dumbbell Snatch","Shoulder Arm Bar","Neck Bridge","Reverse Hyper","Back Squat","Kang Squat","RDL","Bent Over Row","Single Leg Hinge","Leg Lifts","QL Hip Drop","Lateral Tilts","Clean and Press","Med Ball Slam","Carry","Landmine Rotation","Rotational Throw","Diagonal Chop","Torso Rotation"],
+  hip: ["Hip Flexor","Hip Distraction","Hip Airplane","Hip Hike","Hip Walk","Hip Circle","Hip Stretch","Adductor","Glute Mobilization","Shin Box","Figure 4","Split Squat Drift","Back Squat","Split Squat","Lateral Squat","Landmine Single Leg","Hip Abduction","Hip External Rotation","Hip Flexion","RDL","Single Leg Hinge","QL Hip Drop","Leg Lifts","Reverse Hyper","Kettlebell Swing"],
   neck: ["Neck Circle","Neck Bridge","Neck Lateral","Neck Prone","Neck Supine","Neck Release","Barbell Trap"],
-  wrist: ["Farmer","Suitcase Carry","Towel Kettlebell Carry","Dead Hang","Plate Pinch","Wrist Roller","Dynamic Sled Row","Forearm Supination","Forearm Pronation"],
-  elbow: ["Bench Press","Push-up","Push Up","Tricep","Close Grip","Forearm Supination","Forearm Pronation","Wrist Roller","Pull-Up","Pull Up","Chin-Up","Chin Up","Inverted Row","Barbell Curl","Bayesian Curl","Cable Curl"]
+  wrist: ["Farmer","Suitcase Carry","Towel Kettlebell Carry","Dead Hang","Plate Pinch","Wrist Roller","Dynamic Sled Row","Forearm Supination","Forearm Pronation","Wrist Curl","Wrist Rotation","Forearm Rotation","Forearm Twist","Bottoms-Up","Renegade Row","Push-Up","Push Up","Crawl"],
+  elbow: ["Bench Press","Push-up","Push Up","Tricep","Close Grip","Forearm Supination","Forearm Pronation","Wrist Roller","Pull-Up","Pull Up","Chin-Up","Chin Up","Inverted Row","Barbell Curl","Bayesian Curl","Cable Curl","Dips","Bicep Curl","Hammer Curl","Supinated Curl","Wrist Curl","Forearm Twist","Forearm Rotation","Renegade Row","Bent Over Row","DB Row","Push Press","DB Press"]
 };
 function getZones(name) {
   const z = [];

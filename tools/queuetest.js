@@ -1,6 +1,6 @@
 // CARTHAGO : file de 14 seances (17.10.2026).
 // 1. Couverture : chaque exercice du programme (et du modele recovery) est dans une seance de la file.
-// 2. 1h max : trainTime de chaque seance <= 60 min.
+// 2. 1h max : le temps AFFICHE (estimation de l'app, en FULL) de chaque seance <= 60 min (cas 14 ; trainTime n'est pas affiche).
 // 3. FULL : au moins 2 seances entre deux FULL, sur deux tours enchaines (rotation cond / cond2).
 // 4. Migration : ancienne position 6/12 (Pull B) => 8/14 Pull B, sans perdre la seance.
 // 5. LIGHT ne saute plus rien (Pull B light : tous les exercices + note main lift).
@@ -26,8 +26,6 @@ const inQ = new Set();
 Q.forEach(s => { const d = (s.w === "A" ? P.tier6OverridesA : P.tier6OverridesB)[s.d]; chk(!!d, "contenu absent " + s.w + " " + s.d); if (d) d.blocks.forEach(b => b.exercises.forEach(e => inQ.add(e.name))); });
 const miss = [...lib].filter(n => !inQ.has(n));
 chk(miss.length === 0, "exercices hors file : " + miss.join(", "));
-// 2
-Q.forEach(s => { const d = (s.w === "A" ? P.tier6OverridesA : P.tier6OverridesB)[s.d]; const m = d && parseInt(String(d.trainTime).replace(/\D/g, ""), 10); chk(m && m <= 60, s.label + " " + s.w + " : " + (d && d.trainTime)); });
 // 3
 const seq = Q.map(s => s.cond).concat(Q.map(s => s.cond2)); const fullAt = []; seq.forEach((c, i) => { if (c === "full") fullAt.push(i); });
 let minGap = 99; fullAt.forEach((p, i) => { const nx = i + 1 < fullAt.length ? fullAt[i + 1] : fullAt[0] + seq.length; minGap = Math.min(minGap, nx - p); });
@@ -133,6 +131,39 @@ const base = { tier: 5, cpMode: "v2", queueMode: true, workoutHistory: {}, view:
     labels = card ? [...card.querySelectorAll("span")].map(x => x.textContent.trim()).filter(t => /^(REPS|DIST|KG|SEC)$/.test(t)) : null;
   });
   chk(labels && labels.join(",") === "DIST,KG", "13: lignes du Farmer's Carry = " + JSON.stringify(labels));
+  // 14. Les 14 seances en FULL : temps affiche <= 60 min, aucun "1 sets", lettres de blocs sans trou, aucune erreur
+  MON = new Date(2026, 10, 23, 9, 0, 0);
+  for (let i = 0; i < 14; i++) {
+    let txt = "", names = [];
+    const rr = await run({ ...base, cyclePos: { 4: 0, 5: i, 6: 0, q: 14 } }, async (o) => {
+      const b = [...o.w.document.querySelectorAll("button")].find(x => x.textContent.trim() === "FULL");
+      if (b) { b.dispatchEvent(new o.w.MouseEvent("click", { bubbles: true })); await wait(250); }
+      txt = o.text();
+    });
+    const m = txt.match(/~(\d+) min/);
+    chk(m && +m[1] <= 60, "14: seance " + (i + 1) + "/14 FULL affiche " + (m ? m[0] : "aucun temps"));
+    chk(!/(^|[^0-9])1 sets/.test(txt), "14: seance " + (i + 1) + "/14 affiche '1 sets'");
+    chk(!rr.errors.length, "14: seance " + (i + 1) + "/14 erreurs " + rr.errors.join(" | "));
+    const sq = Q[i]; const L = (sq.w === "A" ? P.tier6OverridesA : P.tier6OverridesB)[sq.d].blocks.map(b => b.name.split(".")[0].replace(/\d/, ""));
+    const uniq = [...new Set(L)]; chk(uniq.join("") === "ABCDEFGH".slice(0, uniq.length), "14: lettres de blocs " + sq.label + " " + sq.w + " = " + uniq.join(""));
+  }
+  // 15. Modele recovery : rotationMap ne touche pas ses exercices (Pallof Press etait saute, "1 skipped")
+  let recTxt = "";
+  await run({ ...base, cyclePos: { 4: 0, 5: 5, 6: 0, q: 14 } }, async (o) => {
+    const b = [...o.w.document.querySelectorAll("button")].find(x => x.textContent.trim() === "RECOVERY");
+    b.dispatchEvent(new o.w.MouseEvent("click", { bubbles: true })); await wait(300); recTxt = o.text();
+  });
+  chk(recTxt.includes("Pallof Press") && !/skipped|flagged/.test(recTxt), "15: Full Body Flow saute encore un exercice");
+  // 16. Armor (jamais FULL) : pas de "PR attempts only on FULL days" ; Plate Pinch (Seconds + Weight) = SEC + KG
+  let armorB = "", pinch = null;
+  await run({ ...base, cyclePos: { 4: 0, 5: 12, 6: 0, q: 14 } }, async (o) => {
+    armorB = o.text();
+    const name = [...o.w.document.querySelectorAll("*")].find(el => el.children.length === 0 && el.textContent.trim() === "Plate Pinch Hold");
+    let card = name; while (card && !/\+ SET/.test(card.textContent)) card = card.parentElement;
+    pinch = card ? [...card.querySelectorAll("span")].map(x => x.textContent.trim()).filter(t => /^(REPS|DIST|KG|SEC|MIN)$/.test(t)) : null;
+  });
+  chk(/same weight, fewer sets/.test(armorB) && !/PR attempts only on FULL/.test(armorB), "16: Armor parle de jours FULL");
+  chk(pinch && pinch.join(",") === "SEC,KG", "16: lignes Plate Pinch = " + JSON.stringify(pinch));
   if (fails.length) { console.log("ECHEC queuetest :\n  " + fails.join("\n  ")); process.exit(1); }
   console.log("OK queuetest : 14 seances, " + lib.size + " exercices couverts, <= 60 min, FULL espaces (ecart min " + minGap + "), migration 12->14, LIGHT sans saut, Mobility reelle, Armor, fin de tour");
 })();
