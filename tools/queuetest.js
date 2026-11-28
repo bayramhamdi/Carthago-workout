@@ -156,14 +156,43 @@ const base = { tier: 5, cpMode: "v2", queueMode: true, workoutHistory: {}, view:
   chk(recTxt.includes("Pallof Press") && !/skipped|flagged/.test(recTxt), "15: Full Body Flow saute encore un exercice");
   // 16. Armor (jamais FULL) : pas de "PR attempts only on FULL days" ; Plate Pinch (Seconds + Weight) = SEC + KG
   let armorB = "", pinch = null;
-  await run({ ...base, cyclePos: { 4: 0, 5: 12, 6: 0, q: 14 } }, async (o) => {
-    armorB = o.text();
+  await run({ ...base, cyclePos: { 4: 0, 5: 12, 6: 0, q: 14 } }, async (o) => { armorB = o.text(); });
+  await run({ ...base, cyclePos: { 4: 0, 5: 7, 6: 0, q: 14 } }, async (o) => {
     const name = [...o.w.document.querySelectorAll("*")].find(el => el.children.length === 0 && el.textContent.trim() === "Plate Pinch Hold");
     let card = name; while (card && !/\+ SET/.test(card.textContent)) card = card.parentElement;
     pinch = card ? [...card.querySelectorAll("span")].map(x => x.textContent.trim()).filter(t => /^(REPS|DIST|KG|SEC|MIN)$/.test(t)) : null;
   });
   chk(/same weight, fewer sets/.test(armorB) && !/PR attempts only on FULL/.test(armorB), "16: Armor parle de jours FULL");
   chk(pinch && pinch.join(",") === "SEC,KG", "16: lignes Plate Pinch = " + JSON.stringify(pinch));
+  // 17. LIGHT : jamais moins de 2 series sur un bloc prevu a 3+ (Arms A light : Biceps 2 sets, Warm-up 1 set)
+  const setsOf = (o, bn) => { const sp = [...o.w.document.querySelectorAll("span")].find(x => x.textContent.trim() === bn); return sp && sp.parentElement.children[1] ? sp.parentElement.children[1].textContent.trim() : null; };
+  let bi = null, wu = null, grip = null, swapTxt = "";
+  await run({ ...base, cyclePos: { 4: 0, 5: 4, 6: 0, q: 14 } }, async (o) => { bi = setsOf(o, "C. BICEPS"); wu = setsOf(o, "A. WARM-UP"); });
+  chk(bi === "2 sets (reduced)", "17: Arms A light, Biceps = " + bi); chk(wu === "1 set (reduced)", "17: Arms A light, Warm-up = " + wu);
+  // 18. Forearms + grip : fin de Pull (plus dans Armor, la seance juste apres Arms)
+  await run({ ...base, cyclePos: { 4: 0, 5: 0, 6: 0, q: 14 } }, async (o) => { grip = setsOf(o, "F. FOREARMS + GRIP"); });
+  chk(grip === "2 sets", "18: Pull A sans bloc Forearms + Grip (" + grip + ")"); chk(!/FOREARMS/.test(armorB), "18: Armor B a encore un bloc forearms");
+  // 19. Plus de badge DELOAD (semaine du 30.11.2026) ; SWAP propose les anciennes variantes (TRX Row pour Dynamic Sled Row)
+  MON = new Date(2026, 10, 30, 9, 0, 0);
+  const wk = await run({ ...base, cyclePos: { 4: 0, 5: 2, 6: 0, q: 14 } }, async (o) => {
+    const name = [...o.w.document.querySelectorAll("*")].find(el => el.children.length === 0 && el.textContent.trim() === "Dynamic Sled Row");
+    let card = name; while (card && ![...card.querySelectorAll("button")].some(x => /SWAP/.test(x.textContent))) card = card.parentElement;
+    const sb = card && [...card.querySelectorAll("button")].find(x => /SWAP/.test(x.textContent));
+    if (sb) { sb.dispatchEvent(new o.w.MouseEvent("click", { bubbles: true })); await wait(250); swapTxt = o.text(); }
+  });
+  chk(!/DELOAD|deload/.test(wk.text), "19: badge DELOAD encore affiche"); chk(swapTxt.includes("TRX Row"), "19: SWAP ne propose pas TRX Row");
+  // 20. Temps au rythme reel : 3 seances a 1.25x l'estimation => temps affiche x1.25 + "your pace" ; estMin enregistre au Mark Complete
+  MON = new Date(2026, 10, 23, 9, 0, 0);
+  const hist = {}; ["2026-11-18", "2026-11-19", "2026-11-20"].forEach(k => { hist[k] = { completed: true, durationMin: 50, estMin: 40, day: "MONDAY", week: "A" }; });
+  let plain = "", paced = "", saved = null;
+  await run({ ...base, cyclePos: { 4: 0, 5: 0, 6: 0, q: 14 } }, async (o) => { plain = (o.text().match(/~(\d+) min/) || [])[1]; });
+  await run({ ...base, workoutHistory: hist, cyclePos: { 4: 0, 5: 0, 6: 0, q: 14 } }, async (o) => {
+    paced = (o.text().match(/~(\d+) min \u00B7 your pace/) || [])[1];
+    const mc = [...o.w.document.querySelectorAll("button")].find(x => /MARK SESSION COMPLETE/i.test(x.textContent));
+    if (mc) { mc.dispatchEvent(new o.w.MouseEvent("click", { bubbles: true })); await wait(400); saved = (o.ls("workoutHistory") || {})["2026-11-23"]; }
+  });
+  chk(plain && paced && +paced === Math.round(+plain * 1.25), "20: rythme reel, " + plain + " => " + paced);
+  chk(saved && saved.estMin === +plain, "20: estMin non enregistre " + JSON.stringify(saved && saved.estMin));
   if (fails.length) { console.log("ECHEC queuetest :\n  " + fails.join("\n  ")); process.exit(1); }
   console.log("OK queuetest : 14 seances, " + lib.size + " exercices couverts, <= 60 min, FULL espaces (ecart min " + minGap + "), migration 12->14, LIGHT sans saut, Mobility reelle, Armor, fin de tour");
 })();

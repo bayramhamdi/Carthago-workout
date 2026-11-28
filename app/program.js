@@ -322,6 +322,9 @@ const getSwapIndex = () => {
   const idx = {};
   const scan = (obj) => { try { Object.values(obj || {}).forEach(d => ((d && d.blocks) || []).forEach(b => (b.exercises || []).forEach(ex => { if (!ex || !ex.name || ex.key) return; const k = blockKind(b.name); idx[k] = idx[k] || {}; if (!idx[k][ex.name]) idx[k][ex.name] = ex; }))); } catch (e) {} };
   [workoutsA, workoutsB, tier6OverridesA, tier6OverridesB].forEach(scan);
+  // Les anciennes variantes LIGHT / RECOVERY de rotationMap restent joignables : elles entrent dans le choix SWAP du bloc de leur exercice d'origine.
+  try { const home = {}; [tier6OverridesA, tier6OverridesB].forEach(o => Object.values(o || {}).forEach(d => ((d && d.blocks) || []).forEach(b => (b.exercises || []).forEach(ex => { (home[ex.name] = home[ex.name] || []).push(blockKind(b.name)); }))));
+    Object.keys(rotationMap || {}).forEach(k => ["light", "recovery"].forEach(m => { const v = rotationMap[k] && rotationMap[k][m]; if (!v || !v.name || home[v.name]) return; (home[k] || []).forEach(kind => { idx[kind] = idx[kind] || {}; if (!idx[kind][v.name]) idx[kind][v.name] = v; }); })); } catch (e) {}
   __swapIdx = idx; return idx;
 };
 const patternOf = (n) => { const s = String(n || "").toLowerCase();
@@ -634,7 +637,7 @@ const recoveryWorkouts = {
 const tier6OverridesA = {
   // MONDAY
   MONDAY: {
-    trainTitle: "PULL · Deadlift + Back",
+    trainTitle: "PULL · Deadlift + Back + Grip",
     trainTime: "~56 min",
     trainNote: "Pull day. Hip prep, KB swing, deadlift, pull-ups, back volume.",
     blocks: [
@@ -762,6 +765,27 @@ const tier6OverridesA = {
             track: "Reps",
             vid: "PoBbZrY9zTE",
             dr: 12
+          }
+        ]
+      },
+      {
+        name: "F. FOREARMS + GRIP",
+        sets: 2,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Kettlebell Forearm Rotation",
+            detail: "8 reps. KB rotation for forearm strength.",
+            track: "Reps",
+            vid: "FwCuyV208bU",
+            dr: 8
+          },
+          {
+            name: "Forearm Twist + Curl with Towel",
+            detail: "8 reps. Towel over bar, twist and curl.",
+            track: "Reps",
+            vid: "Bc3qLJnYwkI",
+            dr: 8
           }
         ]
       }
@@ -1449,9 +1473,9 @@ const tier6OverridesA = {
   },
   // ARMOR
   ARMOR: {
-    trainTitle: "FIGHTER ARMOR · Carries + Grip + Neck + Core",
+    trainTitle: "FIGHTER ARMOR · Lower Back + Carries + Neck + Core",
     trainTime: "~46 min",
-    trainNote: "Armor day. Reverse hyper, carries, grip, neck strength, core and hip flexors.",
+    trainNote: "Armor day. Reverse hyper, carries, neck strength, core and hip flexors.",
     blocks: [
       {
         name: "A. WARM-UP",
@@ -1511,28 +1535,7 @@ const tier6OverridesA = {
         ]
       },
       {
-        name: "D. FOREARMS + GRIP",
-        sets: 2,
-        color: "#E65100",
-        exercises: [
-          {
-            name: "Kettlebell Forearm Rotation",
-            detail: "8 reps. KB rotation for forearm strength.",
-            track: "Reps",
-            vid: "FwCuyV208bU",
-            dr: 8
-          },
-          {
-            name: "Forearm Twist + Curl with Towel",
-            detail: "8 reps. Towel over bar, twist and curl.",
-            track: "Reps",
-            vid: "Bc3qLJnYwkI",
-            dr: 8
-          }
-        ]
-      },
-      {
-        name: "E. NECK",
+        name: "D. NECK",
         sets: 2,
         color: "#546E7A",
         exercises: [
@@ -1567,7 +1570,7 @@ const tier6OverridesA = {
         ]
       },
       {
-        name: "F. CORE + HIP FLEXORS",
+        name: "E. CORE + HIP FLEXORS",
         sets: 2,
         color: "#1565C0",
         exercises: [
@@ -1814,7 +1817,7 @@ const tier6OverridesA = {
 const tier6OverridesB = {
   // MONDAY B
   MONDAY: {
-    trainTitle: "PULL B · Deadlift + Back",
+    trainTitle: "PULL B · Deadlift + Back + Grip",
     trainTime: "~50 min",
     trainNote: "Pull day B. Snatch power, deadlift, pull-ups, back volume.",
     blocks: [
@@ -1935,6 +1938,27 @@ const tier6OverridesB = {
             track: "Reps",
             vid: "m8s7cblgdDQ",
             dr: 12
+          }
+        ]
+      },
+      {
+        name: "F. FOREARMS + GRIP",
+        sets: 2,
+        color: "#E65100",
+        exercises: [
+          {
+            name: "Plate Pinch Hold",
+            detail: "Max hold. Pinch grip endurance.",
+            track: "Seconds + Weight",
+            vid: "woJifu7hSD8",
+            dr: 30
+          },
+          {
+            name: "Wrist Roller",
+            detail: "Roll up and down. Forearm pump.",
+            track: "Reps",
+            vid: "8ARDRJjhnSw",
+            dr: 4
           }
         ]
       }
@@ -2622,9 +2646,9 @@ const tier6OverridesB = {
   },
   // ARMOR B
   ARMOR: {
-    trainTitle: "FIGHTER ARMOR B · Carries + Grip + Neck + Core",
+    trainTitle: "FIGHTER ARMOR B · Lower Back + Carries + Neck + Core",
     trainTime: "~43 min",
-    trainNote: "Armor day B. Reverse hyper, carries, grip, neck strength, core.",
+    trainNote: "Armor day B. Reverse hyper, carries, neck strength, core.",
     blocks: [
       {
         name: "A. WARM-UP",
@@ -2684,28 +2708,7 @@ const tier6OverridesB = {
         ]
       },
       {
-        name: "D. FOREARMS + GRIP",
-        sets: 2,
-        color: "#E65100",
-        exercises: [
-          {
-            name: "Plate Pinch Hold",
-            detail: "Max hold. Pinch grip endurance.",
-            track: "Seconds + Weight",
-            vid: "woJifu7hSD8",
-            dr: 30
-          },
-          {
-            name: "Wrist Roller",
-            detail: "Roll up and down. Forearm pump.",
-            track: "Reps",
-            vid: "8ARDRJjhnSw",
-            dr: 4
-          }
-        ]
-      },
-      {
-        name: "E. NECK",
+        name: "D. NECK",
         sets: 2,
         color: "#546E7A",
         exercises: [
@@ -2747,7 +2750,7 @@ const tier6OverridesB = {
         ]
       },
       {
-        name: "F. CORE + HIP FLEXORS",
+        name: "E. CORE + HIP FLEXORS",
         sets: 2,
         color: "#1565C0",
         exercises: [
